@@ -1,0 +1,36 @@
+experiences:
+  - id: "kaist-masters"
+    role: "Researcher - KAIST Master's Research"
+    organization: "Korea Advanced Institute of Science and Technology (KAIST)"
+    period: "2015.03 - 2017.08"
+    hook: "Embedded motion-control foundation: designed a controller for real turret hardware under moving-platform disturbance."
+    bullets:
+      - "Designed controller for motion stabilization of a turret on a moving platform."
+      - "Worked across dynamics, control logic, sensor noise, and real hardware validation."
+      - "Built the control foundation later reused in vehicle dynamics and sensor-fusion work."
+    detail_output: "experience/kaist-masters/index.html"
+
+  - id: "add-k2-tcu"
+    role: "Researcher - TCU Application Software"
+    organization: "Agency for Defense Development (ADD), Ground Technology Research Institute"
+    period: "2017.09 - 2021.03"
+    hook: "Full V-cycle TCU productization: developed K2 55-ton tracked-vehicle TCU software from MILS/HILS to dynamometer and field validation."
+    bullets:
+      - "Developed TCU application software for K2 tracked vehicle transmission control."
+      - "Experienced full V-cycle workflow: MILS, HILS, powerpack dynamometer, and actual vehicle field testing."
+      - "Worked on control algorithms, plant modeling, calibration, parameter correction, and reliability-test support."
+    detail_output: "experience/add-k2-tcu/index.html"
+
+  - id: "hmc-adas"
+    role: "Research Engineer - Commercial Vehicle SCC / Lvl2 ADAS"
+    organization: "Hyundai Motor Company (HMC)"
+    period: "2021.03 - Present"
+    hook: "Production commercial-vehicle ADAS engineer with SCC part experience and independent ownership of Emergency Stop, EKF RoadRadius fusion, FOC brake-distribution logic, and target-selection robustness."
+    bullets:
+      - "Worked in the SCC part of HMC's commercial-vehicle SCC/LFA development organization, contributing to mass-production SCC/FOC tuning, regulation-driven state-transition updates, validation, and production issue response."
+      - "Contributed to mass-production programs across QZ FCEV Europe, QZ FCEV North America, QZ 25PE ICE tractor, and PY ICE/FCEV bus platforms with different AT/AMT and EBS/ABS configurations."
+      - "Independently developed SCC2 Emergency Stop behavior, including activation, state-transition handling, controlled deceleration, and safe-stop flow."
+      - "Developed EKF-based RoadRadius fusion combining steering-intent-based radius estimation, yaw-rate-based radius estimation, and conditional lane/camera blending."
+      - "Developed rule-based FOC brake distribution logic balancing auxiliary brake and foundation brake usage under heavy-duty deceleration scenarios."
+      - "Built target object selection robustness logic to reduce adjacent-lane false target risk in difficult commercial-vehicle road scenarios."
+    detail_output: "experience/hmc-adas/index.html"

@@ -1,0 +1,242 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>ADD K2 TCU - Sensorless Control & Localization of Heavy-Duty TCU</title>
+  <link rel="stylesheet" href="../../style.css"/>
+  <style>
+    .case-shell{max-width:1160px}
+    .phase-block{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:28px 30px;margin-bottom:18px}
+    .phase-label{display:inline-block;background:var(--accent-soft);border:1px solid #d7e2ff;color:var(--accent);border-radius:999px;padding:5px 12px;font-size:11px;font-weight:800;letter-spacing:.08em;text-transform:uppercase;margin-bottom:14px}
+    .phase-block h2{font-size:34px;line-height:1.08;letter-spacing:-.035em;margin-bottom:10px}
+    .phase-summary{font-size:15px;color:var(--muted);max-width:900px}
+    .section-grid{display:grid;grid-template-columns:1fr 1.15fr;gap:16px;margin-bottom:18px}
+    .math-stack{display:flex;flex-direction:column;gap:12px}
+    .math-item{border:1px solid var(--line);background:#fafbff;border-radius:10px;padding:12px 14px}
+    .math-item h3{font-size:13px;margin-bottom:6px;color:var(--accent)}
+    .math-item p{font-size:12.8px;color:var(--muted)}
+    .equation{background:#111827;color:#f8fafc;border-radius:10px;padding:11px 14px;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:13px;line-height:1.55;overflow-x:auto}
+    .wide-proof,.panel-grid figure,.single-panel figure{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
+    .panel-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+    .panel-grid img,.wide-proof img,.single-panel img{display:block;width:100%;height:auto}
+    .panel-grid figcaption,.wide-proof figcaption,.single-panel figcaption{padding:10px 12px;font-size:12.4px;color:var(--muted);border-top:1px solid var(--line)}
+    .result-box{background:linear-gradient(135deg,#fff,#f8faff);border:1px solid #d9e3ff;border-radius:12px;padding:18px;margin-top:18px}
+    .result-box h2{margin-bottom:10px}
+    .result-box ul{padding-left:18px}
+    .result-box li{font-size:12.8px;color:var(--muted);margin-bottom:5px}
+    .tight-list li{margin-bottom:6px}
+    .section-kicker{font-size:11px;text-transform:uppercase;letter-spacing:.12em;color:var(--soft);font-weight:800;margin-bottom:8px}
+
+    .output-grid{display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:14px}
+    .output-grid article{border:1px solid var(--line);background:#fff;border-radius:12px;padding:14px}
+    .output-grid h3{font-size:14px;margin:4px 0 8px;color:var(--accent)}
+    .output-grid ol{padding-left:18px}
+    .output-grid li{font-size:12.5px;color:var(--muted);margin-bottom:8px;line-height:1.55}
+    .output-grid span{color:var(--soft)}
+    .subnote{font-size:12.5px;color:var(--muted);margin-top:10px}
+    @media(max-width:900px){
+      .section-grid,.panel-grid,.output-grid{grid-template-columns:1fr}
+      .phase-block h2{font-size:28px}
+    }
+  </style>
+</head>
+<body class="detail-page">
+  <nav class="top-nav no-print">
+    <a class="nav-brand" href="../../index.html">Jae Woong Hwang</a>
+    <a href="../../index.html#resume">Resume</a>
+    <a href="../../index.html#experience">Experience</a>
+    <a href="../../index.html#toolchains">Toolchains</a>
+    <button class="print-btn" onclick="window.print()">Export PDF</button>
+  </nav>
+
+  <main class="detail-shell case-shell">
+    <header class="detail-hero">
+      <p class="eyebrow">Phase 2: Productization</p>
+      <h1>Sensorless Control & Localization of Heavy-Duty TCU</h1>
+      <p>
+        At ADD, I worked on localization of the transmission control unit (TCU) for the 55-ton K2 tracked vehicle.
+        The engineering value was not simply writing control code—it was productizing shift-quality logic under harsh physical
+        constraints, validating it through HILS and powerpack tests, and making sensorless control work reliably in a heavy-duty platform.
+      </p>
+      <a href="../../index.html" class="detail-link no-print">Back to resume</a>
+    </header>
+
+    <section class="phase-block">
+      <div class="phase-label">Productization</div>
+      <h2>From Physics to Validated TCU Software</h2>
+      <p class="phase-summary">
+        This project sits at the point where controls, software, and real hardware must meet.
+        The core challenge was achieving robust shift quality without direct clutch-pressure sensing,
+        while keeping the software viable for real-time validation and deployment.
+      </p>
+    </section>
+
+    <section class="section-grid">
+      <article class="detail-card">
+        <div class="section-kicker">Problem</div>
+        <h2>Physical Constraints & Sensorless Environment</h2>
+        <ul class="tight-list">
+          <li><strong>Massive inertia:</strong> controlling shifts in a 55-ton main battle tank means extreme driveline torque and high consequence for poor shift quality.</li>
+          <li><strong>Hardware limitation:</strong> due to cost and durability constraints, individual clutch pressure sensors could not be installed.</li>
+          <li><strong>Sensorless implication:</strong> traditional open-loop-only methods are not enough to guarantee repeatable shift quality and reliability.</li>
+          <li><strong>Engineering target:</strong> recover clutch state indirectly from speed and CAN-based signals, then make the software robust enough for HILS, dynamometer, and vehicle validation.</li>
+        </ul>
+      </article>
+
+      <article class="detail-card">
+        <div class="section-kicker">Architecture & Math</div>
+        <h2>HILS Architecture & Real-Time Integration</h2>
+        <div class="math-stack">
+          <div class="math-item">
+            <h3>Real-Time HILS Integration</h3>
+            <p>
+              Bridged theoretical hydro-mechanical dynamics and software validation by integrating complex non-linear transmission plant models
+              into the real-time HILS environment. This enabled algorithm verification before expensive dynamometer and field tests.
+            </p>
+          </div>
+
+          <div class="math-item">
+            <h3>Plant Dynamics Utilized</h3>
+            <p>
+              Applied Newton-iteration-based lumped hydraulic models to compute solenoid-valve and clutch-piston pressure behavior while staying within real-time constraints.
+            </p>
+            <div class="equation">
+              ṗ = (βK<sub>A</sub>α<sub>ref</sub>F(p<sub>A</sub> − p + p<sub>cent</sub>(ω)) − …) / (V<sub>0</sub> + x<sub>A</sub>p)
+            </div>
+          </div>
+
+          <div class="math-item">
+            <h3>Clutch Kiss-Point EOL & Adaptation Logic</h3>
+            <p>
+              Overcame the lack of direct pressure sensing by designing ASW logic that estimates the clutch kiss-point—the exact onset of torque transfer—
+              and adapts it over time. This lets the controller transition intelligently from open-loop filling to closed-loop pressure control.
+            </p>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="image-evidence">
+      <h2>Core Technical Evidence</h2>
+      <div class="panel-grid">
+        <figure>
+          <img src="assets/plant_model_newton_iteration.png" alt="Hydraulic plant model and Newton iteration for real-time HILS."/>
+          <figcaption>
+            <strong>Hydro-mechanical plant model:</strong> lumped solenoid-valve and clutch-piston models solved with Newton iteration to keep the HILS model physically meaningful and real-time capable.
+          </figcaption>
+        </figure>
+
+        <figure>
+          <img src="assets/kiss_point_learning_eol.png" alt="Clutch kiss-point learning logic."/>
+          <figcaption>
+            <strong>Kiss-point learning (EOL):</strong> pressure and turbine-speed behavior used to identify the clutch/brake torque-transfer onset, supporting sensorless adaptation logic.
+          </figcaption>
+        </figure>
+
+        <figure>
+          <img src="assets/clutch_to_clutch_shift_logic.png" alt="Clutch-to-clutch shift control logic."/>
+          <figcaption>
+            <strong>Shift control architecture:</strong> clutch-to-clutch shift logic transitions from open-loop to closed-loop control while coordinating on-coming/off-going clutch pressures.
+          </figcaption>
+        </figure>
+
+        <figure>
+          <img src="assets/dyno_and_vehicle_validation.png" alt="Powerpack dynamometer and K2 tracked vehicle."/>
+          <figcaption>
+            <strong>Productization proof:</strong> the logic moved beyond simulation and HILS into powerpack dynamometer validation and the actual 55-ton K2 tracked vehicle.
+          </figcaption>
+        </figure>
+      </div>
+    </section>
+
+
+    <section class="result-box">
+      <h2>Performance Result & Research Output</h2>
+      <ul>
+        <li>
+          <strong>Performance validation:</strong> demonstrated stronger performance than the legacy ZF TCU baseline across
+          shift shock metrics (<em>VDV, LFP, Zerk, Δτ</em>), acceleration behavior, braking behavior, and steering/handling-related vehicle response.
+        </li>
+        <li>
+          <strong>Added functions beyond the legacy ZF TCU:</strong> clutch adaptation, improved EOL calibration logic,
+          towing-start support, and fault-diagnosis information transmission.
+        </li>
+      </ul>
+
+      <div class="output-grid">
+        <article>
+          <h3>Academic Papers</h3>
+          <ol>
+            <li>
+              Hyunseok Choi, <strong>Jaewoong Hwang</strong>, Seibum Choi,
+              <em>“Dynamic driveline torque estimation during whole gear shift for an automatic transmission,”</em>
+              Mechanism and Machine Theory, 2018. <span>Published.</span>
+            </li>
+            <li>
+              Hyunseok Choi, <strong>Jaewoong Hwang</strong>, Seibum Choi,
+              <em>“Gear shift control based on estimated driveline torque for an automatic transmission,”</em>
+              Mechanism and Machine Theory, 2020. <span>Listed in the source portfolio as forthcoming/publication-stage work.</span>
+            </li>
+          </ol>
+          <p class="subnote">
+            Research contribution: proposed driveline torque estimation and torque-feedback control based on dynamic analysis
+            of the transmission mechanical model, then verified the method in a dynamometer environment.
+          </p>
+        </article>
+
+        <article>
+          <h3>Korean Conference Paper</h3>
+          <ol>
+            <li>
+              Jaewoong Hwang, Hyunseok Choi, Yongwon Kim,
+              <em>“Design study of a HIL system plant model for integrated TCU software development for tracked vehicles,”</em>
+              Korean Society for Military Science and Technology Annual Conference, 2019.
+            </li>
+          </ol>
+
+          <h3>Korean Patent / Patent Applications</h3>
+          <ol>
+            <li>
+              <strong>Registered Korean Patent:</strong>
+              <em>“Method for estimating automatic-transmission driveline torque and friction coefficient,”</em>
+              Registration No. 10-2155303, registered on 2020.09.07.
+            </li>
+            <li>
+              <strong>Korean Patent Application:</strong>
+              <em>“Method for transmitting fault-diagnosis information of an automatic transmission for high-mobility tracked vehicles,”</em>
+              Application No. 10-2020-0015038, filed on 2020.02.07.
+            </li>
+            <li>
+              <strong>Korean Patent Application:</strong>
+              <em>“Method for guiding EOL calibration of an automatic transmission for combat vehicles,”</em>
+              Application No. 10-2020-005020, filed on 2020.01.14.
+            </li>
+            <li>
+              <strong>Korean Patent Application:</strong>
+              <em>“Method for guiding towed-vehicle start-up device and towed-vehicle start-up operation,”</em>
+              Application No. 10-2019-0110314, filed on 2019.09.05.
+            </li>
+          </ol>
+        </article>
+      </div>
+    </section>
+
+    <section class="result-box">
+      <h2>Why This Matters</h2>
+      <ul>
+        <li><strong>Sensorless control:</strong> solved a real production constraint rather than assuming ideal instrumentation.</li>
+        <li><strong>Physics-to-software translation:</strong> turned hydro-mechanical behavior into executable and testable TCU software logic.</li>
+        <li><strong>Full validation path:</strong> connected HILS, powerpack dynamometer, and actual vehicle verification into a single V-cycle story.</li>
+        <li><strong>Career signal:</strong> this phase demonstrates productization ability—moving from abstract control concepts to validated embedded software under real constraints.</li>
+      </ul>
+      <p class="subnote">
+        If you want, the next refinement should be to add a compact “My exact role” strip near the top
+        (TCU ASW, HILS integration, calibration, and field validation) so the page becomes even more resume-friendly.
+      </p>
+    </section>
+  </main>
+
+  <script src="../../site.js"></script>
+</body>
+</html>

@@ -1,0 +1,7 @@
+title: "Engineering Narrative"
+intro: "My career is a hardware-to-software arc: from real motion-control hardware, to full V-cycle vehicle TCU software, to commercial-vehicle ADAS and AI-ready validation platforms."
+items:
+  - "Physical constraints -> control logic: I turn hardware limitations, sensing delays, and vehicle dynamics into algorithms and validation evidence."
+  - "R&D bottlenecks -> toolchains: I build internal Python/C++/MATLAB platforms when repeated manual work slows the team."
+  - "System architecture first: I use AI coding assistants effectively because I define the full data path, interfaces, timing constraints, and validation goal before coding."
+  - "NDA-safe technical storytelling: I explain protected work through problem definition, architecture, math/logic abstraction, and measurable outcome."

@@ -1,0 +1,33 @@
+{% extends "base.html.j2" %}
+{% set home_path = '../../index.html' %}
+{% set css_path = '../../style.css' %}
+{% set js_path = '../../site.js' %}
+{% block title %}{{ detail.title }}{% endblock %}
+{% block body_class %}detail-page{% endblock %}
+
+{% block body %}
+<main class="detail-shell">
+  <header class="detail-hero">
+    <p class="eyebrow">{{ detail.pill }}</p>
+    <h1>{{ detail.title }}</h1>
+    <p>{{ detail.summary }}</p>
+    <a href="../../index.html" class="detail-link no-print">Back to resume</a>
+  </header>
+
+  <section class="detail-grid">
+    {% for section in detail.sections %}
+    <article class="detail-card">
+      <h2>{{ section.title }}</h2>
+      {% if section.body %}<p>{{ section.body }}</p>{% endif %}
+      {% if section.bullets %}
+      <ul>
+        {% for bullet in section.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+</main>
+{% endblock %}

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XCP-Based AI Validation Interface Mock</title>
+  <link rel="stylesheet" href="../assets/ui.css" />
+  <style>
+    .xcp-frame{background:#0d1018;border:1px solid #1f2431;border-radius:18px;overflow:hidden;box-shadow:0 25px 60px rgba(0,0,0,.22)}
+    .xcp-topline,.xcp-toolbar{display:flex;align-items:center;gap:8px;padding:8px 12px;background:#151922;border-bottom:1px solid #2a3141;color:#d7dce7;font-size:12px}
+    .xcp-toolbar{padding:7px 12px;background:#11151d}
+    .xcp-chip{display:inline-flex;align-items:center;gap:6px;padding:4px 10px;border-radius:6px;background:#202736;border:1px solid #343d50;color:#e5e7eb;font-weight:700}
+    .xcp-chip.yellow{background:#f2d719;color:#111;border-color:#f2d719}
+    .xcp-chip.green{background:#193321;color:#b5f3c2;border-color:#245332}
+    .xcp-chip.muted{background:#1b202c;color:#97a1b4}
+    .xcp-chip .dot{width:7px;height:7px;border-radius:50%;display:inline-block;background:#f97316}
+    .xcp-btn{border:1px solid #384154;background:#1e2432;color:#e6ebf5;border-radius:6px;padding:5px 10px;font-size:12px;font-weight:800;cursor:pointer}
+    .xcp-btn.yellow{background:#f3e000;color:#0b0b0b;border-color:#f3e000}
+    .xcp-btn:disabled{opacity:.5;cursor:not-allowed}
+    .xcp-status{margin-left:auto;display:flex;align-items:center;gap:14px;color:#9ea8bb}
+    .xcp-layout{display:grid;grid-template-columns:300px 1fr;min-height:900px;background:#0f121a}
+    .xcp-sidebar{border-right:1px solid #2a3141;background:#11151d;display:flex;flex-direction:column}
+    .xcp-tabs{display:flex;border-bottom:1px solid #2a3141;background:#161b26}
+    .xcp-tab{flex:1;padding:12px 14px;font-weight:800;color:#c9d1dd;border-right:1px solid #2a3141}
+    .xcp-tab.active{background:#1c212c;color:#fff;box-shadow:inset 0 -2px 0 #ffe000}
+    .xcp-search{padding:10px;border-bottom:1px solid #2a3141}
+    .xcp-search input{width:100%;background:#0e1219;border:1px solid #30384a;color:#d8dce4;border-radius:6px;padding:8px 10px;font-size:12px}
+    .signal-list{list-style:none;overflow:auto;flex:1}
+    .signal-list li{padding:7px 12px;border-bottom:1px solid #1c2230;color:#d9e0ec;font-size:12px;cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+    .signal-list li.selected{background:#24314f;color:#fff;box-shadow:inset 3px 0 0 #79b4ff}
+    .signal-list li small{display:block;color:#7f8aa0;font-size:10px;margin-top:3px}
+    .signal-count{padding:8px 12px;border-top:1px solid #2a3141;color:#dfe4ef;text-align:right;font-size:12px;background:#131823}
+    .xcp-main{display:flex;flex-direction:column;min-width:0}
+    .workspace-wrap{position:relative;height:640px;overflow:auto;border-bottom:1px solid #2a3141;background:#12161f}
+    .workspace{position:relative;width:1520px;height:620px;background:#12161f}
+    .workspace-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(255,255,255,.03) 1px,transparent 1px),linear-gradient(90deg,rgba(255,255,255,.03) 1px,transparent 1px);background-size:26px 26px}
+    .connection-layer{position:absolute;inset:0;width:100%;height:100%;pointer-events:none}
+    .connection-layer path{stroke:#7fe18d;stroke-width:2.2;fill:none;opacity:.92;transition:all .2s ease}
+    .xcp-running .connection-layer path{stroke:#f8fbff;stroke-width:2.7;filter:drop-shadow(0 0 6px rgba(255,255,255,.9));opacity:1}
+    .graph-node{position:absolute;width:130px;min-height:72px;border:1px solid #333742;border-radius:10px;background:#2d313b;color:#e7edf7;box-shadow:0 5px 14px rgba(0,0,0,.25)}
+    .graph-node.large{width:160px;min-height:130px}
+    .graph-node.medium{width:150px;min-height:85px}
+    .graph-node .head{padding:4px 8px;border-radius:10px 10px 0 0;font-size:11px;font-weight:900;letter-spacing:.03em;text-transform:uppercase}
+    .graph-node.measure .head{background:#0c5db8}
+    .graph-node.model .head{background:#207229}
+    .graph-node.characteristic .head{background:#d56700}
+    .graph-node .body{padding:8px;font-size:11px;line-height:1.35}
+    .graph-node .role{display:block;color:#9ae6b4;margin-bottom:5px;font-weight:700}
+    .graph-node.measure .role{color:#9fd1ff}
+    .graph-node.characteristic .role{color:#ffe0a6}
+    .graph-node .muted{display:block;color:#97a0b2;font-size:10px}
+    .graph-node .value{display:block;margin-top:6px;color:#fff;font-weight:800;font-size:12px}
+    .port{position:absolute;top:50%;width:10px;height:10px;border-radius:50%;background:#9ed7ff;border:1px solid #d9f0ff;transform:translateY(-50%);box-shadow:0 0 0 2px rgba(0,0,0,.2)}
+    .port.in{left:-5px}.port.out{right:-5px;background:#92dda0;border-color:#d5f7db}
+    .graph-node.characteristic .port.out{background:#ffd29d;border-color:#fff0d7}
+    .xcp-running .port{box-shadow:0 0 10px rgba(255,255,255,.95)}
+    .legend-box{position:absolute;right:18px;top:14px;border:1px solid #333a49;background:#191f2a;border-radius:10px;padding:10px 12px;color:#d8e0ee;font-size:12px}
+    .legend-box h4{font-size:12px;margin-bottom:8px}
+    .legend-box p{margin:4px 0;color:#a8b1c2}
+    .legend-box .badge-ui{display:inline-block;padding:2px 7px;border-radius:999px;margin-right:6px;font-size:10px;font-weight:800}
+    .badge-ui.in{background:#103d72;color:#d2eaff}.badge-ui.model{background:#183b1d;color:#c9f7d2}.badge-ui.out{background:#6b3700;color:#ffe0b1}
+    .bottom-dock{display:grid;grid-template-columns:420px 1fr;min-height:240px;background:#171c25}
+    .bottom-panel{padding:14px;border-right:1px solid #2a3141;color:#d8dde8}
+    .bottom-panel:last-child{border-right:0}
+    .panel-title{display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;color:#f3f5f8;font-weight:800}
+    .signal-info{border:1px solid #2a3141;border-radius:10px;background:#1f232c;padding:12px;font-size:13px;line-height:1.65}
+    .signal-info dt{color:#7f8aa0;width:110px;float:left;clear:left}.signal-info dd{margin-left:118px;color:#e7ebf4}
+    .signal-chart{background:#fff;border-radius:10px;display:block;width:100%;height:190px}
+    .chart-caption{margin-top:8px;font-size:11px;color:#9da7b9}
+    .tiny-stat{display:inline-flex;align-items:center;gap:6px;padding:2px 8px;border-radius:999px;background:#252b39;color:#edf2fa;font-size:11px}
+    @media(max-width:1100px){.xcp-layout{grid-template-columns:1fr}.xcp-sidebar{max-height:380px}.bottom-dock{grid-template-columns:1fr}.bottom-panel{border-right:0;border-bottom:1px solid #2a3141}.workspace{width:1360px}}
+  
+    body{background:#0b0d12}
+    .demo-shell{max-width:none;margin:0;padding:14px}
+    .xcp-btn.yellow{background:#1e293b;color:#d0d6e1;border-color:#384154}
+    .xcp-btn:disabled{opacity:.45;cursor:not-allowed;background:#1e293b!important;color:#7f8795!important;border-color:#384154!important}
+    .xcp-btn.start-glow{background:#ffffff!important;color:#05070c!important;border-color:#ffffff!important;box-shadow:0 0 14px rgba(255,255,255,.85),0 0 28px rgba(255,255,255,.35);animation:pulseWhite 1.5s infinite}
+    .xcp-btn.start-glow:disabled{opacity:.75;box-shadow:none;animation:none;background:#e5e7eb!important;color:#111827!important}
+    @keyframes pulseWhite{0%,100%{box-shadow:0 0 10px rgba(255,255,255,.75),0 0 26px rgba(255,255,255,.32)}50%{box-shadow:0 0 20px rgba(255,255,255,1),0 0 44px rgba(255,255,255,.48)}}
+    .xcp-layout{grid-template-columns:280px 1fr}
+    .xcp-tab{padding:10px 8px!important;font-size:10.5px;text-align:center;white-space:nowrap;letter-spacing:.01em}
+    .signal-list{max-height:360px}
+</style>
+</head>
+<body>
+  <main class="demo-shell">
+<section class="xcp-frame" id="mock">
+      <div class="xcp-topline">
+        <span class="xcp-chip muted">📁 File / Dir</span>
+        <span>A2L: <strong>public_mock_model_updated.a2l</strong></span>
+        <span>ELF: <strong>public_mock_adas_iv.elf</strong></span>
+        <button class="xcp-btn" disabled>UPDATE</button>
+        <span class="xcp-chip">XCP Setting</span>
+        <span class="xcp-chip yellow">XCP Connection</span>
+        <div class="xcp-status">
+          <span><strong id="runStatus">Offline</strong></span>
+          <span>Jitter:</span>
+          <span>Avg: <strong id="jitterAvg">—</strong></span>
+          <span>Max: <strong id="jitterMax">—</strong></span>
+        </div>
+      </div>
+      <div class="xcp-toolbar">
+        <button class="xcp-btn" id="allGraphBtn" disabled>ALL Graph</button>
+        <button class="xcp-btn" id="addModelBtn" disabled>Add Model</button>
+        <button class="xcp-btn" disabled>Save Canvas</button>
+        <button class="xcp-btn" disabled>Open Canvas</button>
+        <button class="xcp-btn" disabled>Clear</button>
+        <button class="xcp-btn start-glow" id="startBtn">Start</button>
+        <button class="xcp-btn" id="stopBtn" disabled>Stop</button>
+        <span class="xcp-status" style="margin-left:auto">public mock session</span>
+      </div>
+
+      <div class="xcp-layout" id="xcpRoot">
+        <aside class="xcp-sidebar">
+          <div class="xcp-tabs">
+            <div class="xcp-tab active">MEASUREMENT</div>
+            <div class="xcp-tab">CHARACTERISTIC</div>
+          </div>
+          <div class="xcp-search"><input id="signalSearch" placeholder="Search..." /></div>
+          <ul class="signal-list" id="signalList"></ul>
+          <div class="signal-count"><span id="signalCount">0</span> Signals</div>
+        </aside>
+
+        <section class="xcp-main">
+          <div class="workspace-wrap">
+            <div class="workspace" id="workspace">
+              <div class="workspace-grid"></div>
+              <svg class="connection-layer" id="linkLayer"></svg>
+              <div class="legend-box">
+                <h4>Flow Legend</h4>
+                <p><span class="badge-ui in">ECU IN</span> Measurement values are streamed from a mock ECU input set.</p>
+                <p><span class="badge-ui model">AI MODEL</span> model1~4 are assumed to be TimeSeries AI model stages.</p>
+                <p><span class="badge-ui out">ECU OUT</span> Characteristic is the mocked value written back to ECU.</p>
+              </div>
+
+              <div class="graph-node measure" id="m1" style="left:120px; top:82px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal1<span class="muted">ULONG · 0x10016511</span><span class="value" data-measure="0">0.00</span></div>
+              </div>
+              <div class="graph-node measure" id="m2" style="left:120px; top:156px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal2<span class="muted">SLONG · 0x10016512</span><span class="value" data-measure="1">0.00</span></div>
+              </div>
+              <div class="graph-node measure" id="m3" style="left:120px; top:230px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal3<span class="muted">UWORD · 0x10016513</span><span class="value" data-measure="2">0.00</span></div>
+              </div>
+              <div class="graph-node measure" id="m4" style="left:120px; top:304px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal4<span class="muted">UWORD · 0x10016514</span><span class="value" data-measure="3">0.00</span></div>
+              </div>
+              <div class="graph-node measure" id="m5" style="left:120px; top:378px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal5<span class="muted">SBYTE · 0x10016515</span><span class="value" data-measure="4">0.00</span></div>
+              </div>
+              <div class="graph-node measure" id="m6" style="left:120px; top:452px">
+                <span class="port out"></span><div class="head">MEASUREMENT</div><div class="body"><span class="role">ECU IN</span>signal6<span class="muted">UBYTE · 0x10016516</span><span class="value" data-measure="5">0.00</span></div>
+              </div>
+
+              <div class="graph-node model large" id="model1" style="left:420px; top:190px">
+                <span class="port in"></span><span class="port out"></span><div class="head">MODEL</div><div class="body"><span class="role">TimeSeries AI</span>timeseriesAI_model1.py<span class="muted">IN: 6 · OUT: 2</span><span class="value" id="model1Val">0.00 / 0.00</span></div>
+              </div>
+              <div class="graph-node model medium" id="model2" style="left:720px; top:170px">
+                <span class="port in"></span><span class="port out"></span><div class="head">MODEL</div><div class="body"><span class="role">TimeSeries AI</span>timeseriesAI_model2.py<span class="muted">IN: 1 · OUT: 1</span><span class="value" id="model2Val">0.00</span></div>
+              </div>
+              <div class="graph-node model medium" id="model3" style="left:720px; top:330px">
+                <span class="port in"></span><span class="port out"></span><div class="head">MODEL</div><div class="body"><span class="role">TimeSeries AI</span>timeseriesAI_model3.py<span class="muted">IN: 1 · OUT: 1</span><span class="value" id="model3Val">0.00</span></div>
+              </div>
+              <div class="graph-node model medium" id="model4" style="left:1020px; top:245px">
+                <span class="port in"></span><span class="port out"></span><div class="head">MODEL</div><div class="body"><span class="role">TimeSeries AI</span>timeseriesAI_model4.py<span class="muted">IN: 2 · OUT: 1</span><span class="value" id="model4Val">0.00</span></div>
+              </div>
+              <div class="graph-node characteristic medium" id="characteristic" style="left:1310px; top:252px">
+                <span class="port in"></span><span class="port out"></span><div class="head">CHARACTERISTIC</div><div class="body"><span class="role">ECU OUT</span>ecu_write_value<span class="muted">VALUE · 0xB004342B</span><span class="value" id="ecuOutVal">0.00</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="bottom-dock">
+            <div class="bottom-panel">
+              <div class="panel-title"><span>📌 Signal Info </span><span class="tiny-stat" id="selectedType">MEASUREMENT</span></div>
+              <dl class="signal-info" id="signalInfo"></dl>
+            </div>
+            <div class="bottom-panel">
+              <div class="panel-title"><span>Real Time Data</span><span class="tiny-stat">synthetic replay · live update</span></div>
+              <canvas id="liveChart" class="signal-chart" width="900" height="190"></canvas>
+              <div class="chart-caption">Visible traces: vehicle speed, yaw rate, model output, ECU write. This is synthetic replay data only.</div>
+            </div>
+          </div>
+        </section>
+      </div>
+    </section>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

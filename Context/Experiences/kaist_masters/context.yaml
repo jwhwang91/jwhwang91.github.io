@@ -1,0 +1,7 @@
+id: "kaist-masters"
+title: "KAIST Master's Thesis - Turret Motion Stabilization"
+pill: "Robotics / Embedded Motion Control / Sensor Fusion"
+summary: >
+  Controller design for motion stabilization of a turret mounted on a moving platform,
+  using physical plant modeling, loop shaping, Time Delay Estimation, Kalman-filter-based sensor fusion,
+  and real-hardware verification.
