@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>{% block title %}{{ personal.display_name | default(site.name) }} - Resume Portfolio{% endblock %}</title>
+  {% if inline_css is defined %}
+  <style>
+{{ inline_css | safe }}
+  </style>
+  {% else %}
+  <link rel="stylesheet" href="{{ css_path | default('style.css') }}"/>
+  {% endif %}
+</head>
+<body class="{% block body_class %}{% endblock %}">
+  <nav class="top-nav no-print">
+    <a class="nav-brand" href="{{ home_path | default('index.html') }}">{{ personal.display_name | default(site.name) }}</a>
+    <a href="{{ home_path | default('index.html') }}#resume">Resume</a>
+    <a href="{{ home_path | default('index.html') }}#experience">Experience</a>
+    <a href="{{ home_path | default('index.html') }}#toolchains">Toolchains</a>
+    <button class="print-btn" onclick="window.print()">Export PDF</button>
+  </nav>
+
+  {% block body %}{% endblock %}
+
+  {% if inline_js is defined %}
+  <script>
+{{ inline_js | safe }}
+  </script>
+  {% else %}
+  <script src="{{ js_path | default('site.js') }}"></script>
+  {% endif %}
+</body>
+</html>

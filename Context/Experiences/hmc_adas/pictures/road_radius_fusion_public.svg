@@ -1,0 +1,85 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
+  <title id="title">NDA-Safe RoadRadius Fusion Architecture</title>
+  <desc id="desc">Public-safe block diagram showing steering-intent radius, yaw-rate radius, EKF fusion, lane validity check, and final RoadRadius.</desc>
+  <defs>
+    <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
+      <path d="M0,0 L0,6 L9,3 z" fill="#334155" />
+    </marker>
+    <style>
+      .bg { fill: #ffffff; }
+      .box { fill: #f8fafc; stroke: #334155; stroke-width: 1.6; rx: 16; }
+      .box-accent { fill: #ecfeff; stroke: #0e7490; stroke-width: 1.8; rx: 16; }
+      .box-final { fill: #f0fdf4; stroke: #15803d; stroke-width: 1.8; rx: 16; }
+      .line { stroke: #334155; stroke-width: 2.2; fill: none; marker-end: url(#arrow); }
+      .muted-line { stroke: #64748b; stroke-width: 1.8; stroke-dasharray: 6 6; fill: none; marker-end: url(#arrow); }
+      .heading { font-family: Arial, sans-serif; font-size: 26px; font-weight: 700; fill: #0f172a; }
+      .label { font-family: Arial, sans-serif; font-size: 16px; font-weight: 700; fill: #0f172a; text-anchor: middle; dominant-baseline: middle; }
+      .small { font-family: Arial, sans-serif; font-size: 13px; fill: #475569; text-anchor: middle; dominant-baseline: middle; }
+      .note { font-family: Arial, sans-serif; font-size: 13px; fill: #64748b; }
+    </style>
+  </defs>
+  <rect class="bg" x="0" y="0" width="1200" height="640" />
+  <text class="heading" x="56" y="54">NDA-Safe RoadRadius Fusion Architecture</text>
+  <text class="note" x="56" y="82">Internal signal names, matrices, thresholds, calibration values, and Simulink structures are intentionally omitted.</text>
+
+  <!-- Steering path -->
+  <rect class="box" x="70" y="125" width="210" height="76" rx="16" />
+  <text class="label" x="175" y="154">Steering Input</text>
+  <text class="small" x="175" y="178">early driver intention</text>
+
+  <rect class="box" x="370" y="125" width="240" height="76" rx="16" />
+  <text class="label" x="490" y="154">Tire-Angle</text>
+  <text class="small" x="490" y="178">conversion model</text>
+
+  <rect class="box" x="700" y="125" width="255" height="76" rx="16" />
+  <text class="label" x="827.5" y="154">Steering-Based</text>
+  <text class="small" x="827.5" y="178">RoadRadius estimation</text>
+
+  <!-- Yaw path -->
+  <rect class="box" x="70" y="285" width="210" height="76" rx="16" />
+  <text class="label" x="175" y="314">Vehicle Speed</text>
+  <text class="small" x="175" y="338">and yaw rate</text>
+
+  <rect class="box" x="370" y="285" width="240" height="76" rx="16" />
+  <text class="label" x="490" y="314">Yaw-Rate-Based</text>
+  <text class="small" x="490" y="338">RoadRadius estimation</text>
+
+  <!-- Lane path -->
+  <rect class="box" x="70" y="465" width="210" height="76" rx="16" />
+  <text class="label" x="175" y="494">Lane / Camera</text>
+  <text class="small" x="175" y="518">optional radius source</text>
+
+  <rect class="box" x="370" y="465" width="240" height="76" rx="16" />
+  <text class="label" x="490" y="494">Lane Validity</text>
+  <text class="small" x="490" y="518">condition check</text>
+
+  <!-- Fusion -->
+  <rect class="box-accent" x="730" y="285" width="210" height="92" rx="16" />
+  <text class="label" x="835" y="319">EKF-Based</text>
+  <text class="label" x="835" y="344">Fusion</text>
+
+  <rect class="box-accent" x="730" y="455" width="210" height="92" rx="16" />
+  <text class="label" x="835" y="489">Conditional</text>
+  <text class="label" x="835" y="514">Lane Blending</text>
+
+  <rect class="box-final" x="1010" y="365" width="145" height="92" rx="16" />
+  <text class="label" x="1082.5" y="397">Final</text>
+  <text class="label" x="1082.5" y="422">RoadRadius</text>
+
+  <!-- Arrows -->
+  <path class="line" d="M280 163 L370 163" />
+  <path class="line" d="M610 163 L700 163" />
+  <path class="line" d="M828 201 L828 282" />
+
+  <path class="line" d="M280 323 L370 323" />
+  <path class="line" d="M610 323 L728 323" />
+
+  <path class="line" d="M280 503 L370 503" />
+  <path class="muted-line" d="M610 503 L728 503" />
+
+  <path class="line" d="M940 331 L985 331 C1000 331 1000 411 1010 411" />
+  <path class="muted-line" d="M940 501 L985 501 C1000 501 1000 411 1010 411" />
+
+  <!-- Group notes -->
+  <text class="note" x="70" y="603">Output is used for ego-path prediction and target object selection. Public diagram abstracts the production implementation.</text>
+</svg>

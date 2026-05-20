@@ -1,0 +1,28 @@
+name: "Jae Woong Hwang"
+title: "Hardware-Aware Software Engineer | Vehicle Controls & AI Toolchains"
+
+headline: "Hardware-aware software engineer building vehicle control systems and AI-ready validation toolchains."
+one_liner: >
+  I connect real vehicle hardware, embedded control software, model-based development,
+  and Python/C++ automation to remove R&D bottlenecks.
+
+keywords:
+  - "Hardware-Software Integration"
+  - "Vehicle Dynamics"
+  - "Embedded Control"
+  - "Model-Based Development"
+  - "ADAS Lvl2"
+  - "MILS/HILS"
+  - "XCP / CAN-FD"
+  - "Python / C++"
+  - "MATLAB / Simulink"
+  - "EKF"
+  - "ONNX"
+  - "MF4"
+  - "A2L / ELF"
+
+main_focus:
+  - "Hardware-aware software engineer who understands physical vehicle constraints, not only office-side code."
+  - "Builder of internal tools that remove repetitive development, validation, and calibration bottlenecks."
+  - "Systems architect who uses Claude/Codex effectively because the target architecture and constraints are clear."
+  - "Fast learner who converts new technologies into practical engineering workflows."

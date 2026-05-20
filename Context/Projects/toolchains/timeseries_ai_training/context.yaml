@@ -1,0 +1,21 @@
+title: "E2E GUI Time-Series AI Model Training Platform"
+pill: "Python / MF4 / AI Training Platform"
+summary: >
+  Customizable time-series AI training platform for ADAS engineers using vehicle MF4 logs.
+
+sections:
+  - title: "Objective"
+    body: >
+      Engineers needed a reusable way to load CANape MF4 files, preprocess time-series signals,
+      normalize data, train customizable AI models, and export deployment-ready artifacts.
+  - title: "Architecture"
+    bullets:
+      - "MF4 loading and free preprocessing pipeline."
+      - "Automatic time-series normalization layer."
+      - "Model-agnostic training interface so each ADAS module owner can test their own model."
+      - ".pt to .onnx conversion for runtime use."
+      - "Optional MATLAB-compatible export for simulation workflow."
+  - title: "Team Impact"
+    body: >
+      Accelerates migration from traditional rule-based ADAS modules toward AI-assisted and E2E-ready workflows
+      by giving engineers a shared training pipeline instead of isolated scripts.

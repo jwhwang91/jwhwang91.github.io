@@ -1,0 +1,544 @@
+{% extends "base.html.j2" %}
+{% set home_path = '../../index.html' %}
+{% set css_path = '../../style.css' %}
+{% set js_path = '../../site.js' %}
+{% block title %}{{ detail.title }}{% endblock %}
+{% block body_class %}detail-page{% endblock %}
+
+{% block body %}
+<style>
+  .detail-local-style .hero-media,
+  .detail-local-style .architecture-panel,
+  .detail-local-style .program-card,
+  .detail-local-style .case-study-card,
+  .detail-local-style .reference-panel {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 22px;
+    background: rgba(255, 255, 255, 0.78);
+    box-shadow: 0 18px 50px rgba(15, 23, 42, 0.08);
+    overflow: hidden;
+  }
+  .detail-local-style .hero-media img,
+  .detail-local-style .architecture-panel img {
+    width: 100%;
+    display: block;
+    object-fit: cover;
+  }
+  .detail-local-style .hero-media img { max-height: 460px; }
+  .detail-local-style .media-caption,
+  .detail-local-style figcaption {
+    padding: 0.85rem 1rem 1rem;
+    color: #64748b;
+    font-size: 0.92rem;
+    line-height: 1.5;
+  }
+  .detail-local-style .highlight-strip {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+    gap: 0.9rem;
+    margin: 1.25rem 0 2rem;
+  }
+  .detail-local-style .highlight-card {
+    border: 1px solid rgba(148, 163, 184, 0.35);
+    border-radius: 18px;
+    padding: 1rem;
+    background: rgba(248, 250, 252, 0.9);
+  }
+  .detail-local-style .highlight-card span {
+    display: block;
+    color: #64748b;
+    font-size: 0.78rem;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    margin-bottom: 0.35rem;
+  }
+  .detail-local-style .highlight-card strong { color: #0f172a; }
+  .detail-local-style .section-title-row { margin: 2.6rem 0 1.1rem; }
+  .detail-local-style .section-title-row h2 { margin-bottom: 0.35rem; }
+  .detail-local-style .section-note { color: #64748b; line-height: 1.6; }
+
+  /* Independent Technical Ownership: wide horizontal cards, not narrow vertical tiles. */
+  .detail-local-style .case-study-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1.35rem;
+  }
+  .detail-local-style .case-study-card {
+    padding: 1.75rem 1.9rem;
+  }
+  .detail-local-style .case-study-card h3,
+  .detail-local-style .program-card h3 { margin-top: 0; }
+  .detail-local-style .case-study-card p { line-height: 1.65; }
+  .detail-local-style .case-study-body {
+    display: grid;
+    grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.45fr) minmax(0, 0.9fr);
+    gap: 1.35rem;
+    align-items: start;
+  }
+  .detail-local-style .case-column {
+    min-width: 0;
+    border-left: 1px solid rgba(203, 213, 225, 0.8);
+    padding-left: 1rem;
+  }
+  .detail-local-style .case-column:first-child {
+    border-left: 0;
+    padding-left: 0;
+  }
+  .detail-local-style .case-label {
+    display: block;
+    margin: 0 0 0.35rem;
+    font-weight: 800;
+    color: #0f172a;
+    letter-spacing: 0.02em;
+  }
+  .detail-local-style .detail-card ul,
+  .detail-local-style .case-study-card ul,
+  .detail-local-style .architecture-panel ul,
+  .detail-local-style .program-card ul,
+  .detail-local-style .reference-panel ul {
+    padding-left: 1.55rem;
+    margin-left: 0.25rem;
+    margin-top: 0.65rem;
+  }
+  .detail-local-style .detail-card li,
+  .detail-local-style .case-study-card li,
+  .detail-local-style .architecture-panel li,
+  .detail-local-style .program-card li,
+  .detail-local-style .reference-panel li {
+    margin-bottom: 0.45rem;
+    line-height: 1.55;
+  }
+
+  /* Architecture belongs under the matching independent work card. */
+  .detail-local-style .inline-architecture {
+    margin-top: 1.35rem;
+    padding-top: 1.2rem;
+    border-top: 1px solid rgba(203, 213, 225, 0.9);
+  }
+  .detail-local-style .inline-architecture h4 {
+    margin: 0 0 0.55rem;
+    font-size: 1.05rem;
+    color: #0f172a;
+  }
+  .detail-local-style .inline-architecture-grid {
+    display: grid;
+    grid-template-columns: minmax(360px, 1.15fr) minmax(280px, 0.85fr);
+    gap: 1rem;
+    align-items: start;
+  }
+  .detail-local-style .inline-architecture-figure {
+    margin: 0;
+  }
+  .detail-local-style .inline-architecture-figure img {
+    width: 100%;
+    display: block;
+    background: white;
+    border-radius: 16px;
+    object-fit: contain;
+    max-height: 520px;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+  }
+  .detail-local-style .inline-architecture-text p {
+    color: #475569;
+    line-height: 1.6;
+  }
+
+  .detail-local-style .case-architecture-grid {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 1rem;
+  }
+  .detail-local-style .architecture-panel { padding: 1.1rem; }
+  .detail-local-style .architecture-panel img {
+    background: white;
+    border-radius: 16px;
+    object-fit: contain;
+    max-height: 520px;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+  }
+  .detail-local-style .architecture-panel h3 { margin: 0 0 0.55rem; }
+  .detail-local-style .architecture-panel p { line-height: 1.6; }
+
+  /* Production vehicles: wide horizontal reference cards with text on the left and clickable media on the right. */
+  .detail-local-style .program-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 1.1rem;
+  }
+  .detail-local-style .program-card {
+    display: grid;
+    grid-template-columns: minmax(320px, 0.9fr) minmax(420px, 1.1fr);
+    min-height: 300px;
+  }
+  .detail-local-style .program-card-body {
+    padding: 1.35rem 1.45rem 1.45rem;
+    order: 1;
+  }
+  .detail-local-style .program-media {
+    order: 2;
+    display: flex;
+    flex-direction: column;
+    gap: 0.75rem;
+    padding: 0.95rem;
+    background: rgba(248, 250, 252, 0.85);
+  }
+  .detail-local-style .program-media a { display: block; }
+  .detail-local-style .program-media img {
+    width: 100%;
+    height: 245px;
+    display: block;
+    object-fit: cover;
+    border-radius: 16px;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+  }
+  .detail-local-style .program-video {
+    position: relative;
+    width: 100%;
+    aspect-ratio: 16 / 9;
+    border-radius: 16px;
+    overflow: hidden;
+    border: 1px solid rgba(203, 213, 225, 0.9);
+    background: #0f172a;
+  }
+  .detail-local-style .program-video iframe {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    border: 0;
+  }
+  .detail-local-style .program-card p { color: #475569; line-height: 1.55; }
+  .detail-local-style .program-meta {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.35rem;
+    border: 1px solid rgba(14, 116, 144, 0.22);
+    border-radius: 999px;
+    background: rgba(236, 254, 255, 0.75);
+    color: #0e7490;
+    font-size: 0.82rem;
+    font-weight: 700;
+    padding: 0.35rem 0.65rem;
+    margin: 0.35rem 0 0.75rem;
+  }
+  .detail-local-style .support-block-grid {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 1rem;
+    margin-top: 2.2rem;
+  }
+  .detail-local-style .support-block-grid .detail-card { padding: 1.2rem 1.35rem; }
+  .detail-local-style .reference-panel { padding: 1.2rem; }
+  .detail-local-style .reference-panel p {
+    margin: 0;
+    color: #475569;
+    line-height: 1.65;
+  }
+  @media (max-width: 1180px) {
+    /* Keep Problem / My contribution / Outcome horizontal on normal desktop/tablet widths. */
+    .detail-local-style .case-study-body {
+      grid-template-columns: minmax(0, 0.85fr) minmax(0, 1.5fr) minmax(0, 0.85fr);
+      gap: 1rem;
+    }
+    .detail-local-style .case-column {
+      border-left: 1px solid rgba(203, 213, 225, 0.8);
+      padding-left: 0.9rem;
+    }
+    .detail-local-style .case-column:first-child {
+      border-left: 0;
+      padding-left: 0;
+    }
+    .detail-local-style .support-block-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+    .detail-local-style .program-card { grid-template-columns: 1fr; }
+    .detail-local-style .program-media { order: 1; }
+    .detail-local-style .program-card-body { order: 2; }
+    .detail-local-style .program-media img { height: 260px; }
+  }
+  @media (max-width: 860px) {
+    .detail-local-style .inline-architecture-grid,
+    .detail-local-style .case-architecture-grid,
+    .detail-local-style .support-block-grid { grid-template-columns: 1fr; }
+  }
+  @media (max-width: 760px) {
+    .detail-local-style .case-study-card { padding: 1.25rem; }
+    .detail-local-style .case-study-body { grid-template-columns: 1fr; }
+    .detail-local-style .case-column {
+      border-left: 0;
+      border-top: 1px solid rgba(203, 213, 225, 0.8);
+      padding-left: 0;
+      padding-top: 1rem;
+    }
+    .detail-local-style .case-column:first-child {
+      border-top: 0;
+      padding-top: 0;
+    }
+    .detail-local-style .program-media img { height: 210px; }
+  }
+  @media print {
+    .detail-local-style .hero-media,
+    .detail-local-style .architecture-panel,
+    .detail-local-style .program-card,
+    .detail-local-style .case-study-card { box-shadow: none; break-inside: avoid; }
+    .detail-local-style .case-study-body { grid-template-columns: 1fr; }
+    .detail-local-style .inline-architecture-grid { grid-template-columns: 1fr; }
+  }
+</style>
+
+<main class="detail-shell detail-local-style">
+  <header class="detail-hero">
+    <p class="eyebrow">{{ detail.pill }}</p>
+    <h1>{{ detail.title }}</h1>
+    <p>{{ detail.summary }}</p>
+    <a href="../../index.html" class="detail-link no-print">Back to resume</a>
+  </header>
+
+  {% if detail.hero_image %}
+  <figure class="hero-media">
+    <img src="assets/{{ detail.hero_image.file }}" alt="{{ detail.hero_image.caption }}"/>
+    {% if detail.hero_image.caption %}<figcaption>{{ detail.hero_image.caption }}</figcaption>{% endif %}
+  </figure>
+  {% endif %}
+
+  {% if detail.highlights %}
+  <section class="highlight-strip" aria-label="Experience highlights">
+    {% for item in detail.highlights %}
+    <article class="highlight-card">
+      <span>{{ item.label }}</span>
+      <strong>{{ item.value }}</strong>
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if detail.sections %}
+  <section class="detail-grid">
+    {% for section in detail.sections %}
+    <article class="detail-card">
+      <h2>{{ section.title }}</h2>
+      {% if section.body %}<p>{{ section.body }}</p>{% endif %}
+      {% if section.bullets %}
+      <ul>
+        {% for bullet in section.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if detail.case_studies %}
+  <section>
+    <div class="section-title-row">
+      <h2>Independent Technical Ownership</h2>
+      <p class="section-note">Wide horizontal case-study cards, separated from team-level SCC/FOC production contribution.</p>
+    </div>
+    <div class="case-study-list">
+      {% for item in detail.case_studies %}
+      <article class="case-study-card">
+        <h3>{{ item.title }}</h3>
+        <div class="case-study-body">
+          {% if item.problem %}
+          <div class="case-column">
+            <span class="case-label">Problem</span>
+            <p>{{ item.problem }}</p>
+          </div>
+          {% endif %}
+          {% if item.contribution %}
+          <div class="case-column">
+            <span class="case-label">My contribution</span>
+            <ul>
+              {% for bullet in item.contribution %}
+              <li>{{ bullet }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+          {% endif %}
+          {% if item.outcome %}
+          <div class="case-column">
+            <span class="case-label">Outcome</span>
+            <p>{{ item.outcome }}</p>
+          </div>
+          {% endif %}
+        </div>
+
+        {% if item.architecture %}
+        <div class="inline-architecture">
+          <h4>{{ item.architecture.title }}</h4>
+          <div class="inline-architecture-grid">
+            {% if item.architecture.image %}
+            <figure class="inline-architecture-figure">
+              <img src="assets/{{ item.architecture.image }}" alt="{{ item.architecture.caption | default(item.architecture.title) }}"/>
+              {% if item.architecture.caption %}<figcaption>{{ item.architecture.caption }}</figcaption>{% endif %}
+            </figure>
+            {% endif %}
+            <div class="inline-architecture-text">
+              {% if item.architecture.body %}<p>{{ item.architecture.body }}</p>{% endif %}
+              {% if item.architecture.bullets %}
+              <ul>
+                {% for bullet in item.architecture.bullets %}
+                <li>{{ bullet }}</li>
+                {% endfor %}
+              </ul>
+              {% endif %}
+            </div>
+          </div>
+        </div>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+
+    {% if detail.case_architectures %}
+    <div class="case-architecture-grid">
+      {% for item in detail.case_architectures %}
+      <article class="architecture-panel">
+        <h3>{{ item.title }}</h3>
+        {% if item.body %}<p>{{ item.body }}</p>{% endif %}
+        {% if item.image %}
+        <img src="assets/{{ item.image }}" alt="{{ item.caption | default(item.title) }}"/>
+        {% endif %}
+        {% if item.caption %}<p class="media-caption">{{ item.caption }}</p>{% endif %}
+        {% if item.bullets %}
+        <ul>
+          {% for bullet in item.bullets %}
+          <li>{{ bullet }}</li>
+          {% endfor %}
+        </ul>
+        {% endif %}
+      </article>
+      {% endfor %}
+    </div>
+    {% endif %}
+  </section>
+  {% endif %}
+
+  {% if detail.architecture %}
+  <section>
+    <div class="section-title-row">
+      <h2>{{ detail.architecture.title }}</h2>
+      {% if detail.architecture.body %}<p class="section-note">{{ detail.architecture.body }}</p>{% endif %}
+    </div>
+    <article class="architecture-panel">
+      {% if detail.architecture.image %}
+      <img src="assets/{{ detail.architecture.image }}" alt="{{ detail.architecture.caption | default(detail.architecture.title) }}"/>
+      {% endif %}
+      {% if detail.architecture.caption %}<p class="media-caption">{{ detail.architecture.caption }}</p>{% endif %}
+      {% if detail.architecture.bullets %}
+      <ul>
+        {% for bullet in detail.architecture.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+  </section>
+  {% endif %}
+
+  {% if detail.vehicle_programs %}
+  <section>
+    <div class="section-title-row">
+      <h2>Production Vehicle References</h2>
+      <p class="section-note">Mass-production vehicle programs where the commercial-vehicle ADAS logic was applied. Different powertrain, transmission, and brake-control configurations made behavior consistency and calibration substantially harder.</p>
+    </div>
+    <div class="program-grid">
+      {% for program in detail.vehicle_programs %}
+      <article class="program-card">
+        <div class="program-card-body">
+          <h3>{{ program.name }}</h3>
+          <p><strong>{{ program.platform }}</strong></p>
+          {% if program.control_config %}<div class="program-meta">{{ program.control_config }}</div>{% endif %}
+          {% if program.role %}<p>{{ program.role }}</p>{% endif %}
+        </div>
+        <div class="program-media">
+          {% if program.image %}
+            {% if program.url %}<a href="{{ program.url }}" target="_blank" rel="noopener noreferrer" aria-label="Open public reference for {{ program.name }}">{% endif %}
+              <img src="assets/{{ program.image }}" alt="{{ program.name }} - {{ program.platform }}"/>
+            {% if program.url %}</a>{% endif %}
+          {% endif %}
+          {% if program.video_embed %}
+          <div class="program-video">
+            <iframe src="{{ program.video_embed }}" title="{{ program.video_title | default(program.name) }}" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" allowfullscreen loading="lazy"></iframe>
+          </div>
+          {% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if detail.validation_workflow or detail.toolchain_context or detail.patents %}
+  <section class="support-block-grid">
+    {% for block in [detail.validation_workflow, detail.toolchain_context, detail.patents] %}
+    {% if block %}
+    <article class="detail-card">
+      <h2>{{ block.title }}</h2>
+      {% if block.body %}<p>{{ block.body }}</p>{% endif %}
+      {% if block.bullets %}
+      <ul>
+        {% for bullet in block.bullets %}
+        <li>{{ bullet }}</li>
+        {% endfor %}
+      </ul>
+      {% endif %}
+    </article>
+    {% endif %}
+    {% endfor %}
+  </section>
+  {% endif %}
+
+  {% if detail.public_reference_note %}
+  <section>
+    <div class="section-title-row">
+      <h2>Public References</h2>
+    </div>
+    <article class="reference-panel">
+      <p>{{ detail.public_reference_note }}</p>
+    </article>
+  </section>
+  {% elif detail.reference_links %}
+  <section>
+    <div class="section-title-row">
+      <h2>Public References</h2>
+    </div>
+    <article class="reference-panel">
+      <ul>
+        {% for ref in detail.reference_links %}
+        <li><a href="{{ ref.url }}" target="_blank" rel="noopener noreferrer">{{ ref.label }}</a></li>
+        {% endfor %}
+      </ul>
+    </article>
+  </section>
+  {% endif %}
+
+  {% if detail.images %}
+  <section class="image-evidence">
+    <h2>Visual Evidence / Architecture Images</h2>
+    <p class="section-note">Images are stored under this project's <code>pictures/</code> folder and copied into the generated detail page.</p>
+
+    {% for image in detail.images %}
+    {% if loop.first %}
+    <figure class="wide-figure">
+      <img src="assets/{{ image.file }}" alt="{{ image.caption }}"/>
+      <figcaption>{{ image.caption }}</figcaption>
+    </figure>
+    {% endif %}
+    {% endfor %}
+
+    <div class="figure-grid">
+      {% for image in detail.images %}
+      {% if not loop.first %}
+      <figure>
+        <img src="assets/{{ image.file }}" alt="{{ image.caption }}"/>
+        <figcaption>{{ image.caption }}</figcaption>
+      </figure>
+      {% endif %}
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+</main>
+{% endblock %}

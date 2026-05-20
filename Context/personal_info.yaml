@@ -1,0 +1,28 @@
+# Personal/private contact information.
+# Edit this file when you want to update email, phone, LinkedIn, GitHub, or website links.
+# This file is intentionally separated from site.yaml so the public narrative and personal contact data are not mixed.
+
+name: "Jae Woong Hwang"
+display_name: "Jae Woong Hwang"
+location: "South Korea"
+
+email: "jwhwang91@gmail.com"
+phone: "+82-10-5775-1863"
+
+linkedin:
+  label: "LinkedIn"
+  url: "https://linkedin.com/in/yourname"
+
+github:
+  label: "GitHub"
+  url: "https://github.com/yourname"
+
+portfolio:
+  label: "Full Technical Portfolio"
+  url: "https://your-domain.com/full-portfolio"
+
+optional_links:
+  - label: "Google Scholar"
+    url: ""
+  - label: "Patent / Publication Archive"
+    url: ""

@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>Jae Woong Hwang - Resume Portfolio</title>
+  <link rel="stylesheet" href="style.css"/>
+</head>
+<body class="resume-page">
+  <nav class="top-nav no-print">
+    <a class="nav-brand" href="index.html">Jae Woong Hwang</a>
+    <a href="index.html#resume">Resume</a>
+    <a href="index.html#experience">Experience</a>
+    <a href="index.html#toolchains">Toolchains</a>
+    <button class="print-btn" onclick="window.print()">Export PDF</button>
+  </nav>
+
+<main class="resume-sheet">
+  <header class="resume-header" id="resume">
+    <div>
+      <p class="eyebrow">Resume / Portfolio Main Page</p>
+      <h1>Jae Woong Hwang</h1>
+      <h2>Hardware-Aware Software Engineer | Vehicle Controls & AI Toolchains</h2>
+      <p class="headline">Hardware-aware software engineer building vehicle control systems and AI-ready validation toolchains.</p>
+      <p class="one-liner">I connect real vehicle hardware, embedded control software, model-based development, and Python/C++ automation to remove R&D bottlenecks.
+</p>
+    </div>
+    <div class="contact-box">
+      <div>South Korea</div>
+      <div>jwhwang91@gmail.com</div>
+      <div>+82-10-5775-1863</div>
+      <div><a href="https://linkedin.com/in/yourname" target="_blank">LinkedIn</a></div>
+      <div><a href="https://github.com/yourname" target="_blank">GitHub</a></div>
+    </div>
+  </header>
+
+  <section class="keyword-strip">
+    <span>Hardware-Software Integration</span>
+    <span>Vehicle Dynamics</span>
+    <span>Embedded Control</span>
+    <span>Model-Based Development</span>
+    <span>ADAS Lvl2</span>
+    <span>MILS/HILS</span>
+    <span>XCP / CAN-FD</span>
+    <span>Python / C++</span>
+    <span>MATLAB / Simulink</span>
+    <span>EKF</span>
+    <span>ONNX</span>
+    <span>MF4</span>
+    <span>A2L / ELF</span>
+  </section>
+
+  <section class="notion-block">
+    <h3>Core Positioning</h3>
+    <ul class="tight-list">
+      <li>Hardware-aware software engineer who understands physical vehicle constraints, not only office-side code.</li>
+      <li>Builder of internal tools that remove repetitive development, validation, and calibration bottlenecks.</li>
+      <li>Systems architect who uses Claude/Codex effectively because the target architecture and constraints are clear.</li>
+      <li>Fast learner who converts new technologies into practical engineering workflows.</li>
+    </ul>
+  </section>
+
+  <section class="two-col">
+    <div class="notion-block">
+      <h3>Education</h3>
+      <div class="mini-entry">
+        <strong>University of California Los Angeles (UCLA)</strong>
+        <span>B.S. Mechanical Engineering | 2010.09 - 2014.06</span>
+      </div>
+      <div class="mini-entry">
+        <strong>Korea Advanced Institute of Science and Technology (KAIST)</strong>
+        <span>M.S. Robotics | 2015.03 - 2017.08</span>
+        <em>Thesis: Controller Design for Motion Stabilization of a Turret on a Moving Platform</em>
+      </div>
+    </div>
+
+    <div class="notion-block">
+      <h3>Skill Stack</h3>
+      <p><strong>Control:</strong> Vehicle dynamics · Transmission control · SCC/LFA ADAS logic · Sensor fusion · EKF · Time Delay Estimation</p>
+      <p><strong>Validation:</strong> MILS · HILS · Dynamometer · Vehicle test · Calibration · Mass-production sign-off</p>
+      <p><strong>Software:</strong> Python · C/C++ · MATLAB/Simulink · XCP/CAN-FD · ONNX · A2L/ELF · MF4</p>
+    </div>
+  </section>
+
+  <section class="notion-block" id="experience">
+    <h3>Experience</h3>
+    <div class="experience-list">
+      <article class="experience-card">
+        <div class="entry-top">
+          <div>
+            <strong>Researcher - KAIST Master's Research</strong>
+            <span>Korea Advanced Institute of Science and Technology (KAIST) | 2015.03 - 2017.08</span>
+          </div>
+          <a href="experience/kaist-masters/index.html" class="detail-link no-print">Detail</a>
+        </div>
+        <p class="hook">Embedded motion-control foundation: designed a controller for real turret hardware under moving-platform disturbance.</p>
+        <ul>
+          <li>Designed controller for motion stabilization of a turret on a moving platform.</li>
+          <li>Worked across dynamics, control logic, sensor noise, and real hardware validation.</li>
+          <li>Built the control foundation later reused in vehicle dynamics and sensor-fusion work.</li>
+        </ul>
+        <p class="print-url print-only">Detail: experience/kaist-masters/index.html</p>
+      </article>
+      <article class="experience-card">
+        <div class="entry-top">
+          <div>
+            <strong>Researcher - TCU Application Software</strong>
+            <span>Agency for Defense Development (ADD), Ground Technology Research Institute | 2017.09 - 2021.03</span>
+          </div>
+          <a href="experience/add-k2-tcu/index.html" class="detail-link no-print">Detail</a>
+        </div>
+        <p class="hook">Full V-cycle TCU productization: developed K2 55-ton tracked-vehicle TCU software from MILS/HILS to dynamometer and field validation.</p>
+        <ul>
+          <li>Developed TCU application software for K2 tracked vehicle transmission control.</li>
+          <li>Experienced full V-cycle workflow: MILS, HILS, powerpack dynamometer, and actual vehicle field testing.</li>
+          <li>Worked on control algorithms, plant modeling, calibration, parameter correction, and reliability-test support.</li>
+        </ul>
+        <p class="print-url print-only">Detail: experience/add-k2-tcu/index.html</p>
+      </article>
+      <article class="experience-card">
+        <div class="entry-top">
+          <div>
+            <strong>Research Engineer - Commercial Vehicle SCC / Lvl2 ADAS</strong>
+            <span>Hyundai Motor Company (HMC) | 2021.03 - Present</span>
+          </div>
+          <a href="experience/hmc-adas/index.html" class="detail-link no-print">Detail</a>
+        </div>
+        <p class="hook">Production commercial-vehicle ADAS engineer with SCC part experience and independent ownership of Emergency Stop, EKF RoadRadius fusion, FOC brake-distribution logic, and target-selection robustness.</p>
+        <ul>
+          <li>Worked in the SCC part of HMC's commercial-vehicle SCC/LFA development organization, contributing to mass-production SCC/FOC tuning, regulation-driven state-transition updates, validation, and production issue response.</li>
+          <li>Contributed to mass-production programs across QZ FCEV Europe, QZ FCEV North America, QZ 25PE ICE tractor, and PY ICE/FCEV bus platforms with different AT/AMT and EBS/ABS configurations.</li>
+          <li>Independently developed SCC2 Emergency Stop behavior, including activation, state-transition handling, controlled deceleration, and safe-stop flow.</li>
+          <li>Developed EKF-based RoadRadius fusion combining steering-intent-based radius estimation, yaw-rate-based radius estimation, and conditional lane/camera blending.</li>
+          <li>Developed rule-based FOC brake distribution logic balancing auxiliary brake and foundation brake usage under heavy-duty deceleration scenarios.</li>
+          <li>Built target object selection robustness logic to reduce adjacent-lane false target risk in difficult commercial-vehicle road scenarios.</li>
+        </ul>
+        <p class="print-url print-only">Detail: experience/hmc-adas/index.html</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="narrative-block" id="narrative">
+    <h3>Engineering Narrative</h3>
+    <p>My career is a hardware-to-software arc: from real motion-control hardware, to full V-cycle vehicle TCU software, to commercial-vehicle ADAS and AI-ready validation platforms.</p>
+    <ul>
+      <li>Physical constraints -> control logic: I turn hardware limitations, sensing delays, and vehicle dynamics into algorithms and validation evidence.</li>
+      <li>R&D bottlenecks -> toolchains: I build internal Python/C++/MATLAB platforms when repeated manual work slows the team.</li>
+      <li>System architecture first: I use AI coding assistants effectively because I define the full data path, interfaces, timing constraints, and validation goal before coding.</li>
+      <li>NDA-safe technical storytelling: I explain protected work through problem definition, architecture, math/logic abstraction, and measurable outcome.</li>
+    </ul>
+  </section>
+
+  <section class="notion-block" id="toolchains">
+    <h3>Selected Toolchain Projects</h3>
+    <p class="section-note">Main-root vehicle projects are covered in Experience. This section highlights independently built toolchains that removed team bottlenecks.</p>
+    <div class="toolchain-list">
+      <article class="toolchain-card">
+        <div class="entry-top">
+          <div>
+            <strong>E2E GUI XCP Bypassing App</strong>
+            <span>Python / C++ / XCP / CAN-FD / ONNX</span>
+          </div>
+          <div class="entry-actions no-print">
+            <a href="toolchains/e2e-xcp-bypass/index.html" class="detail-link">Detail</a>
+            <a href="_toolchain_ui_mock/01_xcp_ai_validation_ui/index.html" class="detail-link mock-link">MOCK</a>
+          </div>
+        </div>
+        <p class="hook">Laptop-only real-vehicle AI bypass testing on mass-production ADAS ECU.</p>
+        <div class="objective-impact">
+          <p><b>Objective:</b> Commercial-vehicle ADAS needed an E2E transition path without relying on scarce passenger-car AI hardware such as Orin/Thor setups. I designed a platform where engineers can connect a laptop through Vector/Kvaser XCP to a mass-production ADAS ECU and test learned models on real vehicles.
+</p>
+          <p><b>Impact:</b> Reduces dependency on special devices and CANape workflows, enables AI model testing across many vehicle variants with only a laptop and ECU connection, and prepares the team to move from rule-based logic toward E2E AI validation.
+</p>
+        </div>
+        <div class="tag-row">
+          <span>Python</span>
+          <span>C++</span>
+          <span>XCP</span>
+          <span>CAN-FD</span>
+          <span>ONNX</span>
+          <span>A2L/ELF</span>
+        </div>
+        <p class="print-url print-only">Detail: toolchains/e2e-xcp-bypass/index.html</p>
+        <p class="print-url print-only">Mock: _toolchain_ui_mock/01_xcp_ai_validation_ui/index.html</p>
+      </article>
+      <article class="toolchain-card">
+        <div class="entry-top">
+          <div>
+            <strong>E2E GUI Time-Series AI Model Training Platform</strong>
+            <span>Python / MF4 / PyTorch / ONNX / MATLAB Export</span>
+          </div>
+          <div class="entry-actions no-print">
+            <a href="toolchains/timeseries-ai-training/index.html" class="detail-link">Detail</a>
+            <a href="_toolchain_ui_mock/02_timeseries_training_ui/index.html" class="detail-link mock-link">MOCK</a>
+          </div>
+        </div>
+        <p class="hook">All-in-one MF4 time-series preprocessing, training, normalization, and deployment conversion platform.</p>
+        <div class="objective-impact">
+          <p><b>Objective:</b> The team works mostly with CANape MF4 time-series data. I built a customizable platform that lets engineers load, preprocess, normalize, train, and export models without rewriting the same data pipeline for each ADAS module.
+</p>
+          <p><b>Impact:</b> Gives each module owner a reusable path to test AI-based replacements for rule-based logic, then export .pt to ONNX or MATLAB-compatible formats for simulation and real-vehicle bypass testing.
+</p>
+        </div>
+        <div class="tag-row">
+          <span>Python</span>
+          <span>MF4</span>
+          <span>PyTorch</span>
+          <span>ONNX</span>
+          <span>Time-Series</span>
+        </div>
+        <p class="print-url print-only">Detail: toolchains/timeseries-ai-training/index.html</p>
+        <p class="print-url print-only">Mock: _toolchain_ui_mock/02_timeseries_training_ui/index.html</p>
+      </article>
+      <article class="toolchain-card">
+        <div class="entry-top">
+          <div>
+            <strong>TOS/ODP MATLAB Simulink Bird-Eye-View Simulator</strong>
+            <span>MATLAB Script / Simulink / ADAS Visualization</span>
+          </div>
+          <div class="entry-actions no-print">
+            <a href="toolchains/tos-odp-bev-simulator/index.html" class="detail-link">Detail</a>
+            <a href="_toolchain_ui_mock/03_tos_odp_bev_simulator_ui/index.html" class="detail-link mock-link">MOCK</a>
+          </div>
+        </div>
+        <p class="hook">Repeatable simulator for rare bus-only-lane misdetection scenarios that were hard to reproduce with real vehicles.</p>
+        <div class="objective-impact">
+          <p><b>Objective:</b> During PY bus development, repeated bus-only-lane misdetections required a way to visualize tracks, cut-in/cut-out thresholds, and ODP/TOS behavior without repeatedly deploying a massive bus into rare traffic conditions.
+</p>
+          <p><b>Impact:</b> Enabled repeated logic modification and parameter tuning in simulation before final vehicle confirmation, helping the team obtain test-team sign-off for mass-production bus behavior.
+</p>
+        </div>
+        <div class="tag-row">
+          <span>MATLAB</span>
+          <span>Simulink</span>
+          <span>ADAS</span>
+          <span>BEV</span>
+          <span>TOS/ODP</span>
+        </div>
+        <p class="print-url print-only">Detail: toolchains/tos-odp-bev-simulator/index.html</p>
+        <p class="print-url print-only">Mock: _toolchain_ui_mock/03_tos_odp_bev_simulator_ui/index.html</p>
+      </article>
+    </div>
+  </section>
+
+  <section class="footer-cta">
+    <strong>Full technical website:</strong>
+    <span><a href="https://your-domain.com/full-portfolio" target="_blank">https://your-domain.com/full-portfolio</a></span>
+    <p>Use this resume-style page for PDF export. Use detail pages for architecture diagrams, screenshots, evidence, and deeper engineering explanations.</p>
+  </section>
+</main>
+
+  <script src="site.js"></script>
+</body>
+</html>

@@ -1,0 +1,62 @@
+projects:
+- id: e2e-xcp-bypass
+  title: E2E GUI XCP Bypassing App
+  stack: Python / C++ / XCP / CAN-FD / ONNX
+  hook: Laptop-only real-vehicle AI bypass testing on mass-production ADAS ECU.
+  objective: 'Commercial-vehicle ADAS needed an E2E transition path without relying on scarce passenger-car AI hardware such as Orin/Thor setups. I designed a platform where engineers can connect a laptop through Vector/Kvaser XCP to a mass-production ADAS ECU and test learned models on real vehicles.
+
+    '
+  impact: 'Reduces dependency on special devices and CANape workflows, enables AI model testing across many vehicle variants with only a laptop and ECU connection, and prepares the team to move from rule-based logic toward E2E AI validation.
+
+    '
+  tags:
+  - Python
+  - C++
+  - XCP
+  - CAN-FD
+  - ONNX
+  - A2L/ELF
+  detail_output: toolchains/e2e-xcp-bypass/index.html
+  mock_output: _toolchain_ui_mock/01_xcp_ai_validation_ui/index.html
+  source_type: html
+  source: Context/Projects/toolchains/e2e_xcp_bypass/format/detail.html
+- id: timeseries-ai-training
+  title: E2E GUI Time-Series AI Model Training Platform
+  stack: Python / MF4 / PyTorch / ONNX / MATLAB Export
+  hook: All-in-one MF4 time-series preprocessing, training, normalization, and deployment conversion platform.
+  objective: 'The team works mostly with CANape MF4 time-series data. I built a customizable platform that lets engineers load, preprocess, normalize, train, and export models without rewriting the same data pipeline for each ADAS module.
+
+    '
+  impact: 'Gives each module owner a reusable path to test AI-based replacements for rule-based logic, then export .pt to ONNX or MATLAB-compatible formats for simulation and real-vehicle bypass testing.
+
+    '
+  tags:
+  - Python
+  - MF4
+  - PyTorch
+  - ONNX
+  - Time-Series
+  detail_output: toolchains/timeseries-ai-training/index.html
+  mock_output: _toolchain_ui_mock/02_timeseries_training_ui/index.html
+  source_type: html
+  source: Context/Projects/toolchains/timeseries_ai_training/format/detail.html
+- id: tos-odp-bev-simulator
+  title: TOS/ODP MATLAB Simulink Bird-Eye-View Simulator
+  stack: MATLAB Script / Simulink / ADAS Visualization
+  hook: Repeatable simulator for rare bus-only-lane misdetection scenarios that were hard to reproduce with real vehicles.
+  objective: 'During PY bus development, repeated bus-only-lane misdetections required a way to visualize tracks, cut-in/cut-out thresholds, and ODP/TOS behavior without repeatedly deploying a massive bus into rare traffic conditions.
+
+    '
+  impact: 'Enabled repeated logic modification and parameter tuning in simulation before final vehicle confirmation, helping the team obtain test-team sign-off for mass-production bus behavior.
+
+    '
+  tags:
+  - MATLAB
+  - Simulink
+  - ADAS
+  - BEV
+  - TOS/ODP
+  detail_output: toolchains/tos-odp-bev-simulator/index.html
+  mock_output: _toolchain_ui_mock/03_tos_odp_bev_simulator_ui/index.html
+  source_type: html
+  source: Context/Projects/toolchains/tos_odp_bev_simulator/format/detail.html

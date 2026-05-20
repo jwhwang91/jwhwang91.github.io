@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Time-Series AI Training Platform Mock</title>
+  <link rel="stylesheet" href="../assets/ui.css" />
+  <style>
+    body{background:#f5f5f5}
+    .orig-grid{display:grid;grid-template-columns:1fr 1fr;gap:18px;margin:18px 0}
+    .win{background:#fff;border:1px solid #d1d1d1;border-radius:6px;overflow:hidden;box-shadow:0 6px 18px rgba(0,0,0,.08)}
+    .titlebar{height:28px;display:flex;align-items:center;justify-content:space-between;padding:0 10px;background:#f4f4f4;border-bottom:1px solid #d8d8d8;font-size:12px;color:#222}
+    .dark-area{background:#1f2228;color:#e9edf3}
+    .main-tool{padding:0}
+    .main-toolbar{display:grid;grid-template-columns:340px 1fr;gap:12px;padding:14px;background:#1f2228;border-bottom:1px solid #323845}
+    .work-dir,.path-box{height:40px;border:1px solid #3b4250;border-radius:4px;background:#111318;color:#f2f4f7;display:flex;align-items:center;justify-content:center;font-size:12px}
+    .tool-btn-row{display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;padding:10px 14px;background:#1f2228;border-bottom:2px solid #d28d2d}
+    .tool-btn{height:32px;border:1px solid #3b4250;border-radius:4px;background:#22262e;color:#f0f4fa;font-size:12px;display:flex;align-items:center;justify-content:center}
+    .tool-body{min-height:320px;background:#fff;padding:18px;color:#4a4a4a;font-size:18px}
+    .loader-body{padding:0}
+    .loader-head{display:grid;grid-template-columns:280px 1fr;gap:8px;padding:10px;background:#1f2228;border-bottom:1px solid #313744}
+    .loader-columns{display:grid;grid-template-columns:1.1fr .35fr .9fr .8fr;gap:10px;padding:14px;background:#1f2228;color:#e9edf3}
+    .box-title{font-size:11px;color:#cfd5de;margin-bottom:6px}
+    .list-box,.select-box,.out-box,.mid-box{border:1px solid #3b4250;border-radius:4px;background:#14171d;min-height:250px;padding:8px;font-size:11px}
+    .list-item{padding:2px 0;color:#e5e9ef}
+    .mid-box{display:flex;flex-direction:column;justify-content:center;gap:12px;min-height:250px}
+    .mid-btn{border:1px solid #505869;background:#232933;border-radius:4px;color:#eaf0f7;padding:8px;font-size:11px;text-align:center}
+    .loader-footer{display:grid;grid-template-columns:1fr 180px 1fr 140px 180px;gap:8px;padding:10px 14px;background:#1f2228;border-top:1px solid #313744;color:#e8edf6;font-size:11px;align-items:center}
+    .tiny-input{height:26px;border:1px solid #3b4250;background:#14171d;color:#fff;border-radius:4px;padding:0 8px;font-size:11px}
+    .train-grid{display:grid;grid-template-columns:1fr 180px;min-height:420px;background:#1f2228;color:#eef2f7}
+    .train-left{padding:8px;border-right:1px solid #323845}
+    .train-topbar{display:flex;gap:8px;align-items:center;padding-bottom:8px}
+    .mini-btn{border:1px solid #41495a;background:#22262e;color:#edf1f7;padding:6px 9px;border-radius:4px;font-size:11px}
+    .two-pane{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+    .pane-box{border:1px solid #323845;background:#14171d;min-height:150px}
+    .pane-head{padding:6px 8px;border-bottom:1px solid #323845;font-size:11px;color:#cfd6e1}
+    .pane-content{padding:8px;font-size:11px;color:#f1f4f8}
+    .status-box{margin-top:8px;border:1px solid #323845;background:#14171d;min-height:140px;padding:8px;font-size:11px;white-space:pre-line;color:#dfe5ee}
+    .train-bottom{display:flex;justify-content:space-between;align-items:center;padding-top:8px}
+    .train-right{padding:8px}
+    .hyper-box{border:1px solid #323845;background:#14171d;height:100%;padding:8px}
+    .hyper-grid{display:grid;grid-template-columns:1fr 70px;gap:6px 8px;font-size:11px;color:#dee5ef;align-items:center}
+    .hyper-grid input,.hyper-grid select{height:24px;border:1px solid #3b4250;background:#1f232b;color:#fff;border-radius:3px;padding:0 6px;font-size:11px}
+    .chart-area{background:#07090d;border:1px solid #323845;height:330px;display:block;width:100%}
+    .result-info{background:#1f2228;color:#dde3ec;padding:8px;font-size:11px;white-space:pre-line;min-height:90px;border-top:1px solid #323845}
+    .section-caption{font-size:28px;color:#3e5065;margin:8px 0 0 6px}
+    @media(max-width:1100px){.orig-grid{grid-template-columns:1fr}.main-toolbar,.loader-head,.loader-columns,.loader-footer,.train-grid,.two-pane{grid-template-columns:1fr}.main-toolbar{gap:8px}.loader-columns{grid-template-columns:1fr}.loader-footer{grid-template-columns:1fr}.train-left{border-right:0;border-bottom:1px solid #323845}}
+  
+    .demo-shell{max-width:none;margin:0;padding:10px}
+    .model-item{padding:5px 6px;margin-bottom:3px;border-radius:4px;cursor:pointer}
+    .model-item.active{background:#2b3750;color:#fff;box-shadow:inset 3px 0 0 #d6c900}
+</style>
+</head>
+<body>
+  <main class="demo-shell">
+<section id="mock">
+      <div class="orig-grid">
+        <div>
+          <div class="win main-tool">
+            <div class="titlebar"><span>📄 Logging ML Tool</span><span>— □ ✕</span></div>
+            <div class="dark-area main-toolbar">
+              <div class="work-dir">Select Working Directory…</div>
+              <div class="path-box">D:/AI_Development_1</div>
+            </div>
+            <div class="dark-area tool-btn-row">
+              <div class="tool-btn">Preprocess Logging File…</div>
+              <div class="tool-btn">Training Setting…</div>
+              <div class="tool-btn">Trained AI Test Visualization…</div>
+            </div>
+            <div class="tool-body">Main Window</div>
+          </div>
+          <div class="section-caption">Main Window</div>
+        </div>
+
+        <div>
+          <div class="win loader-body">
+            <div class="titlebar"><span>🗂 Logging File Conversion</span><span>— □ ✕</span></div>
+            <div class="loader-head dark-area">
+              <div class="tool-btn">Select MF4 File…</div>
+              <div class="path-box">D:/jtj/GSCC/CANape/Canape_Custom_2L06/20260304_CVSCC_004.MF4</div>
+            </div>
+            <div class="loader-columns dark-area">
+              <div>
+                <div class="box-title">All Signals (searchable)</div>
+                <div class="list-box">
+                  <div class="list-item">signal1</div><div class="list-item">signal2</div><div class="list-item">signal3</div><div class="list-item">signal4</div><div class="list-item">signal5</div><div class="list-item">signal6</div><div class="list-item">signal7</div><div class="list-item">signal8</div>
+                </div>
+              </div>
+              <div class="mid-box">
+                <div class="mid-btn">Add → X (Inputs)</div>
+                <div class="mid-btn">Add → Y (Outputs)</div>
+              </div>
+              <div>
+                <div class="box-title">Selected for Input (X)</div>
+                <div class="select-box"><div class="list-item">signal1</div><div class="list-item">signal2</div><div class="list-item">signal3</div><div class="list-item">signal4</div></div>
+              </div>
+              <div>
+                <div class="box-title">Selected for Output (Y)</div>
+                <div class="out-box"><div class="list-item">target_output</div></div>
+              </div>
+            </div>
+            <div class="loader-footer dark-area">
+              <div><input type="checkbox" checked /> Resample to a unified timestamp</div>
+              <div>Sampling period (s)</div>
+              <input class="tiny-input" value="0.050" />
+              <div>Method</div>
+              <div class="tiny-input" style="display:flex;align-items:center">Linear</div>
+            </div>
+          </div>
+          <div class="section-caption">Preprocess / MF4 Loader</div>
+        </div>
+      </div>
+
+      <div class="orig-grid" style="grid-template-columns:1fr 1fr;">
+        <div>
+          <div class="win">
+            <div class="titlebar"><span>🧪 Training Window</span><span>— □ ✕</span></div>
+            <div class="train-grid">
+              <div class="train-left">
+                <div class="train-topbar">
+                  <button class="mini-btn">Load CSV Files</button>
+                  <button class="mini-btn">Choose Model</button>
+                  <button class="mini-btn" id="tuneBtn">Task…</button>
+                </div>
+                <div class="two-pane">
+                  <div class="pane-box">
+                    <div class="pane-head">Shows the loaded CSV files</div>
+                    <div class="pane-content">public_mock_dataset_001.csv</div>
+                  </div>
+                  <div class="pane-box">
+                    <div class="pane-head">List of Available Models</div>
+                    <div class="pane-content"><div id="modelList">
+  <div class="model-item active" data-model="LSTM">LSTM</div>
+  <div class="model-item" data-model="TCN">TCN</div>
+  <div class="model-item" data-model="Transformer">Transformer</div>
+  <div class="model-item" data-model="my_models">my_models</div>
+</div></div>
+                  </div>
+                </div>
+                <div class="status-box" id="trainStatus">Status Printing Area
+Data prepared. X:(1355,4,100), y:(1355,5), Input_dim=4, Output_dim=5
+Initialized model: TorchWrappedAdvanced(my_models)
+Waiting for training...</div>
+                <div class="train-bottom">
+                  <button class="mini-btn">Convert</button>
+                  <button class="mini-btn" id="trainBtn">Train</button>
+                </div>
+              </div>
+              <div class="train-right">
+                <div class="hyper-box">
+                  <div class="pane-head" style="margin:-8px -8px 8px -8px">Hyperparameters</div>
+                  <div class="hyper-grid" id="hyperGrid"></div>
+                </div>
+              </div>
+            </div>
+          </div>
+          <div class="section-caption">Training Window</div>
+        </div>
+
+        <div>
+          <div class="win">
+            <div class="titlebar"><span>📈 Training Result Window</span><span>— □ ✕</span></div>
+            <div class="dark-area" style="padding:8px;border-bottom:1px solid #323845;display:flex;gap:8px"><div class="mini-btn">Load Test CSV</div><div class="mini-btn">Load .pt model</div><div class="mini-btn">Show</div></div>
+            <canvas id="resultChart" class="chart-area" width="700" height="330"></canvas>
+            <div class="result-info" id="resultInfo">Loaded model: D:/AI_Development_1/TCN_tcn.pt
+Model class: TCN
+Task: Regression
+seq_len: 100
+input_dim: 4
+output_dim: 5</div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+  </main>
+  <script src="app.js"></script>
+</body>
+</html>

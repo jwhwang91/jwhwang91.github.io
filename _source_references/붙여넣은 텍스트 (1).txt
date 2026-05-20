@@ -1,0 +1,147 @@
+Major Redesign of portfolio project
+
+Since big companies review 1000s of submitted resume with AI filtering, 
+my main HTML website would be pdf exportable format. 
+it must be a NOTION like resume at the main page
+
+and in the end, i will throw a link for my full html website for further detail
+so little words as possible on the main page, but these words MUST CATCH AI Attention (or human attention)
+
+The main focus I want to include in my main page:
+	1. Hardware - Software engineer
+		- like who has understanding of hardware when developing software
+			- the point is i am not the type of SW engineer who just sits in the office (that i think would be replaced by AI in the future)
+	2. person who finds inefficiency in working, and creates tool for efficient working 
+		- I use CLAUDE/CODEX to MAXIMIZE my outcome (like solving bottlenecks of development in Big companies)
+	3. I am good at seeing the big picture as a systems architect
+		- when i use claude or codex, since i know the big picture of what i want to solve, i can use them more efficiently
+	4. I am always willing to learn new technologies and apply that to my work 
+Education
+	- Add Full name of the institute 
+		- University of California Los Angeles (UCLA) 
+		- Korea Advanced Institute of Science and Technology (KAIST) 
+	- For KAIST
+		- add title of Thesis : Controller Design for Motion Stabilization of a Turret on a Moving Platform
+
+Add very strong ONE LINE HOOK for each Experiences that will catch attention of AI resume overview by big companies
+Each experiences section will have dedicated detailed page
+
+Experience
+	1. Researcher - KAIST (Masters)
+		- Designed Embedded controller for a real HW Turret platform for motion stabilization
+		- See Detail button -> Redirects to the detail page
+	
+	2. Researcher - Agency for Defence Development (ADD) 
+		- Ground Technology Research Institute
+		- Developed TCU application Software for 55 ton K2 tracked vehicle
+			- Experienced full V cycle development process for TCU for K2
+			- MILS/HILS/Dynamometer(Powerpack)/actual vehicle on field
+		- See detail button -> Redirects to the detail page
+	
+	3. Research Engineer - Hyundai Motor Company (HMC) : 2021. 03 ~ Present
+		- Model based development of Lvl2 ADAS algorithm for Hyundai Commercial Vehicles (Tractor/Truck (ICE, FCEV)/Bus)
+		- Mass production with SCC/LFA 
+			- QZ 25PE (Tractor) 
+			- QZ FCEV EU (FCEV Truck)
+			- PY ICE / FCEV (Bus)
+		- Main role : SCC algorithm development including tuning various vehicles and powertrain types
+			- Transmission variety: AMT, AT
+			- EBS, ABS controller for braking
+		- Independently done
+			- Emergency Stop algorithm (SCC2) 
+				- safely stopping vehicle to stop while SCC and LFA, when driver unconscious
+			- ODP Ego vehicle path generation (RoadRadius)
+				- Used steering angle to convert it to tire angle (Tire model)
+				- Fusion of Tire angle based Roadradius and EBS Yawrate based Roadradius to yield Robust but fast Path generation
+			- Toolchain development, solving development process bottleneck
+				- E2E GUI XCP bypassing app : Python/C++
+				- E2E GUI timeseries AI model training platform : Python 
+				- TOS/ODP Matlab Simulink Bird Eye View simulator : Matlab script and Simulink
+		- See detail button -> redirects to the detailed page
+			- in this detailed page, we just mention Toolchain development,we focus on main role at the company
+				- these toolchain development will be mentioned in Selected Projects
+
+Engineering Narrative
+	- I think the current version is pretty good,
+		- but if you can make it better, please do
+	- and instead of horizontal outline, just make a big block that lists the Narratives
+
+Selected Project
+	- You see as main root contents are merged into Experience section, we only need Toolchain projects
+	- There are 3 main projects that i want to stand out, in each block (vertically listed), 
+		- the project objective (why this project was brought by me), and impact of this on my team)
+			- these should be breifly summerrized.
+	- Three Projects(Totally indenpendetly done by me) are
+		- E2E GUI XCP bypassing app : Python/C++
+			- Objective : 
+				- As my team move on to E2E development process, we need to move on from legacy ECU 
+				- Passenger car ADAS teams were doing this, but commercial adas team was carrying out Passenger car ADAS team logic, we didnt have proper infra
+					- like Passenger car team had all the cool equipments like Nvidia OrinX or Thor dSpace, 
+						- but we didnt have any of those, because our team are focused on mass production for commercial vehicle of ADAS Lvl2 (or HDA)
+				- as this is the case, as a bright engineer, i came up with idea of using currently developing Mass produced ECU and my laptop 
+					- i didnt want no external devices, cost money, cost time to learn, and MOST IMPORTANTLY, i couldnt get it : passenger car ADAS teams were too busing using those
+				- So with real time XCP communication of mass produced ADAS ECU, I develop this platform for anyone of my teammates to get there laptop connected via vector (or kvaser) XCP to test their learned model on the real vehicle
+			- Outcome : 
+				- Although currently developing, 
+					- it would save much time for my teammate from learning new devices 
+					- they would just use my platform and python coding to test AI model on real any vehicle!!
+						- we have so many vehicles (py qz ICE, QZ FCEV, QT.....)
+							- so if we use special device like Thor or orinX, engineers can ONLY TEST AI MODEL on that SPECIFIC VEHICLE
+						- but with my platform, engineer can test ON ANY VEHICLE with ADAS ECU with just LAPTOP alone
+					- this would much accelerate process of transfering from traditional rule based to currently trending E2E for commercial vehicle!
+					- AND NO NEED to use CANape for XCP connection 
+						- and this app also handles a2l/elf for ECU_ADDRESS managing (That CAnape did in the past)
+					
+		- E2E GUI timeseries AI model training platform : Python 
+			- Objective :
+				- Our team mostly deal with timeseries data, acquired from Canape in mf4 format,
+				- so i thought, if i can make a customizable platform that let engineers freedom to process mf4 file to train AI model, it would be great
+				- so i made a ALL in One package platform my python that does
+					- load and freely pre process any mf4 file acquired from the real vehilce
+					- and use that to train the ENTIREY customizable AI model on the platform 
+						- that user can use any AI model, because the platfrom automatically deal with all the timeseries normalizations 
+					- and this platfrom can also convert .pt to .onnx (runtime) or even matlab (for simulation)
+					- converted .onnx can be used in my E2E GUI XCP bypassing platform to test in real vehicle
+			- Outcome :
+				- much accelerate process of transfering from traditional rule based to currently trending E2E for commercial vehicle!
+					- gives engineer to freely test and train model
+					- like each engineer is in charge of their own module from our entire ADAS logic
+						- like SIA, SCC2, LOC, LAC, ODP, TOS, ACG Etc etc
+						- and each engineer wants to convert it to AI based model 
+						- these experience will later help them to transfering to E2E architecture
+						
+		- TOS/ODP Matlab Simulink Bird Eye View simulator : Matlab script and Simulink
+			- Objective: 
+				- this is one of my many matlab GUI personal projects 
+				- since our ADAS system is Model based development process including auto code gen and flashing
+				- we are heavily bound to MATLAB/Simulink environment
+				- While developing PY, there was MANY issues of miss detection is bus-only lane 
+					- the case where bus-only lane is free, and right side of the lane has traffic 
+					- since we use lv2 sensor set (mobilQ5) and rule based logic for mass production
+						- we need to repeately generate same situation for 
+					- and we also need Bird Eye View to analyze this miss detection for logic modification and tuning 
+						- because, we need to see if the track crossed the cutin(or cutout)threshold, and how are we gonna mask it out to prevent miss detection
+					- and since TOS/ODP logic contains massive for loop, which is very hard to debug in Simulink environment,
+						- I thought that we need a simulator 
+			- Outcome
+				- before this simulator, after modifying the logic, we had to bring real vehicle to actually test it if the modifications work 
+					- but then, it was VERY time consuming and hard to put MASSIVE BUS on the bus-only lane where right lane is full of traffic (very rare condition)
+						- but then in order to get Sign Off from the test team, we MUST fix the miss detection
+				- after this simulator, we were able to repeat SAME process over and over again with fixing our logic and tuning parameters 
+					- after getting logic fixed, we tested once to see and wow it worked very well that we got the SIGN-OFF from test team for mass production of the bus
+			
+	- for now just make a folder for each project
+		- in each folder, there will be context, pictures, and format
+			- I will give you, hard coded html files for each project 
+
+Personal Project 
+	- Made ICT based crypto trading platform with AI implemented
+		- here i want to emphasize how I made custom AI agents to help my trading 
+			- the focus is not the trading itself
+		- how i harnessed the AI agents for successful trading
+			- i am actually making some money from this platform 
+			- as money is very senstive, AI harnessing MUST be very very strict 
+		- I will give detailed info later
+	- quick question of this personal project : Do you think this would be not optimal to attach on my resume??
+
+Style : must be universal across all my pages

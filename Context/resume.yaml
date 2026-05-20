@@ -1,0 +1,35 @@
+education:
+  - institute: "University of California Los Angeles (UCLA)"
+    degree: "B.S. Mechanical Engineering"
+    period: "2010.09 - 2014.06"
+    location: "Los Angeles, USA"
+
+  - institute: "Korea Advanced Institute of Science and Technology (KAIST)"
+    degree: "M.S. Robotics"
+    period: "2015.03 - 2017.08"
+    location: "Daejeon, South Korea"
+    thesis: "Controller Design for Motion Stabilization of a Turret on a Moving Platform"
+
+skills:
+  control:
+    - "Vehicle dynamics"
+    - "Transmission control"
+    - "SCC/LFA ADAS logic"
+    - "Sensor fusion"
+    - "EKF"
+    - "Time Delay Estimation"
+  validation:
+    - "MILS"
+    - "HILS"
+    - "Dynamometer"
+    - "Vehicle test"
+    - "Calibration"
+    - "Mass-production sign-off"
+  software:
+    - "Python"
+    - "C/C++"
+    - "MATLAB/Simulink"
+    - "XCP/CAN-FD"
+    - "ONNX"
+    - "A2L/ELF"
+    - "MF4"
