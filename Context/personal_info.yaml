@@ -11,15 +11,15 @@ phone: "+82-10-5775-1863"
 
 linkedin:
   label: "LinkedIn"
-  url: "https://linkedin.com/in/yourname"
+  url: ""
 
 github:
-  label: "GitHub"
-  url: "https://github.com/yourname"
+  label: "Portfolio Source"
+  url: "https://github.com/jwhwang91/jwhwang91.github.io"
 
 portfolio:
-  label: "Full Technical Portfolio"
-  url: "https://your-domain.com/full-portfolio"
+  label: "Portfolio"
+  url: "https://jwhwang91.github.io"
 
 optional_links:
   - label: "Google Scholar"

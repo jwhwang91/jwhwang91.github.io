@@ -30,7 +30,7 @@ Data prepared. X:(1355,4,100), y:(1355,5), Input_dim=4, Output_dim=5
 Initialized model: ${model}
 Hyperparameters loaded for ${model}
 Waiting for training...`;
-  document.getElementById('resultInfo').textContent = `Loaded model: D:/AI_Development_1/${model}_mock.pt
+  document.getElementById('resultInfo').textContent = `Loaded model: C:/public_demo/mock_models/${model}_mock.pt
 Model class: ${model}
 Task: Regression
 seq_len: ${hyperByModel[model][0][1]}
@@ -87,7 +87,7 @@ function stepTrain() {
   if (history.length > 30) history.shift();
   drawChart();
   appendStatus(`Epoch ${epoch}: train_loss=${(0.95*Math.exp(-epoch/6)+0.04).toFixed(4)}, val_loss=${(0.82*Math.exp(-epoch/7)+0.06).toFixed(4)}`);
-  document.getElementById('resultInfo').textContent = `Loaded model: D:/AI_Development_1/${currentModel}_mock.pt
+  document.getElementById('resultInfo').textContent = `Loaded model: C:/public_demo/mock_models/${currentModel}_mock.pt
 Model class: ${currentModel}
 Task: Regression
 seq_len: ${hyperByModel[currentModel][0][1]}
@@ -98,7 +98,7 @@ Status: training...`;
   if (epoch >= 20) {
     running = false;
     appendStatus('Training finished.');
-    document.getElementById('resultInfo').textContent = `Loaded model: D:/AI_Development_1/${currentModel}_mock.pt
+    document.getElementById('resultInfo').textContent = `Loaded model: C:/public_demo/mock_models/${currentModel}_mock.pt
 Model class: ${currentModel}
 Task: Regression
 seq_len: ${hyperByModel[currentModel][0][1]}

@@ -5,5 +5,5 @@
     "curve_cutin",
     "lane_drop"
   ],
-  "hidden": "No production thresholds, signal names, vehicle data, or algorithm detail included."
+  "hidden": "No production parameters, signal names, vehicle data, or algorithm detail included."
 }

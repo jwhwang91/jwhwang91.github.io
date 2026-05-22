@@ -3,5 +3,5 @@ intro: "My career is a hardware-to-software arc: from real motion-control hardwa
 items:
   - "Physical constraints -> control logic: I turn hardware limitations, sensing delays, and vehicle dynamics into algorithms and validation evidence."
   - "R&D bottlenecks -> toolchains: I build internal Python/C++/MATLAB platforms when repeated manual work slows the team."
-  - "System architecture first: I use AI coding assistants effectively because I define the full data path, interfaces, timing constraints, and validation goal before coding."
-  - "NDA-safe technical storytelling: I explain protected work through problem definition, architecture, math/logic abstraction, and measurable outcome."
+  - "System architecture first: I use AI coding assistants as implementation accelerators while personally owning requirements, interfaces, timing constraints, debugging, and validation."
+  - "Public-safe technical storytelling: I explain protected work through problem definition, architecture, logic abstraction, and engineering outcome."

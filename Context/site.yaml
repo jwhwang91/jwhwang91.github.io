@@ -1,28 +1,28 @@
 name: "Jae Woong Hwang"
-title: "Hardware-Aware Software Engineer | Vehicle Controls & AI Toolchains"
+title: "ADAS Controls, Embedded Validation & Vehicle Toolchain Engineer"
 
-headline: "Hardware-aware software engineer building vehicle control systems and AI-ready validation toolchains."
+headline: "Production ADAS controls, embedded validation, and vehicle-development toolchain experience across commercial trucks, tractors, buses, and fuel-cell platforms."
 one_liner: >
-  I connect real vehicle hardware, embedded control software, model-based development,
-  and Python/C++ automation to remove R&D bottlenecks.
+  I connect production-facing behavior logic, full V-cycle validation workflows,
+  calibration/debugging environments, and Python/C++ tooling under real vehicle-development constraints.
 
 keywords:
-  - "Hardware-Software Integration"
+  - "Commercial-Vehicle ADAS"
+  - "SCC / L2 ADAS"
+  - "Embedded Validation"
   - "Vehicle Dynamics"
-  - "Embedded Control"
-  - "Model-Based Development"
-  - "ADAS Lvl2"
+  - "Production-Facing Behavior Logic"
   - "MILS/HILS"
-  - "XCP / CAN-FD"
-  - "Python / C++"
+  - "Dynamometer / Real Vehicle"
+  - "CANape / VN1640"
+  - "XCP / CAN-FD Legacy Workflow"
+  - "C++ / Python Tooling"
   - "MATLAB / Simulink"
-  - "EKF"
   - "ONNX"
-  - "MF4"
-  - "A2L / ELF"
+  - "AI-Assisted Development"
 
 main_focus:
-  - "Hardware-aware software engineer who understands physical vehicle constraints, not only office-side code."
-  - "Builder of internal tools that remove repetitive development, validation, and calibration bottlenecks."
-  - "Systems architect who uses Claude/Codex effectively because the target architecture and constraints are clear."
-  - "Fast learner who converts new technologies into practical engineering workflows."
+  - "Production-facing commercial-vehicle ADAS controls experience across SCC/L2 behavior logic and release-readiness support."
+  - "Embedded validation experience across MILS, HILS, dynamometer, and real-vehicle workflows."
+  - "Legacy calibration workflow experience with CANape, VN1640, XCP, and CAN-FD in constrained field-test environments."
+  - "AI-assisted implementation with human-owned requirements, architecture, debugging, integration, and validation."

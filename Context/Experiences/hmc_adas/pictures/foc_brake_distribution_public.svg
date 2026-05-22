@@ -1,6 +1,6 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
-  <title id="title">NDA-Safe FOC Brake Distribution Architecture</title>
-  <desc id="desc">Public-safe block diagram showing FOC requested deceleration, ego and target context, rule-based brake allocation, auxiliary brake, foundation brake, and final deceleration response.</desc>
+  <title id="title">Public-Safe Front-Target Brake Distribution Architecture</title>
+  <desc id="desc">Public-safe block diagram showing ADAS-requested deceleration, ego and forward-target context, rule-based brake allocation, auxiliary brake, foundation brake, and final deceleration response.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
       <path d="M0,0 L0,6 L9,3 z" fill="#334155" />
@@ -19,16 +19,16 @@
     </style>
   </defs>
   <rect class="bg" x="0" y="0" width="1200" height="640" />
-  <text class="heading" x="56" y="54">NDA-Safe FOC Brake Distribution Architecture</text>
+  <text class="heading" x="56" y="54">Public-Safe Front-Target Brake Distribution Architecture</text>
   <text class="note" x="56" y="82">Internal thresholds, brake maps, calibration values, and platform-specific parameters are intentionally omitted.</text>
 
   <!-- Inputs -->
   <rect class="box" x="70" y="125" width="230" height="82" rx="16" />
-  <text class="label" x="185" y="154">FOC Requested</text>
+  <text class="label" x="185" y="154">ADAS-Requested</text>
   <text class="label" x="185" y="177">Deceleration</text>
 
   <rect class="box" x="70" y="275" width="230" height="92" rx="16" />
-  <text class="label" x="185" y="305">Ego / Target</text>
+  <text class="label" x="185" y="305">Ego / Forward Target</text>
   <text class="small" x="185" y="330">speed, distance,</text>
   <text class="small" x="185" y="350">speed gradient</text>
 
@@ -68,5 +68,5 @@
   <path class="line" d="M952 457 L952 520" />
 
   <!-- Notes -->
-  <text class="note" x="70" y="603">Goal: satisfy FOC deceleration demand while reducing unnecessary foundation-brake usage in heavy-duty scenarios.</text>
+  <text class="note" x="70" y="603">Goal: satisfy front-target deceleration demand while reducing unnecessary foundation-brake usage in heavy-duty scenarios.</text>
 </svg>

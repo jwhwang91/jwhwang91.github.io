@@ -1,18 +1,18 @@
 title: "TOS/ODP MATLAB Simulink Bird-Eye-View Simulator"
 pill: "MATLAB / Simulink / ADAS Debugging"
 summary: >
-  Repeatable bird-eye-view simulation environment for debugging TOS/ODP logic and bus-only-lane misdetection.
+  Repeatable bird-eye-view simulation environment for debugging TOS/ODP logic and bus-only-lane false target selection.
 
 sections:
   - title: "Objective"
     body: >
-      PY bus development had difficult-to-reproduce misdetection cases in bus-only-lane scenarios.
-      The team needed a repeatable simulator to visualize object tracks, thresholds, and ODP/TOS logic behavior.
+      PY bus development had difficult-to-reproduce false target selection cases in bus-only-lane scenarios.
+      The team needed a repeatable simulator to visualize object tracks, public-safe gating behavior, and ODP/TOS logic behavior.
   - title: "Architecture"
     bullets:
       - "MATLAB GUI-style personal tool for ADAS module debugging."
       - "Simulink-compatible workflow aligned with model-based development and auto-code-generation."
-      - "Bird-eye-view visualization of tracked objects, cut-in/cut-out thresholds, and masking logic."
+      - "Bird-eye-view visualization of tracked objects, candidate gating behavior, and masking logic."
       - "Designed to debug massive loop-based TOS/ODP logic more quickly than raw Simulink inspection."
   - title: "Team Impact"
     body: >
