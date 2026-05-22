@@ -15,8 +15,8 @@
       <div>{{ personal.location }}</div>
       <div>{{ personal.email }}</div>
       <div>{{ personal.phone }}</div>
-      <div><a href="{{ personal.linkedin.url }}" target="_blank">{{ personal.linkedin.label }}</a></div>
-      <div><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></div>
+      {% if personal.linkedin.url %}<div><a href="{{ personal.linkedin.url }}" target="_blank">{{ personal.linkedin.label }}</a></div>{% endif %}
+      {% if personal.github.url %}<div><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></div>{% endif %}
       {% for link in personal.optional_links %}
       {% if link.url %}
       <div><a href="{{ link.url }}" target="_blank">{{ link.label }}</a></div>
@@ -25,14 +25,17 @@
     </div>
   </header>
 
-  <section class="keyword-strip">
-    {% for keyword in site.keywords %}
-    <span>{{ keyword }}</span>
-    {% endfor %}
+  <section class="notion-block">
+    <h3>Target Roles</h3>
+    <div class="keyword-strip">
+      {% for keyword in site.keywords %}
+      <span>{{ keyword }}</span>
+      {% endfor %}
+    </div>
   </section>
 
   <section class="notion-block">
-    <h3>Core Positioning</h3>
+    <h3>Professional Summary</h3>
     <ul class="tight-list">
       {% for item in site.main_focus %}
       <li>{{ item }}</li>
@@ -40,30 +43,15 @@
     </ul>
   </section>
 
-  <section class="two-col">
-    <div class="notion-block">
-      <h3>Education</h3>
-      {% for edu in resume.education %}
-      <div class="mini-entry">
-        <strong>{{ edu.institute }}</strong>
-        <span>{{ edu.degree }} | {{ edu.period }}</span>
-        {% if edu.thesis %}
-        <em>Thesis: {{ edu.thesis }}</em>
-        {% endif %}
-      </div>
-      {% endfor %}
-    </div>
-
-    <div class="notion-block">
-      <h3>Skill Stack</h3>
-      <p><strong>Control:</strong> {{ resume.skills.control | join(" · ") }}</p>
-      <p><strong>Validation:</strong> {{ resume.skills.validation | join(" · ") }}</p>
-      <p><strong>Software:</strong> {{ resume.skills.software | join(" · ") }}</p>
-    </div>
+  <section class="notion-block">
+    <h3>Core Competencies</h3>
+    <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
+    <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
+    <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
   </section>
 
   <section class="notion-block" id="experience">
-    <h3>Experience</h3>
+    <h3>Professional Experience</h3>
     <div class="experience-list">
       {% for exp in experiences %}
       <article class="experience-card">
@@ -72,7 +60,7 @@
             <strong>{{ exp.role }}</strong>
             <span>{{ exp.organization }} | {{ exp.period }}</span>
           </div>
-          <a href="{{ exp.detail_output }}" class="detail-link no-print">Detail</a>
+          <a href="{{ exp.detail_output }}" class="detail-link no-print">Technical Case Study</a>
         </div>
         <p class="hook">{{ exp.hook }}</p>
         <ul>
@@ -86,19 +74,9 @@
     </div>
   </section>
 
-  <section class="narrative-block" id="narrative">
-    <h3>{{ narrative.title }}</h3>
-    <p>{{ narrative.intro }}</p>
-    <ul>
-      {% for item in narrative['items'] %}
-      <li>{{ item }}</li>
-      {% endfor %}
-    </ul>
-  </section>
-
   <section class="notion-block" id="toolchains">
-    <h3>Selected Toolchain Projects</h3>
-    <p class="section-note">Main-root vehicle projects are covered in Experience. This section highlights independently built toolchains that removed team bottlenecks.</p>
+    <h3>Selected Technical Projects</h3>
+    <p class="section-note">Public-safe technical case studies for validation tooling, AI-assisted implementation, and commercial-vehicle ADAS debugging workflows.</p>
     <div class="toolchain-list">
       {% for project in toolchains %}
       <article class="toolchain-card">
@@ -108,7 +86,7 @@
             <span>{{ project.stack }}</span>
           </div>
           <div class="entry-actions no-print">
-            <a href="{{ project.detail_output }}" class="detail-link">Detail</a>
+            <a href="{{ project.detail_output }}" class="detail-link">Technical Case Study</a>
             {% if project.mock_output %}
             <a href="{{ project.mock_output }}" class="detail-link mock-link">MOCK</a>
             {% endif %}
@@ -133,10 +111,33 @@
     </div>
   </section>
 
+  <section class="two-col">
+    <div class="notion-block">
+      <h3>Education</h3>
+      {% for edu in resume.education %}
+      <div class="mini-entry">
+        <strong>{{ edu.institute }}</strong>
+        <span>{{ edu.degree }} | {{ edu.period }}</span>
+        {% if edu.thesis %}
+        <em>Thesis: {{ edu.thesis }}</em>
+        {% endif %}
+      </div>
+      {% endfor %}
+    </div>
+
+    <div class="notion-block">
+      <h3>Skills</h3>
+      <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
+      <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
+      <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
+    </div>
+  </section>
+
   <section class="footer-cta">
-    <strong>Full technical website:</strong>
+    <strong>Links:</strong>
     <span><a href="{{ personal.portfolio.url }}" target="_blank">{{ personal.portfolio.url }}</a></span>
-    <p>Use this resume-style page for PDF export. Use detail pages for architecture diagrams, screenshots, evidence, and deeper engineering explanations.</p>
+    {% if personal.github.url %}<span><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></span>{% endif %}
+    <p>Use this resume-style page for PDF export. Use detail pages for public-safe technical case studies and sanitized engineering notes.</p>
   </section>
 </main>
 {% endblock %}

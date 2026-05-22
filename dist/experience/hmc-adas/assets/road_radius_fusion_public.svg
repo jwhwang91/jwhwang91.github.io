@@ -1,5 +1,5 @@
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="640" viewBox="0 0 1200 640" role="img" aria-labelledby="title desc">
-  <title id="title">NDA-Safe RoadRadius Fusion Architecture</title>
+  <title id="title">Public-Safe Road-Radius Fusion Architecture</title>
   <desc id="desc">Public-safe block diagram showing steering-intent radius, yaw-rate radius, EKF fusion, lane validity check, and final RoadRadius.</desc>
   <defs>
     <marker id="arrow" markerWidth="10" markerHeight="10" refX="8" refY="3" orient="auto" markerUnits="strokeWidth">
@@ -19,8 +19,8 @@
     </style>
   </defs>
   <rect class="bg" x="0" y="0" width="1200" height="640" />
-  <text class="heading" x="56" y="54">NDA-Safe RoadRadius Fusion Architecture</text>
-  <text class="note" x="56" y="82">Internal signal names, matrices, thresholds, calibration values, and Simulink structures are intentionally omitted.</text>
+  <text class="heading" x="56" y="54">Public-Safe Road-Radius Fusion Architecture</text>
+  <text class="note" x="56" y="82">Internal ECU labels, matrices, thresholds, calibration values, and Simulink structures are intentionally omitted.</text>
 
   <!-- Steering path -->
   <rect class="box" x="70" y="125" width="210" height="76" rx="16" />

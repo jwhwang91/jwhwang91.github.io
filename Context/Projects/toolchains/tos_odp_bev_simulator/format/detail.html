@@ -156,9 +156,8 @@
       <h1>TOS / ODP MATLAB Simulink Bird-Eye-View Simulator</h1>
       <h2>MATLAB Script / Simulink / Base Workspace / ADAS Debugging</h2>
       <p class="hook">Repeatable simulator for rare commercial-vehicle ADAS edge cases that were hard to reproduce with a real bus.</p>
-      <p>This page keeps the clean portfolio style but restores the interactive system architecture: click any block to see the module-level explanation.</p>
       <div class="case-meta">
-        <span>Interactive Diagram Restored</span><span>MATLAB GUI</span><span>Simulink</span><span>Base Workspace</span>
+        <span>Public-Safe Simulator</span><span>MATLAB GUI</span><span>Simulink</span><span>Base Workspace</span>
         <span>assignin / evalin</span><span>To Workspace</span><span>TOS / ODP</span>
       </div>
     </header>
@@ -169,11 +168,11 @@
       </article>
       <article class="case-card">
         <h4>Outcome</h4>
-        <p>Enabled repeated replay, logic modification, and parameter tuning. The tool helped reduce bus-lane miss detection during SCC operation and supported final real-vehicle confirmation.</p>
+        <p>Enabled repeated replay, logic modification, and parameter tuning. The tool helped reduce bus-lane false target selection during SCC operation and supported final real-vehicle confirmation.</p>
       </article>
     </section>
     <section class="evidence-panel architecture-panel">
-      <h3>System Architecture — Click Blocks</h3>
+      <h3>System Architecture</h3>
       <div class="inner"><svg xmlns="http://www.w3.org/2000/svg"
          viewBox="0 0 880 490"
          width="100%" height="auto"
@@ -342,7 +341,7 @@
         <text x="715" y="307" fill="#64748b" font-size="9" font-weight="600"
               text-anchor="middle" letter-spacing=".3">DEVELOPER HOOK</text>
         <text x="715" y="322" fill="#94a3b8" font-size="11" font-weight="700"
-              text-anchor="middle">CustomPlot.m</text>
+              text-anchor="middle">Custom Overlay</text>
       </g>
 
       <!-- 10. To Workspace Blocks (cy=388) -->
@@ -471,7 +470,7 @@
           <tr><td><code>SignalManager_GUI.m</code></td><td>Signal-editing window for ODP/TOS signal definitions and simulation mappings.</td></tr>
           <tr><td><code>TOSODP_Simulation_Variables_UI.m</code></td><td>Registers ODP/TOS simulation variables into Base Workspace using <code>assignin</code>.</td></tr>
           <tr><td><code>UpdateODPModel_GUI.m</code> / <code>UpdateTOSModel_GUI.m</code></td><td>Model update pipeline for inserting simulation signal hooks into ODP/TOS Simulink models.</td></tr>
-          <tr><td><code>CustomPlot.m</code></td><td>Developer visualization hook called per replay frame for custom overlays.</td></tr>
+          <tr><td><code>Custom Overlay</code></td><td>Visualization hook called per replay frame for custom overlays.</td></tr>
         </tbody>
       </table>
     </section>
@@ -496,7 +495,7 @@ const blockData = {
   tosodp_vars:{
     title:'TOSODP_Simulation_Variables_UI.m', sub:'Signal variable definition script',
     fn:'assignin("base", varName, value)', color:'#22d3ee',
-    body:`<ul><li>Registers ODP/TOS simulation variables into MATLAB Base Workspace.</li><li>ODP signals include curvature, curvature derivative, radius, and nearest-block definitions.</li><li>TOS signals include object selection, nearest-object blocks, cut-in/cut-out thresholds, lane-change level, and final detection range.</li></ul>`
+    body:`<ul><li>Registers public-safe ODP/TOS simulation variables into MATLAB Base Workspace.</li><li>ODP values include curvature, curvature derivative, radius, and nearest-block definitions.</li><li>TOS values include object selection, nearest-object blocks, candidate gating, lane-change level, and final detection range.</li></ul>`
   },
   signal_mgr:{
     title:'SignalManager_GUI.m', sub:'Signal editing and management GUI',
@@ -526,12 +525,12 @@ const blockData = {
   idctos:{
     title:'TOS Logic', sub:'Target object selection and filtering',
     fn:'TOS object-selection debug', color:'#60a5fa',
-    body:`<ul><li>Debugs object selection, cut-in/cut-out behavior, threshold crossing, and masking logic.</li><li>Designed for bus-only-lane cases where right-lane traffic can trigger miss detection or false selection.</li></ul>`
+    body:`<ul><li>Debugs object selection, cut-in/cut-out behavior, threshold crossing, and masking logic.</li><li>Designed for bus-only-lane cases where right-lane traffic can trigger false target selection.</li></ul>`
   },
   custom_plot:{
-    title:'CustomPlot.m', sub:'Developer visualization hook',
+    title:'Custom Overlay', sub:'Visualization hook',
     fn:'Custom overlay per replay frame', color:'#fbbf24',
-    body:`<ul><li>Allows custom markers, text, thresholds, and debug overlays during replay.</li><li>Useful when a module owner wants to visualize a specific internal condition.</li></ul>`
+    body:`<ul><li>Allows custom markers, text, public-safe gates, and debug overlays during replay.</li><li>Useful when a module owner wants to visualize a specific behavior condition.</li></ul>`
   },
   to_workspace:{
     title:'To Workspace Blocks', sub:'Simulink-to-GUI data output',

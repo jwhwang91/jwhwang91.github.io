@@ -2,7 +2,7 @@
 
 ## XCP-Based AI Validation Interface
 
-Built a laptop-centered ADAS AI validation interface to inspect signal replay, model output, plausibility checks, and ECU-facing workflow status in one GUI. The public mockup uses synthetic data and a mock transport layer to demonstrate the workflow without exposing company-specific XCP, CAN, A2L/ELF, signal, or ECU details.
+Built a laptop-centered ADAS AI validation interface to inspect synthetic replay, model output, plausibility checks, and ECU-facing workflow status in one GUI. The public mockup uses synthetic data and a mock transport layer to demonstrate the workflow without exposing company-specific transport configuration or ECU details.
 
 ## Time-Series AI Training Platform
 
@@ -10,8 +10,8 @@ Designed an all-in-one time-series AI training workflow for measurement-data ing
 
 ## TOS/ODP BEV Simulator
 
-Built a repeatable BEV scenario visualization workflow for commercial-vehicle ADAS debugging, including ego path, object tracks, target-selection regions, and false-target review. The public mockup uses fake tracks and simplified geometry, with production thresholds and internal TOS/ODP logic intentionally omitted.
+Built a repeatable BEV scenario visualization workflow for commercial-vehicle ADAS debugging, including ego path, object tracks, target-selection regions, and false-target review. The public mockup uses fake tracks and simplified geometry, with production parameters and internal TOS/ODP logic intentionally omitted.
 
-## NDA-safe caption
+## Public-safe caption
 
-Public UI mockup recreated with synthetic data. No company code, company data, internal screenshots, signal names, CAN IDs, ECU configuration, A2L labels, calibration values, thresholds, or production logic are included.
+Public UI mockup recreated with synthetic data. No company code, company data, internal screenshots, signal names, network database identifiers, ECU configuration, calibration metadata, calibration values, thresholds, or production logic are included.

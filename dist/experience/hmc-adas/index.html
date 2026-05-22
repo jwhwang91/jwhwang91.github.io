@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>HMC Commercial Vehicle SCC / Lvl2 ADAS</title>
+  <title>Commercial-Vehicle ADAS Controls & Validation</title>
   <link rel="stylesheet" href="../../style.css"/>
 </head>
 <body class="detail-page">
@@ -296,67 +296,57 @@
 
 <main class="detail-shell detail-local-style">
   <header class="detail-hero">
-    <p class="eyebrow">Mass-Production Commercial-Vehicle ADAS / SCC / RoadRadius / Brake Distribution / Target Selection</p>
-    <h1>HMC Commercial Vehicle SCC / Lvl2 ADAS</h1>
-    <p>I worked in the SCC part of Hyundai Motor Company's commercial-vehicle SCC/LFA development organization, contributing to mass-production SCC tuning, FOC tuning, regulation-driven state-transition updates, vehicle validation, and production issue response. My independent technical ownership focused on SCC2 Emergency Stop logic, EKF-based RoadRadius fusion, FOC brake-distribution logic, and target object selection robustness for heavy-duty commercial-vehicle ADAS.
+    <p class="eyebrow">Public-Safe Production ADAS Case Study</p>
+    <h1>Commercial-Vehicle ADAS Controls & Validation</h1>
+    <p>This page summarizes my public-safe experience in production commercial-vehicle ADAS controls and validation at Hyundai Motor Company. The work involved SCC/L2 ADAS behavior logic, calibration and validation workflows, production issue response, and vehicle-level debugging across heavy-duty truck, tractor, and bus platforms. Proprietary source code, signal names, calibration metadata, CAN database content, calibration values, thresholds, vehicle logs, and internal implementation details are intentionally omitted.
 </p>
     <a href="../../index.html" class="detail-link no-print">Back to resume</a>
   </header>
 
   <figure class="hero-media">
-    <img src="assets/hmc_qz_fcev_na.jpg" alt="Commercial-vehicle ADAS production context across XCIENT truck/tractor and bus platforms."/>
-<figcaption>Commercial-vehicle ADAS production context across XCIENT truck/tractor and bus platforms.</figcaption>  </figure>
+    <img src="assets/hmc_qz_fcev_na.jpg" alt="Commercial-vehicle ADAS production context across public truck, tractor, and bus platform references."/>
+<figcaption>Commercial-vehicle ADAS production context across public truck, tractor, and bus platform references.</figcaption>  </figure>
 
   <section class="highlight-strip" aria-label="Experience highlights">
     <article class="highlight-card">
-      <span>Domain</span>
-      <strong>Commercial-Vehicle SCC / Lvl2 ADAS</strong>
+      <span>Role</span>
+      <strong>Commercial-Vehicle ADAS Controls & Validation Engineer</strong>
     </article>
     <article class="highlight-card">
       <span>Platforms</span>
-      <strong>FCEV truck, FCEV tractor, ICE tractor, ICE/FCEV bus</strong>
+      <strong>Truck, tractor, and bus variants with ICE and FCEV powertrains</strong>
     </article>
     <article class="highlight-card">
-      <span>Core Boundary</span>
-      <strong>Vehicle dynamics + embedded control + production validation</strong>
+      <span>Workflow</span>
+      <strong>MILS, HILS, dynamometer, and real-vehicle validation</strong>
     </article>
     <article class="highlight-card">
-      <span>Independent Ownership</span>
-      <strong>Emergency Stop, RoadRadius Fusion, Brake Distribution, Target Selection</strong>
+      <span>Toolchain</span>
+      <strong>CANape, VN1640, XCP, CAN-FD, Python/C++ validation tooling</strong>
     </article>
   </section>
 
   <section class="detail-grid">
     <article class="detail-card">
-      <h2>Role Clarification</h2>
-<p>I was assigned to the SCC part within the commercial-vehicle SCC/LFA organization. The page separates team-level SCC production contribution from the areas where I had independent technical ownership.
-</p>      <ul>
-        <li>Team contribution: SCC tuning, FOC tuning, vehicle-specific calibration, regulation-driven SCC state-transition updates, production validation, and production issue response.</li>
-        <li>Independent ownership: SCC2 Emergency Stop logic, EKF-based RoadRadius fusion, FOC brake-distribution logic, and target object selection robustness logic.</li>
-        <li>The wording intentionally avoids implying that I independently developed the entire SCC/LFA production stack.</li>
-      </ul>
-    </article>
-    <article class="detail-card">
-      <h2>Positioning</h2>
-<p>My work sits at the boundary between vehicle dynamics, embedded control software, production calibration, and real-road ADAS validation. It is directly relevant to the transition from rule-based L2 ADAS to higher-level autonomy on heavy-duty platforms, where vehicle-specific validation, safety fallback behavior, powertrain-specific control behavior, and scenario coverage remain critical.
+      <h2>Ownership Boundary</h2>
+<p>I did not own the entire SCC/L2 ADAS stack end-to-end. My work focused on selected production-facing behavior logic, validation workflows, calibration/debugging support, and issue-resolution activities within the broader ADAS development team. This page describes my individual contribution areas in public-safe form.
 </p>    </article>
     <article class="detail-card">
-      <h2>Team Contribution: SCC / FOC Tuning & Regulation Updates</h2>
-      <ul>
-        <li>Participated in SCC tuning and FOC tuning as part of a four-person SCC part.</li>
-        <li>Supported vehicle-specific SCC calibration across commercial-vehicle powertrain, transmission, and brake-control variants.</li>
-        <li>Contributed to SCC state-transition modifications required for European safety regulation programs.</li>
-        <li>Supported real-vehicle validation, production issue analysis, and sign-off workflows.</li>
-      </ul>
-    </article>
+      <h2>Role</h2>
+<p>Commercial-vehicle ADAS controls and validation engineer focused on production SCC/L2 ADAS behavior.</p>    </article>
     <article class="detail-card">
-      <h2>Why Commercial-Vehicle ADAS Is Hard</h2>
+      <h2>Platforms</h2>
+<p>Worked across commercial vehicle variants including truck, tractor, and bus platforms with ICE and FCEV powertrains.</p>    </article>
+    <article class="detail-card">
+      <h2>Responsibilities</h2>
       <ul>
-        <li>Long wheelbase and high inertia make yaw response slower than passenger vehicles.</li>
-        <li>Yaw-rate-only RoadRadius estimation can react late during lane changes or rapid curvature transitions.</li>
-        <li>Different powertrain / brake-control configurations such as AT, AMT, EBS, and ABS make behavior consistency harder across platforms.</li>
-        <li>Heavy-duty braking must balance deceleration demand, brake durability, thermal load, fuel efficiency, and driver acceptance.</li>
-        <li>Adjacent-lane or bus-only-lane traffic can create false target-selection risk when ego-path prediction and actual road curvature diverge.</li>
+        <li>Production ADAS behavior logic development.</li>
+        <li>SCC/L2 ADAS calibration and validation.</li>
+        <li>Target-selection robustness improvement.</li>
+        <li>Brake and stop-state behavior logic support.</li>
+        <li>MILS/HILS/dynamometer/real-vehicle validation.</li>
+        <li>Production issue analysis and release support.</li>
+        <li>Internal tooling and workflow improvement.</li>
       </ul>
     </article>
   </section>
@@ -364,48 +354,45 @@
   <section>
     <div class="section-title-row">
       <h2>Independent Technical Ownership</h2>
-      <p class="section-note">Wide horizontal case-study cards, separated from team-level SCC/FOC production contribution.</p>
+      <p class="section-note">Public-safe case-study cards focused on selected production-facing contribution areas.</p>
     </div>
     <div class="case-study-list">
       <article class="case-study-card">
-        <h3>Independent Work 1: SCC2 Emergency Stop</h3>
+        <h3>SCC Emergency-Stop State Behavior</h3>
         <div class="case-study-body">
           <div class="case-column">
             <span class="case-label">Problem</span>
-            <p>Under SCC/LFA operation, the vehicle needs deterministic fallback behavior when the driver cannot intervene or a driver-response abnormality is detected.
+            <p>Production commercial-vehicle SCC/L2 workflows require deterministic behavior when emergency-stop state handling is needed.
 </p>
           </div>
           <div class="case-column">
             <span class="case-label">My contribution</span>
             <ul>
-              <li>Designed the activation, state-transition, controlled-deceleration, and safe-stop behavior for SCC2 Emergency Stop.</li>
-              <li>Structured the behavior around safe handover and safe-stop flow rather than abrupt disengagement.</li>
-              <li>Kept the public description abstract: no internal state names, thresholds, CAN signals, or calibration values are exposed.</li>
+              <li>Developed and validated state-behavior logic related to SCC emergency-stop handling in production commercial-vehicle ADAS workflows.</li>
+              <li>Structured the public description around safe handover and stop-state behavior without exposing internal state names or calibration values.</li>
             </ul>
           </div>
           <div class="case-column">
             <span class="case-label">Outcome</span>
-            <p>Added a safety-fallback behavior layer suitable for mass-production commercial-vehicle SCC operation.
+            <p>Supported robust stop-state behavior for selected production-facing SCC/L2 ADAS workflows.
 </p>
           </div>
         </div>
 
       </article>
       <article class="case-study-card">
-        <h3>Independent Work 2: EKF-Based RoadRadius Fusion</h3>
+        <h3>Road-Radius Fusion Logic</h3>
         <div class="case-study-body">
           <div class="case-column">
             <span class="case-label">Problem</span>
-            <p>Existing production RoadRadius estimation relied heavily on vehicle-speed/yaw-rate geometry and lane-based radius. For heavy-duty vehicles, this could be slow during lane changes or curvature transitions because yaw response lags the driver's steering intention.
+            <p>Heavy-duty vehicles can show delayed yaw response during lane changes or curvature transitions, making road-curvature estimation important for consistent ADAS behavior.
 </p>
           </div>
           <div class="case-column">
             <span class="case-label">My contribution</span>
             <ul>
-              <li>Developed steering-intent-based RoadRadius estimation by converting steering-wheel input into tire-angle-based curvature estimation.</li>
-              <li>Applied a vehicle-dynamics-based radius estimation concept suitable for long-wheelbase commercial vehicles.</li>
-              <li>Fused steering-based RoadRadius with yaw-rate-based RoadRadius using an EKF-based fusion structure.</li>
-              <li>Developed conditions for when lane/camera-based RoadRadius could be considered valid and blended into the final radius.</li>
+              <li>Worked on road-curvature estimation and fusion logic to improve ADAS behavior consistency in curved-road scenarios.</li>
+              <li>Combined steering-intent, yaw-rate, and lane-validity concepts in a public-safe architecture description.</li>
             </ul>
           </div>
           <div class="case-column">
@@ -416,58 +403,57 @@
         </div>
 
         <div class="inline-architecture">
-          <h4>NDA-Safe RoadRadius Fusion Architecture</h4>
+          <h4>Public-Safe Road-Radius Fusion Architecture</h4>
           <div class="inline-architecture-grid">
             <figure class="inline-architecture-figure">
-              <img src="assets/road_radius_fusion_public.svg" alt="Public-safe RoadRadius fusion diagram. Internal signal names, matrices, thresholds, calibration values, and Simulink block structures are intentionally omitted."/>
-<figcaption>Public-safe RoadRadius fusion diagram. Internal signal names, matrices, thresholds, calibration values, and Simulink block structures are intentionally omitted.</figcaption>            </figure>
+              <img src="assets/road_radius_fusion_public.svg" alt="Public-safe road-radius fusion diagram. Internal signal names, matrices, thresholds, calibration values, and Simulink block structures are intentionally omitted."/>
+<figcaption>Public-safe road-radius fusion diagram. Internal signal names, matrices, thresholds, calibration values, and Simulink block structures are intentionally omitted.</figcaption>            </figure>
             <div class="inline-architecture-text">
-<p>Steering input can represent driver intention earlier than yaw-rate response. The public-safe architecture is therefore framed around steering-intent-based radius estimation, yaw-rate-based RoadRadius, lane-validity checking, EKF-based fusion, and conditional lane blending.
+<p>Steering input can represent driver intention earlier than yaw-rate response. The public-safe architecture is framed around steering-intent radius estimation, yaw-rate-based radius estimation, lane-validity checking, fusion, and conditional lane blending.
 </p>              <ul>
-                <li>Steering input → tire-angle conversion → vehicle-dynamics-based radius estimation.</li>
-                <li>Vehicle speed + yaw rate → yaw-rate-based RoadRadius.</li>
-                <li>EKF-based fusion combines steering-intent radius and yaw-rate radius.</li>
-                <li>Lane/camera RoadRadius is blended only when lane-validity conditions are satisfied.</li>
-                <li>Final RoadRadius is used for ego-path prediction and target object selection.</li>
+                <li>Steering input is converted into a vehicle-dynamics-based curvature estimate.</li>
+                <li>Vehicle speed and yaw rate provide a separate road-radius estimate.</li>
+                <li>Fusion logic combines estimates while checking lane/camera validity.</li>
+                <li>Final road-radius output supports ego-path prediction and target selection.</li>
               </ul>
             </div>
           </div>
         </div>
       </article>
       <article class="case-study-card">
-        <h3>Independent Work 3: FOC Brake Distribution Logic</h3>
+        <h3>Front-Target-Based Brake Distribution Logic</h3>
         <div class="case-study-body">
           <div class="case-column">
             <span class="case-label">Problem</span>
-            <p>In Forward Object Collision / FOC deceleration scenarios, heavy-duty vehicles must satisfy required deceleration while avoiding excessive use of the foundation brake. This is especially important during long downhill driving, where foundation-brake overuse can create thermal, durability, fuel-efficiency, and driver-acceptance issues.
+            <p>When a forward target vehicle is present and the ADAS controller requests longitudinal deceleration, heavy-duty vehicles must satisfy the requested deceleration while avoiding unnecessary overuse of the foundation brake. This is especially important during long downhill driving, where foundation-brake overuse can create thermal, durability, fuel-efficiency, and driver-acceptance issues.
 </p>
           </div>
           <div class="case-column">
             <span class="case-label">My contribution</span>
             <ul>
-              <li>Developed rule-based brake distribution logic that selects auxiliary brake and foundation brake usage according to FOC requested deceleration and ego/target conditions.</li>
-              <li>Used scenario factors such as ego speed, target speed, speed gradient, relative distance, and required deceleration to decide brake contribution.</li>
+              <li>Developed rule-based brake distribution logic that selects auxiliary brake and foundation brake usage according to ADAS-requested deceleration and ego/forward-target conditions.</li>
+              <li>Used scenario factors such as ego speed, forward-target speed, speed gradient, relative distance, and required deceleration to decide brake contribution.</li>
               <li>Biased the logic toward active auxiliary-brake usage in long downhill or high thermal-load situations to reduce unnecessary foundation-brake demand.</li>
               <li>Balanced heavy-duty deceleration quality with brake durability, fuel efficiency, and driver acceptance.</li>
             </ul>
           </div>
           <div class="case-column">
             <span class="case-label">Outcome</span>
-            <p>Improved FOC deceleration behavior robustness across commercial-vehicle scenarios where braking strategy matters as much as pure deceleration tracking.
+            <p>Improved front-target deceleration behavior robustness across commercial-vehicle scenarios where braking strategy matters as much as pure deceleration tracking.
 </p>
           </div>
         </div>
 
         <div class="inline-architecture">
-          <h4>NDA-Safe FOC Brake Distribution Architecture</h4>
+          <h4>Public-Safe Front-Target Brake Distribution Architecture</h4>
           <div class="inline-architecture-grid">
             <figure class="inline-architecture-figure">
-              <img src="assets/foc_brake_distribution_public.svg" alt="Public-safe FOC brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted."/>
-<figcaption>Public-safe FOC brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted.</figcaption>            </figure>
+              <img src="assets/foc_brake_distribution_public.svg" alt="Public-safe front-target brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted."/>
+<figcaption>Public-safe front-target brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted.</figcaption>            </figure>
             <div class="inline-architecture-text">
-<p>For heavy-duty vehicles, braking strategy must consider not only requested deceleration but also thermal load, downhill duration, brake durability, fuel efficiency, and driver acceptance. The diagram keeps the logic rule-based and NDA-safe.
+<p>For heavy-duty vehicles, braking strategy during forward-target deceleration must consider not only requested deceleration but also thermal load, downhill duration, brake durability, fuel efficiency, and driver acceptance. The diagram keeps the logic rule-based and public-safe.
 </p>              <ul>
-                <li>FOC requested deceleration is interpreted together with ego/target speed, speed gradient, and relative distance.</li>
+                <li>ADAS-requested deceleration is interpreted together with ego speed, forward-target speed, speed gradient, and relative distance.</li>
                 <li>Auxiliary brake is prioritized when the situation allows, especially in long downhill or high thermal-load scenarios.</li>
                 <li>Foundation brake is blended when required to satisfy deceleration demand and safety constraints.</li>
                 <li>The final brake command balances safety, durability, fuel efficiency, and driver acceptance.</li>
@@ -477,24 +463,46 @@
         </div>
       </article>
       <article class="case-study-card">
-        <h3>Independent Work 4: Target Object Selection Robustness</h3>
+        <h3>Target-Selection Robustness</h3>
         <div class="case-study-body">
           <div class="case-column">
             <span class="case-label">Problem</span>
-            <p>In curved-road or bus-only-lane scenarios, an ego-based constant-R path prediction can include distant adjacent-lane tracks even when the actual road curvature would place them outside the ego lane. This can create false target-candidate risk.
+            <p>Curved-road and lane-specific scenarios can create false or unstable target behavior risk when predicted ego path and actual road geometry diverge.
 </p>
           </div>
           <div class="case-column">
             <span class="case-label">My contribution</span>
             <ul>
-              <li>Built target-selection robustness logic to reduce adjacent-lane false target interpretation.</li>
-              <li>Focused on cut-in/cut-out, target-candidate gating, and ego-corridor consistency under curvature mismatch.</li>
-              <li>Connected the logic to BEV scenario replay so difficult commercial-vehicle cases could be analyzed repeatedly without requiring every iteration to be tested on a real bus.</li>
+              <li>Improved target-selection robustness for curved-road and lane-specific scenarios, reducing false or unstable target behavior risk.</li>
+              <li>Connected the logic to repeatable public-safe BEV scenario replay concepts for analysis without exposing internal datasets.</li>
             </ul>
           </div>
           <div class="case-column">
             <span class="case-label">Outcome</span>
-            <p>Reduced false target-selection risk in difficult real-road commercial-vehicle scenarios and supported production sign-off workflows.
+            <p>Reduced false target-selection risk in difficult real-road commercial-vehicle scenarios and supported production release-readiness workflows.
+</p>
+          </div>
+        </div>
+
+      </article>
+      <article class="case-study-card">
+        <h3>Validation and Release Support</h3>
+        <div class="case-study-body">
+          <div class="case-column">
+            <span class="case-label">Problem</span>
+            <p>Selected control-logic areas must be validated across platform, regulation, powertrain, brake-system, and field-test constraints before release.
+</p>
+          </div>
+          <div class="case-column">
+            <span class="case-label">My contribution</span>
+            <ul>
+              <li>Supported calibration, regression testing, vehicle-level debugging, and production release-readiness workflows across multiple commercial-vehicle platforms.</li>
+              <li>Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows.</li>
+            </ul>
+          </div>
+          <div class="case-column">
+            <span class="case-label">Outcome</span>
+            <p>Helped move selected ADAS behavior updates through production-development validation workflows.
 </p>
           </div>
         </div>
@@ -515,7 +523,7 @@
         <div class="program-card-body">
           <h3>QZ FCEV Europe</h3>
           <p><strong>XCIENT Fuel Cell Truck FCEV</strong></p>
-<div class="program-meta">FCEV / AT / EBS</div><p>European safety regulation vehicle where commercial-vehicle SCC/Lvl2 ADAS logic was applied and validated for mass production.</p>        </div>
+<div class="program-meta">FCEV / AT / EBS</div><p>Public reference platform where commercial-vehicle SCC/L2 ADAS behavior was applied and validated for production-development workflows.</p>        </div>
         <div class="program-media">
 <a href="https://ecv.hyundai.com/global/en/products/xcient-fuel-cell-truck-fcev" target="_blank" rel="noopener noreferrer" aria-label="Open public reference for QZ FCEV Europe">              <img src="assets/hmc_qz_fcev_europe.jpg" alt="QZ FCEV Europe - XCIENT Fuel Cell Truck FCEV"/>
 </a>        </div>
@@ -524,7 +532,7 @@
         <div class="program-card-body">
           <h3>QZ FCEV North America</h3>
           <p><strong>XCIENT Fuel Cell Tractor FCEV</strong></p>
-<div class="program-meta">FCEV / AT / ABS</div><p>North American FCEV tractor platform requiring ADAS behavior consistency under a different brake-control configuration.</p>        </div>
+<div class="program-meta">FCEV / AT / ABS</div><p>Public reference platform requiring ADAS behavior consistency under a different brake-control configuration.</p>        </div>
         <div class="program-media">
 <a href="https://ecv.hyundai.com/global/en/products/xcient-fuel-cell-tractor-fcev" target="_blank" rel="noopener noreferrer" aria-label="Open public reference for QZ FCEV North America">              <img src="assets/hmc_qz_fcev_na.jpg" alt="QZ FCEV North America - XCIENT Fuel Cell Tractor FCEV"/>
 </a>        </div>
@@ -533,7 +541,7 @@
         <div class="program-card-body">
           <h3>QZ 25PE ICE</h3>
           <p><strong>The new XCIENT ICE Tractor</strong></p>
-<div class="program-meta">ICE / AMT / EBS</div><p>ICE tractor mass-production program where transmission and brake-control differences made calibration and behavior consistency non-trivial.</p>        </div>
+<div class="program-meta">ICE / AMT / EBS</div><p>Public reference platform where transmission and brake-control differences made calibration and behavior consistency non-trivial.</p>        </div>
         <div class="program-media">
 <a href="https://www.hyundaimotorgroup.com/en/story/CONT0000000000191845" target="_blank" rel="noopener noreferrer" aria-label="Open public reference for QZ 25PE ICE">              <img src="assets/hmc_qz_25pe_ice.jpg" alt="QZ 25PE ICE - The new XCIENT ICE Tractor"/>
 </a>          <div class="program-video">
@@ -558,23 +566,23 @@
       <h2>Production Validation Workflow</h2>
       <ul>
         <li>Model-based development and logic review in MATLAB/Simulink-oriented production workflow.</li>
-        <li>Vehicle-level SCC/FOC calibration and validation across heavy-duty platform variants.</li>
+        <li>Vehicle-level SCC/L2 calibration and validation across heavy-duty platform variants.</li>
         <li>Scenario-focused debugging for false target selection, curvature transitions, braking behavior, and lane-perception reliability.</li>
-        <li>Production issue response and sign-off support with test teams.</li>
+        <li>Production issue response and release-readiness support with test teams.</li>
       </ul>
     </article>
     <article class="detail-card">
-      <h2>NDA-Safe Toolchain Connection</h2>
-<p>Separate portfolio toolchain pages show mock versions of internal engineering tools that I personally built to reduce validation bottlenecks. They are not presented as company production logic and do not include company code, signal names, real datasets, A2L labels, CAN IDs, or calibration parameters.
+      <h2>Public-Safe Toolchain Connection</h2>
+<p>Separate portfolio toolchain pages show mock versions of engineering tools built to reduce validation bottlenecks. They are not presented as company production logic and do not include company code, real datasets, calibration metadata, database IDs, or calibration parameters.
 </p>      <ul>
-        <li>XCP-Based AI Validation Interface: mock XCP/AI bypass workflow for validating time-series models against ECU I/O concepts.</li>
-        <li>Time-Series AI / MF4 Training Tool: mock model-training workflow for converting logged time-series data into runtime-ready models.</li>
-        <li>TOS / ODP BEV Simulator: mock replay of constant-R ego-path prediction versus varying-curvature road geometry for target-selection analysis.</li>
+        <li>Legacy Calibration Setup to ADAS AI Validation Loop: constraint-driven use of CANape/VN1640/laptop field workflow.</li>
+        <li>Time-Series AI Training Tool: mock model-training workflow for converting synthetic logged time-series data into runtime-ready models.</li>
+        <li>TOS / ODP BEV Simulator: mock replay of ego-path prediction versus varying-curvature road geometry for target-selection analysis.</li>
       </ul>
     </article>
     <article class="detail-card">
       <h2>Patents & Inventions</h2>
-<p>Inventor / co-inventor on approximately seven ADAS and vehicle-control-related patent filings, including Korean patent filings and selected US filings in progress. Patent titles should be translated into English for readability. Details for unpublished or pending filings should remain omitted due to confidentiality.
+<p>Inventor / co-inventor on approximately seven ADAS and vehicle-control-related patent filings, including Korean patent filings and selected US filings in progress. Details for unpublished or pending filings remain omitted.
 </p>    </article>
   </section>
 
@@ -583,7 +591,7 @@
       <h2>Public References</h2>
     </div>
     <article class="reference-panel">
-      <p>Information and visuals on this page are based on publicly available vehicle references or NDA-safe abstractions. No company source code, internal signal names, CAN/A2L labels, calibration data, thresholds, matrices, or proprietary implementation details are included.
+      <p>Public-Safe Boundary: This page contains a public-safe technical summary only. Proprietary source code, ECU signal names, calibration metadata, CAN database content, calibration values, thresholds, vehicle logs, internal screenshots, and company-confidential implementation details are intentionally omitted.
 </p>
     </article>
   </section>
