@@ -169,22 +169,3 @@ For projects where you provide a complete HTML file later, place it under that p
 source_type: "html"
 source: "Context/Projects/toolchains/project_folder/format/detail.html"
 ```
-
-## Personal crypto/AI-agent project recommendation
-
-Do not put the crypto trading project on the main corporate resume by default.
-
-Better placement:
-
-- private portfolio appendix,
-- personal lab section,
-- or separate page titled "AI-Agent Time-Series Decision Support Platform."
-
-Avoid emphasizing profit. Emphasize:
-
-- agent orchestration,
-- risk controls,
-- data pipeline,
-- backtesting,
-- strict human approval,
-- logging and auditability.
