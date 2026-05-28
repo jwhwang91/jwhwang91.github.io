@@ -1,14 +1,16 @@
 projects:
 - id: e2e-xcp-bypass
   title: Turning a Legacy Calibration Setup into an ADAS AI Validation Loop
+  repo_name: realtime-vehicle-ai-validation-studio
+  repo_url: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio
   stack: Python / C++ / CANape / VN1640 / XCP over CAN-FD / ONNX
   hook: Constraint-driven laptop-based ADAS AI validation loop using the team's existing field calibration workflow.
   objective: 'Commercial-vehicle ADAS needed a practical way to explore learned-model validation on real vehicles. The mass-production ECU supported Ethernet, but Vector Ethernet interface hardware was not available in the field workflow, so I reused the available CANape/VN1640/laptop calibration setup.
 
-    '
+  '
   impact: "Transformed the team's existing CANape/VN1640 laptop-based calibration workflow into a minimum viable ADAS AI validation loop, enabling learned-model experimentation on real production vehicles despite the lack of Ethernet interface hardware or dedicated AI compute platforms.
 
-    "
+  "
   tags:
   - Python
   - C++
@@ -17,19 +19,21 @@ projects:
   - ONNX
   - CANape/VN1640
   detail_output: toolchains/e2e-xcp-bypass/index.html
-  mock_output: _toolchain_ui_mock/01_xcp_ai_validation_ui/index.html
   source_type: html
   source: Context/Projects/toolchains/e2e_xcp_bypass/format/detail.html
+
 - id: timeseries-ai-training
   title: ADAS Time-Series AI Training & Export Platform
+  repo_name: adas-log-to-ai-workbench
+  repo_url: https://github.com/jwhwang91/adas-log-to-ai-workbench
   stack: Python / MF4 / PyTorch / ONNX / MATLAB Export
   hook: All-in-one MF4 time-series preprocessing, training, normalization, and deployment conversion platform.
   objective: 'The team works mostly with CANape time-series data. I built a customizable platform that lets engineers load, preprocess, normalize, train, and export models without rewriting the same data pipeline for each ADAS module.
 
-    '
+  '
   impact: 'Gives each module owner a reusable path to test AI-based replacements for rule-based logic, then export .pt to ONNX or MATLAB-compatible formats for simulation and real-vehicle bypass testing.
 
-    '
+  '
   tags:
   - Python
   - MF4
@@ -37,19 +41,21 @@ projects:
   - ONNX
   - Time-Series
   detail_output: toolchains/timeseries-ai-training/index.html
-  mock_output: _toolchain_ui_mock/02_timeseries_training_ui/index.html
   source_type: html
   source: Context/Projects/toolchains/timeseries_ai_training/format/detail.html
+
 - id: tos-odp-bev-simulator
   title: TOS/ODP MATLAB Simulink Bird-Eye-View Simulator
+  repo_name: bev-target-selection-validation-studio
+  repo_url: https://github.com/jwhwang91/bev-target-selection-validation-studio
   stack: MATLAB Script / Simulink / ADAS Visualization
   hook: Repeatable simulator for rare bus-only-lane false target selection scenarios that were hard to reproduce with real vehicles.
   objective: 'During PY bus development, repeated bus-only-lane false target selection cases required a way to visualize tracks, gating behavior, and ODP/TOS behavior without repeatedly deploying a massive bus into rare traffic conditions.
 
-    '
+  '
   impact: 'Enabled repeated logic modification and parameter tuning in simulation before final vehicle confirmation, helping the team obtain test-team sign-off for mass-production bus behavior.
 
-    '
+  '
   tags:
   - MATLAB
   - Simulink
@@ -57,6 +63,5 @@ projects:
   - BEV
   - TOS/ODP
   detail_output: toolchains/tos-odp-bev-simulator/index.html
-  mock_output: _toolchain_ui_mock/03_tos_odp_bev_simulator_ui/index.html
   source_type: html
   source: Context/Projects/toolchains/tos_odp_bev_simulator/format/detail.html
