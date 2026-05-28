@@ -3,253 +3,153 @@
 {% block body_class %}resume-page{% endblock %}
 
 {% block body %}
+
 <main class="resume-sheet">
 
   <header class="resume-header" id="resume">
 
     <div>
-
       <p class="eyebrow">Resume / Portfolio Main Page</p>
-
       <h1>{{ personal.display_name | default(site.name) }}</h1>
-
       <h2>{{ site.title }}</h2>
-
       <p class="headline">{{ site.headline }}</p>
-
       <p class="one-liner">{{ site.one_liner }}</p>
-
     </div>
 
     <div class="contact-box">
-
       <div>{{ personal.location }}</div>
-
       <div>{{ personal.email }}</div>
-
       <div>{{ personal.phone }}</div>
       {% if personal.linkedin.url %}<div><a href="{{ personal.linkedin.url }}" target="_blank">{{ personal.linkedin.label }}</a></div>{% endif %}
-
       {% if personal.github.url %}<div><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></div>{% endif %}
-
       {% for link in personal.optional_links %}
-
       {% if link.url %}
-
       <div><a href="{{ link.url }}" target="_blank">{{ link.label }}</a></div>
-
       {% endif %}
-
       {% endfor %}
-
     </div>
 
   </header>
 
   <section class="notion-block">
     <h3>Target Roles</h3>
-
     <div class="keyword-strip">
-
       {% for keyword in site.keywords %}
-
       <span>{{ keyword }}</span>
-
       {% endfor %}
-
     </div>
-
   </section>
 
   <section class="notion-block">
-
     <h3>Professional Summary</h3>
-
     <ul class="tight-list">
-
       {% for item in site.main_focus %}
-
       <li>{{ item }}</li>
-
       {% endfor %}
-
     </ul>
-
   </section>
 
   <section class="notion-block">
-
     <h3>Core Competencies</h3>
-
     <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
     <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
-
     <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
-
   </section>
 
   <section class="notion-block" id="experience">
-
     <h3>Professional Experience</h3>
-
     <div class="experience-list">
-
       {% for exp in experiences %}
-
       <article class="experience-card">
-
         <div class="entry-top">
-
           <div>
-
             <strong>{{ exp.role }}</strong>
-
             <span>{{ exp.organization }} | {{ exp.period }}</span>
-
           </div>
           <a href="{{ exp.detail_output }}" class="detail-link no-print">Technical Case Study</a>
-
         </div>
 
         <p class="hook">{{ exp.hook }}</p>
-
         <ul>
-
           {% for bullet in exp.bullets %}
-
           <li>{{ bullet }}</li>
-
           {% endfor %}
-
         </ul>
-
         <p class="print-url print-only">Detail: {{ exp.detail_output }}</p>
-
       </article>
-
       {% endfor %}
-
     </div>
-
   </section>
 
   <section class="notion-block" id="toolchains">
-
     <h3>Selected Technical Projects</h3>
     <p class="section-note">Public-safe technical case studies for validation tooling, AI-assisted implementation, and commercial-vehicle ADAS debugging workflows.</p>
 
     <div class="toolchain-list">
-
       {% for project in toolchains %}
-
       <article class="toolchain-card">
-
         <div class="entry-top">
-
           <div>
-
             <strong>{{ project.title }}</strong>
-
             <span>{{ project.stack }}</span>
-
           </div>
 
           <div class="entry-actions no-print">
-
             <a href="{{ project.detail_output }}" class="detail-link">Technical Case Study</a>
             {% if project.repo_url %}
-
-            <a href="{{ project.repo_url }}" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">{{ project.repo_name | default('GitHub Repository') }}</a>
-
+            <a href="{{ project.repo_url }}" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">GitHub</a>
             {% endif %}
-
           </div>
-
         </div>
 
         <p class="hook">{{ project.hook }}</p>
-
         <div class="objective-impact">
-
           <p><b>Objective:</b> {{ project.objective }}</p>
-
           <p><b>Impact:</b> {{ project.impact }}</p>
-
         </div>
 
         <div class="tag-row">
-
           {% for tag in project.tags %}
-
           <span>{{ tag }}</span>
-
           {% endfor %}
-
         </div>
 
         <p class="print-url print-only">Detail: {{ project.detail_output }}</p>
         {% if project.repo_url %}
-
         <p class="print-url print-only">GitHub: {{ project.repo_url }}</p>
-
         {% endif %}
-
       </article>
-
       {% endfor %}
-
     </div>
-
   </section>
 
   <section class="two-col">
-
     <div class="notion-block">
-
       <h3>Education</h3>
-
       {% for edu in resume.education %}
-
       <div class="mini-entry">
-
         <strong>{{ edu.institute }}</strong>
-
         <span>{{ edu.degree }} | {{ edu.period }}</span>
-
         {% if edu.thesis %}
-
         <em>Thesis: {{ edu.thesis }}</em>
-
         {% endif %}
-
       </div>
-
       {% endfor %}
-
     </div>
+
     <div class="notion-block">
-
       <h3>Skills</h3>
-
       <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
-
       <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
-
       <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
-
     </div>
-
   </section>
 
   <section class="footer-cta">
-
     <strong>Links:</strong>
-
     <span><a href="{{ personal.portfolio.url }}" target="_blank">{{ personal.portfolio.url }}</a></span>
     {% if personal.github.url %}<span><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></span>{% endif %}
-
     <p>Use this resume-style page for PDF export. Use detail pages for public-safe technical case studies and sanitized engineering notes.</p>
-
   </section>
 
 </main>
