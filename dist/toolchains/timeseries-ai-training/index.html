@@ -1,655 +1,180 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8"/>
-  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>ADAS Time-Series AI Training & Export Platform</title>
-  <link rel="stylesheet" href="../../style.css"/>
-
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>ADAS Log-to-AI Workbench | Technical Case Study</title>
   <style>
-    :root{
-      --bg2:#111118;--bg3:#1a1a24;--bg4:#22222f;--surface:#16161f;
-      --border:#2a2a3a;--border2:#333348;--text-pri:#f0f0f5;--text-sec:#9898b0;--text-ter:#5a5a72;
-      --accent:#3b82f6;--accent2:#60a5fa;--green:#34d399;--green-d:#0d4a32;
-      --red:#f87171;--red-d:#4a0d0d;--orange:#fb923c;--orange-d:#4a2a0d;
-      --purple:#a78bfa;--purple-d:#2d1a4a;--yellow:#fbbf24;--yellow-d:#4a3a0a;--cyan:#22d3ee;--cyan-d:#0a3a4a;
+    :root {
+      --bg: #f6f8fb;
+      --paper: #ffffff;
+      --ink: #172033;
+      --muted: #637083;
+      --line: #dde4ee;
+      --accent: #204ecf;
+      --soft: #eef3ff;
+      --code: #f4f6f8;
     }
-    .case-shell{max-width:1120px}
-    .case-header{background:var(--paper);border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:34px;margin-bottom:16px}
-    .case-header h1{font-size:38px;line-height:1.04;letter-spacing:-.04em;margin-bottom:8px}
-    .case-header h2{font-size:16px;color:var(--accent);font-weight:850;margin-bottom:12px}
-    .case-header p{font-size:14px;color:var(--muted);max-width:860px}
-    .case-meta{display:flex;flex-wrap:wrap;gap:6px;margin-top:16px}
-    .case-meta span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:750;color:#3f4349}
-    .case-block{border:1px solid var(--line);border-radius:12px;background:#fff;padding:18px 20px;margin:14px 0}
-    .case-block h3{font-size:17px;margin-bottom:10px;letter-spacing:-.01em}
-    .case-block p{font-size:12.8px;color:var(--muted);margin:6px 0}
-    .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .case-grid-3{display:grid;grid-template-columns:repeat(3,1fr);gap:12px}
-    .case-card{border:1px solid var(--line);border-radius:10px;padding:14px 15px;background:#fff}
-    .case-card h4{font-size:13.5px;margin-bottom:7px;color:var(--ink)}
-    .case-card p,.case-card li{font-size:12.5px;color:var(--muted);line-height:1.55}
-    .case-card ul{padding-left:17px}
-    .hook{font-size:14px!important;color:var(--ink)!important;font-weight:820;margin:8px 0!important}
-    .diagram{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;margin:14px 0}
-    .diagram-head{padding:12px 15px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--soft);font-weight:850}
-    .flow{padding:18px;display:grid;grid-template-columns:repeat(6,1fr);gap:8px;align-items:stretch}
-    .flow-node{border:1px solid var(--line2);background:#fafafa;border-radius:10px;padding:12px 10px;text-align:center;position:relative}
-    .flow-node:not(:last-child)::after{content:"→";position:absolute;right:-12px;top:50%;transform:translateY(-50%);color:var(--accent);font-weight:900;z-index:2}
-    .flow-node strong{display:block;font-size:12.5px;margin-bottom:3px}
-    .flow-node span{font-size:10.5px;color:var(--muted)}
-    .stat-row2{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
-    .stat-card2{border:1px solid var(--line);background:#fff;border-radius:10px;padding:13px;text-align:center}
-    .stat-card2 strong{display:block;font-size:20px;color:var(--accent);letter-spacing:-.02em}
-    .stat-card2 span{display:block;font-size:10.5px;color:var(--muted);margin-top:3px}
-    .note-box{background:linear-gradient(135deg,#fff,#f8faff);border:1px solid #d9e3ff;border-radius:12px;padding:16px;margin:14px 0}
-    .note-box h3{font-size:16px;margin-bottom:8px}
-    .note-box p,.note-box li{font-size:12.8px;color:var(--muted)}
-    .note-box ul{padding-left:18px}
-    .evidence-panel{border:1px solid var(--line);border-radius:14px;background:#fff;overflow:hidden;margin:14px 0}
-    .evidence-panel h3{padding:12px 15px;border-bottom:1px solid var(--line);font-size:12px;text-transform:uppercase;letter-spacing:.1em;color:var(--soft);font-weight:850}
-    .evidence-panel .inner{padding:12px;background:#111118;overflow:auto}
-    .evidence-panel svg{max-width:100%!important;height:auto!important;display:block;margin:auto}
-    .evidence-panel img{display:block;max-width:100%;height:auto;margin:auto;border-radius:8px}
-    .architecture-panel{border-color:#d7deea;background:#fff}
-    .architecture-panel h3{background:#f8fafc;color:#475569}
-    .architecture-panel .inner{padding:16px;background:#fff}
-    .architecture-panel svg{background:#fff;border:1px solid #e5e7eb;border-radius:10px}
-    .architecture-panel svg>rect[width="1050"]{fill:#fff!important}
-    .architecture-panel .arch-node:hover rect,.architecture-panel .blk:hover rect,.architecture-panel .iblock:hover rect{filter:brightness(1.08) drop-shadow(0 0 6px rgba(59,130,246,.22))}
-    .architecture-panel .arch-node.arch-active rect,.architecture-panel .blk.block-active rect,.architecture-panel .iblock.block-active rect{filter:brightness(1.08) drop-shadow(0 0 8px rgba(59,130,246,.38))}
-    .caption{font-size:12px;color:var(--muted);padding:10px 14px;border-top:1px solid var(--line);background:#fff}
-    .image-grid{display:grid;grid-template-columns:1fr 1fr;gap:12px;margin-top:12px}
-    .image-grid figure{border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff;margin:0}
-    .image-grid img{display:block;width:100%;height:auto}
-    .image-grid figcaption{font-size:12px;color:var(--muted);border-top:1px solid var(--line);padding:8px 10px}
-    .table-lite{width:100%;border-collapse:collapse;font-size:12.5px;margin-top:8px}
-    .table-lite th{background:#f7f7f5;color:var(--soft);text-align:left;padding:8px 10px;border:1px solid var(--line);text-transform:uppercase;font-size:10.5px;letter-spacing:.08em}
-    .table-lite td{padding:8px 10px;border:1px solid var(--line);color:var(--muted);vertical-align:top}
-    code{background:var(--chip);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:11px}
-
-    /* Interactive diagram styling restored */
-    .arch-node,.blk,.iblock{cursor:pointer}
-    .arch-node rect,.arch-node polygon,.blk rect,.blk polygon,.iblock rect,.iblock polygon{transition:filter .15s}
-    .arch-node:hover rect,.arch-node:hover polygon,.blk:hover rect,.blk:hover polygon,.iblock:hover rect,.iblock:hover polygon{filter:brightness(1.3)}
-    .arch-node.arch-active rect,.arch-node.arch-active polygon{filter:brightness(1.55) drop-shadow(0 0 6px currentColor)}
-
-    /* ML inline info panel */
-    #arch-info{margin:12px 14px 0;background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:16px 20px;min-height:84px;display:flex;align-items:center}
-    #arch-info.has-content{align-items:flex-start;flex-direction:column}
-    #arch-info-placeholder{color:var(--muted);font-size:13px;display:flex;align-items:center;gap:10px;width:100%}
-    #arch-info-content{display:none;width:100%;animation:fadeIn .18s ease}
-    #arch-info.has-content #arch-info-placeholder{display:none}
-    #arch-info.has-content #arch-info-content{display:block}
-    #info-header{display:flex;align-items:center;gap:10px;margin-bottom:10px}
-    #info-tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;padding:2px 8px;border-radius:4px;background:var(--chip);border:1px solid var(--line)}
-    #info-title{font-size:17px;font-weight:850}
-    #info-body{font-size:13px;color:var(--muted);line-height:1.65}
-    #info-pills{display:flex;flex-wrap:wrap;gap:6px;margin-top:12px}
-    .info-pill{padding:3px 10px;border-radius:99px;font-size:12px;font-weight:650;background:var(--chip);border:1px solid var(--line);color:var(--muted)}
-    .arch-thumb-wrap{flex:1;min-width:260px;max-width:480px}
-    .arch-thumb-label{font-size:11px;font-weight:800;letter-spacing:.07em;text-transform:uppercase;color:var(--soft);margin-bottom:6px}
-    .arch-thumb-wrap img{width:100%;height:auto;border-radius:8px;border:1px solid var(--line);display:block;transition:transform .2s, box-shadow .2s}
-    .arch-thumb-wrap img:hover{transform:scale(1.02);box-shadow:0 4px 24px rgba(0,0,0,.2)}
-
-    /* TOS inline info panel */
-    #block-info{background:#fff;border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:0 10px 10px 0;padding:18px 22px;margin-top:12px;display:none;animation:fadeIn .2s ease}
-    #block-info .bi-header{display:flex;align-items:center;gap:12px;margin-bottom:12px}
-    #block-info .bi-dot{width:10px;height:10px;border-radius:50%;flex-shrink:0;background:var(--accent)}
-    #block-info .bi-title{font-size:17px;font-weight:850}
-    #block-info .bi-sub{font-size:11px;color:var(--soft);margin-top:2px}
-    #block-info .bi-fn{display:inline-block;margin-bottom:10px;padding:3px 10px;background:var(--chip);border:1px solid var(--line);border-radius:4px;font-family:'SF Mono',Consolas,monospace;font-size:12px;color:var(--accent)}
-    #block-info .bi-body{font-size:13px;color:var(--muted);line-height:1.65}
-    #block-info .bi-body ul{margin:8px 0 0 18px}
-    #block-info .bi-body li{margin-bottom:5px}
-
-    /* E2E modal restored */
-    .modal-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.68);z-index:200;align-items:center;justify-content:center;backdrop-filter:blur(5px)}
-    .modal-overlay.active{display:flex}
-    .modal-box{background:#fff;border:1px solid var(--line);border-radius:16px;padding:28px;max-width:650px;width:92%;max-height:82vh;overflow-y:auto;position:relative;box-shadow:var(--shadow)}
-    .modal-close{position:absolute;top:14px;right:16px;background:var(--chip);border:1px solid var(--line);color:var(--muted);cursor:pointer;border-radius:7px;padding:3px 9px;font-size:12px}
-    .modal-tag{font-size:10px;font-weight:800;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin-bottom:8px}
-    .modal-title{font-size:20px;font-weight:850;margin-bottom:14px;letter-spacing:-.02em}
-    .modal-body{font-size:13px;color:var(--muted);line-height:1.7}
-    .modal-body h4{color:var(--ink);font-size:13px;margin:14px 0 5px;font-weight:800}
-    .modal-body ul{padding-left:16px;margin-bottom:8px}
-    .modal-body li{margin-bottom:3px}
-    .modal-body pre{background:#111827;color:#e5e7eb;border-radius:8px;padding:12px;font-size:11px;overflow-x:auto;line-height:1.6;margin:8px 0}
-    .modal-desc{background:var(--accent-soft);border:1px solid #d9e3ff;border-left:3px solid var(--accent);border-radius:8px;padding:10px 12px;margin-bottom:12px;color:var(--muted)}
-    .modal-desc strong{display:block;color:var(--ink);font-size:12.5px;margin-bottom:3px}
-    .file-list{display:flex;flex-direction:column;gap:7px;margin-top:7px}
-    .file-item{background:var(--chip);border:1px solid var(--line);border-radius:8px;padding:9px 13px}
-    .file-item .fname{color:var(--accent);font-weight:800;font-size:12px;font-family:'SF Mono','Fira Code',monospace;margin-bottom:4px}
-    .file-item .fdesc{color:var(--muted);font-size:12px;line-height:1.55}
-    @keyframes fadeIn{from{opacity:0;transform:translateY(4px)}to{opacity:1;transform:none}}
-
-    @media(max-width:900px){
-      .case-grid,.case-grid-3,.stat-row2,.image-grid{grid-template-columns:1fr}
-      .flow{grid-template-columns:1fr}
-      .flow-node:not(:last-child)::after{content:"↓";right:50%;top:auto;bottom:-18px;transform:translateX(50%)}
-      .case-header h1{font-size:31px}
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--ink);
+      line-height: 1.65;
     }
-    @media print{
-      .case-shell{max-width:none;margin:0;padding:0}
-      .case-header,.case-block,.note-box,.diagram,.evidence-panel{box-shadow:none;break-inside:avoid}
-      .case-header h1{font-size:28px}
-      .flow{grid-template-columns:repeat(3,1fr)}
-      .flow-node:not(:last-child)::after{display:none}
-      .stat-row2{grid-template-columns:repeat(5,1fr)}
-      .modal-overlay{display:none!important}
+    a { color: var(--accent); text-decoration: none; }
+    a:hover { text-decoration: underline; }
+    .shell { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px; }
+    .top-nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 16px;
+      align-items: center;
+      margin-bottom: 20px;
+      color: var(--muted);
+      font-size: 14px;
+    }
+    .nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
+    .hero, .case-section {
+      background: var(--paper);
+      border: 1px solid var(--line);
+      border-radius: 22px;
+      box-shadow: 0 18px 50px rgba(23, 32, 51, 0.06);
+    }
+    .hero { padding: 34px; margin-bottom: 18px; }
+    .eyebrow {
+      margin: 0 0 10px;
+      text-transform: uppercase;
+      letter-spacing: 0.16em;
+      color: var(--accent);
+      font-weight: 750;
+      font-size: 12px;
+    }
+    h1 { margin: 0; font-size: clamp(32px, 5vw, 54px); line-height: 1.05; letter-spacing: -0.04em; }
+    .subtitle { margin: 14px 0 0; font-size: 18px; color: var(--muted); max-width: 780px; }
+    .meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 7px 11px;
+      border-radius: 999px;
+      background: var(--soft);
+      color: #263f86;
+      font-size: 13px;
+      font-weight: 650;
+    }
+    .case-section { padding: 28px 30px; margin: 16px 0; }
+    .section-title { display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px; }
+    .section-title span { color: var(--accent); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; }
+    h2 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
+    p { margin: 0 0 12px; }
+    ul { margin: 12px 0 0; padding-left: 20px; }
+    li { margin: 7px 0; }
+    .callout {
+      border-left: 4px solid var(--accent);
+      background: #f8faff;
+      padding: 15px 18px;
+      border-radius: 14px;
+      color: #263246;
+      margin-top: 14px;
+    }
+    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
+    .mini-card { background: var(--code); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
+    .mini-card strong { display: block; margin-bottom: 5px; }
+    .boundary { background: #fffaf0; border-color: #f2ddb5; }
+    @media (max-width: 760px) {
+      .hero, .case-section { padding: 24px; border-radius: 18px; }
+      .grid { grid-template-columns: 1fr; }
+      .top-nav { align-items: flex-start; flex-direction: column; }
+    }
+    @media print {
+      body { background: white; }
+      .shell { padding: 0; }
+      .top-nav { display: none; }
+      .hero, .case-section { box-shadow: none; break-inside: avoid; }
     }
   </style>
-
 </head>
-<body class="detail-page">
-  <nav class="top-nav no-print">
-    <a class="nav-brand" href="../../index.html">Jae Woong Hwang</a>
-    <a href="../../index.html#resume">Resume</a>
-    <a href="../../index.html#experience">Experience</a>
-    <a href="../../index.html#toolchains">Toolchains</a>
-    <button class="print-btn" onclick="window.print()">Export PDF</button>
-  </nav>
+<body>
+  <main class="shell">
+    <nav class="top-nav">
+      <strong>Jae Woong Hwang</strong>
+      <div class="nav-links">
+        <a href="../../index.html#resume">Resume</a>
+        <a href="../../index.html#experience">Experience</a>
+        <a href="../../index.html#toolchains">Toolchains</a>
+      </div>
+    </nav>
 
-
-  <main class="detail-shell case-shell">
-    <header class="case-header">
+    <header class="hero">
       <p class="eyebrow">Selected Toolchain Project</p>
-      <h1>ADAS Time-Series AI Training & Export Platform</h1>
-      <h2>Python / PyQt5 / MF4 / PyTorch / ONNX / MATLAB Export</h2>
-      <p class="hook">GUI-driven MF4 time-series preprocessing, training, evaluation, and export platform for ADAS engineers.</p>
-      <div class="case-meta">
-        <span>ADAS Training Workflow</span><span>MF4 / ASAM MDF4</span><span>PyQt5</span><span>pyqtgraph</span>
-        <span>asammdf</span><span>TCN / LSTM / Transformer</span><span>ONNX</span><span>MATLAB</span>
+      <h1>ADAS Log-to-AI Workbench</h1>
+      <p class="subtitle">MF4 preprocessing, model training, normalization, and ONNX/MATLAB export workflow for ADAS engineers.</p>
+      <div class="meta-row">
+        <span class="chip">Python</span>
+        <span class="chip">MF4 / ASAM MDF4</span>
+        <span class="chip">PyTorch</span>
+        <span class="chip">ONNX</span>
+        <span class="chip">MATLAB Export</span>
       </div>
     </header>
-    <section class="case-block">
-      <h3>Objective</h3>
-      <p>The tool gives ADAS engineers a single GUI workflow to load logs, select signals, preprocess and normalize data, train deep learning models, evaluate predictions, and export models for simulation or real-vehicle bypass.</p>
-      <div class="stat-row2">
-        <div class="stat-card2"><strong>Modular</strong><span>Python workflow</span></div>
-        <div class="stat-card2"><strong>4</strong><span>ML model types</span></div>
-        <div class="stat-card2"><strong>3</strong><span>export formats</span></div>
-        <div class="stat-card2"><strong>TCN</strong><span>primary model arch</span></div>
-        <div class="stat-card2"><strong>MF4</strong><span>input format</span></div>
-      </div>
-    </section>
-    <section class="evidence-panel architecture-panel">
-      <h3>System Architecture</h3>
-      <div class="inner"><svg xmlns="http://www.w3.org/2000/svg"
-         viewBox="0 0 1050 440"
-         width="1050" height="440"
-         style="max-width:100%;height:auto;display:block;font-family:-apple-system,BlinkMacSystemFont,'SF Pro Text',sans-serif;">
 
-      <!-- Background -->
-      <rect width="1050" height="440" fill="#111118"/>
-
-      <!-- Arrowhead markers -->
-      <defs>
-        <marker id="a-blue"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#3b82f6"/></marker>
-        <marker id="a-gray"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#5a5a72"/></marker>
-        <marker id="a-green"  markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#34d399"/></marker>
-        <marker id="a-yellow" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#fbbf24"/></marker>
-        <marker id="a-orange" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#fb923c"/></marker>
-        <marker id="a-cyan"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#22d3ee"/></marker>
-        <marker id="a-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#a78bfa"/></marker>
-      </defs>
-
-      <!-- Zone separators -->
-      <line x1="183" y1="10" x2="183" y2="430" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4,4"/>
-      <line x1="617" y1="10" x2="617" y2="430" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4,4"/>
-      <line x1="853" y1="10" x2="853" y2="430" stroke="#2a2a3a" stroke-width="1" stroke-dasharray="4,4"/>
-
-      <!-- Zone labels -->
-      <text x="12"  y="16" fill="#5a5a72" font-size="9" font-weight="700" letter-spacing="1">INPUT</text>
-      <text x="195" y="16" fill="#5a5a72" font-size="9" font-weight="700" letter-spacing="1">APP CORE</text>
-      <text x="625" y="16" fill="#5a5a72" font-size="9" font-weight="700" letter-spacing="1">TRAINING</text>
-      <text x="862" y="16" fill="#5a5a72" font-size="9" font-weight="700" letter-spacing="1">EXPORT / EVAL</text>
-
-      <!-- ═══ ROW 1 — Main Pipeline ═══ -->
-
-      <!-- MF4 File  cx=82 cy=87  R=155 B=120 -->
-      <g class="arch-node" onclick="showModal('input','MF4 / CSV File','Raw automotive log files in ASAM MDF4 format captured from ECU, CAN-bus, or test bench. The app also accepts pre-processed CSV files directly for training or evaluation.',['ASAM MDF4','Multi-channel','Timestamps'])">
-        <rect x="10" y="55" width="145" height="65" rx="10" fill="#111820" stroke="#2a3a4a" stroke-width="1.5"/>
-        <text x="82"  y="84" fill="#9898b0" font-size="13" text-anchor="middle" font-weight="700">MF4 File</text>
-        <text x="82" y="102" fill="#5a5a72"  font-size="11" text-anchor="middle">ASAM MDF4 · CSV</text>
-      </g>
-
-      <!-- Application Entry  cx=260 cy=87  R=328 B=120 -->
-      <g class="arch-node" onclick="showModal('entry','Application Entry','Application entry point. Parses --qss CLI argument, sets QCoreApplication org/app names for Saved preferences, silences asammdf logs, applies QSS stylesheet (from theme assets/ or --qss arg), instantiates Main Workflow and starts the Qt event loop.',['App startup','Saved preferences','Theme loader','Event loop'])">
-        <rect x="193" y="55" width="135" height="65" rx="10" fill="#1a2a4a" stroke="#3b82f6" stroke-width="1.5"/>
-        <text x="260"  y="84" fill="#60a5fa" font-size="13" text-anchor="middle" font-weight="700">Application Entry</text>
-        <text x="260" y="102" fill="#5a5a72"  font-size="11" text-anchor="middle">Entry · Theme loader</text>
-      </g>
-
-      <!-- Main Workflow  cx=475 cy=87  R=585 B=130 T=45 -->
-      <g class="arch-node" onclick="showModal('core','Main Workflow','Main workflow for loading public-safe log data, selecting channels, resampling to a common time grid, normalizing, visualizing, and exporting prepared datasets.',['MF4 loader','Channel selection','pyqtgraph plots','Resampling','Saved settings','CSV export'])">
-        <rect x="365" y="45" width="220" height="85" rx="10" fill="#1a2a4a" stroke="#3b82f6" stroke-width="2"/>
-        <text x="475"  y="79" fill="#60a5fa" font-size="14" text-anchor="middle" font-weight="800">Main Workflow</text>
-        <text x="475"  y="97" fill="#9898b0" font-size="11" text-anchor="middle">main workflow</text>
-        <text x="475" y="116" fill="#5a5a72"  font-size="10" text-anchor="middle">Load · Visualize · Preprocess · Export CSV</text>
-      </g>
-
-      <!-- training workflow  cx=725 cy=90  R=825 B=145 T=35 L=625 -->
-      <g class="arch-node" onclick="showModal('training','training workflow — training workflow','Public-safe training workflow for model selection, dataset preparation, non-blocking training, evaluation, and export.',['Background trainer','Task setup','Training setup','Model discovery','ONNX export','MATLAB .mat export','Live training log'])">
-        <rect x="625" y="35" width="200" height="110" rx="10" fill="#1a2a4a" stroke="#3b82f6" stroke-width="2"/>
-        <text x="725"  y="69" fill="#60a5fa" font-size="13" text-anchor="middle" font-weight="800">training workflow</text>
-        <text x="725"  y="88" fill="#9898b0" font-size="11" text-anchor="middle">training workflow</text>
-        <text x="725" y="106" fill="#5a5a72"  font-size="10" text-anchor="middle">Train · training settings · Export</text>
-        <text x="725" y="122" fill="#5a5a72"  font-size="10" text-anchor="middle">background worker · Live log</text>
-      </g>
-
-      <!-- Evaluation Workflow  cx=947 cy=93  R=1035 B=134 T=52 L=860 -->
-      <g class="arch-node" onclick="showModal('eval','evaluation workflow — evaluation workflow','Evaluation window. Loads a test CSV and a saved model artifact, reconstructs the model architecture from the payload (weights + public metadata), runs inference, plots ground truth vs prediction in pyqtgraph, and prints regression metrics (MAE, RMSE, R²) or classification metrics in the text log.',['Load model artifact','Load held-out data','Load model','Run inference','Plot GT vs Pred','Metrics: MAE/RMSE/R²'])">
-        <rect x="860" y="52" width="175" height="82" rx="10" fill="#0d4a32" stroke="#15803d" stroke-width="2"/>
-        <text x="947"  y="84" fill="#34d399" font-size="13" text-anchor="middle" font-weight="800">Evaluation Workflow</text>
-        <text x="947" y="103" fill="#9898b0"  font-size="11" text-anchor="middle">evaluation workflow</text>
-        <text x="947" y="121" fill="#5a5a72"  font-size="10" text-anchor="middle">Inference · Metrics · Plot</text>
-      </g>
-
-      <!-- ═══ ROW 2 — Support / Data ═══ -->
-
-      <!-- Sample Data  cx=82 cy=212  T=185 B=240 R=155 -->
-      <g class="arch-node" onclick="showModal('input','Sample Data','Contains public-safe sample data used to validate the parsing and preprocessing workflow.',['sample MF4','synthetic data generator','Synthetic data'])">
-        <rect x="10" y="185" width="145" height="55" rx="10" fill="#111820" stroke="#2a3a4a" stroke-width="1.5"/>
-        <text x="82" y="209" fill="#9898b0" font-size="12" text-anchor="middle" font-weight="700">Sample Data</text>
-        <text x="82" y="228" fill="#5a5a72"  font-size="10" text-anchor="middle">Sample MF4 files</text>
-      </g>
-
-      <!-- chart interactions  cx=275 cy=212  T=185 B=240 R=358 L=193 -->
-      <g class="arch-node" onclick="showModal('util','Chart Interaction Layer','Provides Synchronized cursor — synchronized dashed cursor lines across multiple pyqtgraph plots. Includes epoch-to-datetime formatting helpers for x-axis labels, and best-effort mouse event suppression to prevent hairlines from capturing clicks meant for the main plot.',['Synchronized cursor','Epoch formatting','Plot styling helper','Mouse suppression'])">
-        <rect x="193" y="185" width="165" height="55" rx="10" fill="#1a2a3a" stroke="#0e7490" stroke-width="1.5"/>
-        <text x="275" y="209" fill="#22d3ee" font-size="12" text-anchor="middle" font-weight="700">Chart Interaction Layer</text>
-        <text x="275" y="228" fill="#5a5a72"  font-size="10" text-anchor="middle">Hairline · Cursor · Epoch fmt</text>
-      </g>
-
-      <!-- QSS/UI  cx=275 cy=297  T=270 B=325 R=358 L=193 -->
-      <g class="arch-node" onclick="showModal('asset','UI Theme + Layout Assets','QSS: GUI theme — comprehensive dark theme applied globally to the Qt application. UI files: Qt Designer .ui XML layouts for each window/dialog — main_window, training_window, training_result_window, signal_adjust_dialog, trim_dialog, logging_file_conversion_dialog, tcn_training settings_dialog.',['GUI theme','main layout','training layout','result layout','dialog layout'])">
-        <rect x="193" y="270" width="165" height="55" rx="10" fill="#2a1a4a" stroke="#7c3aed" stroke-width="1.5"/>
-        <text x="275" y="294" fill="#a78bfa" font-size="12" text-anchor="middle" font-weight="700">theme assets · layout assets</text>
-        <text x="275" y="313" fill="#5a5a72"  font-size="10" text-anchor="middle">Dark theme · Qt Designer UIs</text>
-      </g>
-
-      <!-- CSV  cx=442 cy=212  T=185 B=240 R=510 L=375 -->
-      <g class="arch-node" onclick="showModal('artifact','Preprocessed CSV','Intermediate data artifact generated by Main Workflow export. Contains aligned and normalized time-series channels. Used as input to training workflow (train/validation split) and evaluation workflow (test set). Enables full reproducibility without re-loading MF4.',['Uniform time grid','Normalized signals','Train/valid/test split','Reproducible','Pandas DataFrame'])">
-        <rect x="375" y="185" width="135" height="55" rx="10" fill="#111820" stroke="#2a3a4a" stroke-width="1.5"/>
-        <text x="442" y="209" fill="#9898b0" font-size="13" text-anchor="middle" font-weight="700">preprocessed dataset</text>
-        <text x="442" y="228" fill="#5a5a72"  font-size="10" text-anchor="middle">Preprocessed signals</text>
-      </g>
-
-      <!-- _models  cx=715 cy=212  T=185 B=240 R=805 L=625 -->
-      <g class="arch-node" onclick="showModal('models','Model Registry','Plugin-style model registry that lets engineers add or swap time-series model families without rewriting the GUI workflow. Each model follows a shared training and inference interface.',['Shared model interface','TCN family','LSTM family','Transformer family','Reusable training flow'])">
-        <rect x="625" y="185" width="180" height="55" rx="10" fill="#2a1a4a" stroke="#7c3aed" stroke-width="2"/>
-        <text x="715" y="209" fill="#a78bfa" font-size="13" text-anchor="middle" font-weight="800">Model Registry</text>
-        <text x="715" y="228" fill="#9898b0"  font-size="10" text-anchor="middle">TCN · LSTM · Transformer · Plugin</text>
-      </g>
-
-      <!-- model artifact  cx=715 cy=305  T=275 B=335 R=805 L=625 -->
-      <g class="arch-node" onclick="showModal('artifact','Model Checkpoint','Self-contained model artifact saved by the training workflow. It carries enough public-safe metadata for evaluation and export tools to reload the trained model without exposing project-specific details.',['Model weights','Training metadata','Input/output schema','Model family','Self-contained'])">
-        <rect x="625" y="275" width="180" height="60" rx="10" fill="#2a2a1a" stroke="#ca8a04" stroke-width="1.5"/>
-        <text x="715" y="301" fill="#fbbf24" font-size="13" text-anchor="middle" font-weight="700">Model Artifact</text>
-        <text x="715" y="320" fill="#9898b0"  font-size="10" text-anchor="middle">weights + public metadata</text>
-      </g>
-
-      <!-- ONNX Export  cx=947 cy=212  T=185 B=240 R=1035 L=860 -->
-      <g class="arch-node" onclick="showModal('export','ONNX Export','Export workflow that converts a trained time-series model into a simulation-compatible runtime artifact while keeping internal conversion details and project configuration out of the public page.',['ONNX export','Simulation handoff','Runtime packaging','Version compatibility','Public-safe summary'])">`r`n        <rect x="860" y="185" width="175" height="55" rx="10" fill="#4a2a0d" stroke="#fb923c" stroke-width="1.5"/>`r`n        <text x="947" y="209" fill="#fb923c" font-size="13" text-anchor="middle" font-weight="800">ONNX Export</text>`r`n        <text x="947" y="228" fill="#9898b0"  font-size="10" text-anchor="middle">simulation export</text>`r`n      </g>
-
-      <!-- Simulation Converter  cx=947 cy=297  T=270 B=325 R=1035 L=860 -->
-      <g class="arch-node" onclick="showModal('export','Simulation Converter','Converter workflow that prepares exported model artifacts for downstream simulation without exposing internal tensor names, file names, or project-specific conversion settings.',['Model artifact import','Public-safe metadata','Simulation-ready output','No internal names','Reusable workflow'])">`r`n        <rect x="860" y="270" width="175" height="55" rx="10" fill="#4a3a0a" stroke="#ca8a04" stroke-width="1.5"/>`r`n        <text x="947" y="294" fill="#fbbf24" font-size="12" text-anchor="middle" font-weight="800">Simulation Converter</text>`r`n        <text x="947" y="313" fill="#9898b0"  font-size="10" text-anchor="middle">exported artifact</text>`r`n      </g>
-
-      <!-- ═══ ROW 3 — Outputs ═══ -->
-
-      <!-- MATLAB Out  cx=715 cy=394  T=365 B=423 R=805 L=625 -->
-      <g class="arch-node" onclick="showModal('output','MATLAB Output Files','Generated artifacts: TCN_tcn.onnx (ONNX model), TCN_weights.mat (weight matrix file), convert_from_onnx.m (MATLAB R2018b importONNXNetwork script). These files allow deployment of the trained model inside a MATLAB Simulink or embedded coder workflow.',['TCN_tcn.onnx','TCN_weights.mat','convert_from_onnx.m','MATLAB R2018b','Simulink ready'])">
-        <rect x="625" y="365" width="180" height="58" rx="10" fill="#0a3a4a" stroke="#0e7490" stroke-width="1.5"/>
-        <text x="715" y="389" fill="#22d3ee" font-size="12" text-anchor="middle" font-weight="700">MATLAB Outputs</text>
-        <text x="715" y="408" fill="#9898b0"  font-size="10" text-anchor="middle">.onnx · .mat · .m script</text>
-      </g>
-
-      <!-- export_csv  cx=947 cy=387  T=360 B=415 R=1035 L=860 -->
-      <g class="arch-node" onclick="showModal('export','export_tcn_to_csv.py','Utility script that exports TCN model predictions (or weight values) to CSV format. Useful for debugging model behavior or for downstream tools that consume CSV rather than binary formats.',['TCN inference','Pandas CSV','Debug utility'])">
-        <rect x="860" y="360" width="175" height="55" rx="10" fill="#111820" stroke="#2a3a4a" stroke-width="1.5"/>
-        <text x="947" y="384" fill="#9898b0" font-size="12" text-anchor="middle" font-weight="700">export_tcn_to_csv.py</text>
-        <text x="947" y="403" fill="#5a5a72"  font-size="10" text-anchor="middle">Weights / predictions → CSV</text>
-      </g>
-
-      <!-- ═══ CONNECTIONS — H and V only, no diagonals ═══ -->
-      <!-- Routing channels: H-lane y=152, V-lane-A x=605, V-lane-B x=829/836/843/850 -->
-
-      <!-- A  MF4 → Application Entry (solid blue →) -->
-      <path d="M 155,87 H 193" fill="none" stroke="#3b82f6" stroke-width="1.8" marker-end="url(#a-blue)"/>
-
-      <!-- B  Application Entry → Main Workflow (solid blue →) -->
-      <path d="M 328,87 H 365" fill="none" stroke="#3b82f6" stroke-width="1.8" marker-end="url(#a-blue)"/>
-
-      <!-- C  Main Workflow → training workflow (solid blue →) -->
-      <path d="M 585,87 H 625" fill="none" stroke="#3b82f6" stroke-width="1.8" marker-end="url(#a-blue)"/>
-
-      <!-- D  training workflow → Evaluation Workflow (dashed gray, "opens window") -->
-      <path d="M 825,87 H 860" fill="none" stroke="#5a5a72" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#a-gray)"/>
-
-      <!-- E  chart interactions → Main Workflow (dashed cyan ↑, dependency)
-           chart_top(275,185) → y=152 H-lane → Main Workflow bottom-center(475,130) -->
-      <path d="M 275,185 V 152 H 475 V 130" fill="none" stroke="#22d3ee" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a-blue)"/>
-
-      <!-- F  QSS/UI → Main Workflow (dashed purple, loads assets)
-           QSS_left(193,297) → x=175 left gap → y=87 → Main Workflow_left(365,87) -->
-      <path d="M 193,297 H 175 V 87 H 365" fill="none" stroke="#a78bfa" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a-purple)"/>
-
-      <!-- G  Main Workflow → CSV (solid gray ↓, exports preprocessed data)
-           MW_bottom_at_x450(450,130) → y=152 H-lane → CSV_top_cx(442,185) -->
-      <path d="M 450,130 V 152 H 442 V 185" fill="none" stroke="#9898b0" stroke-width="1.5" marker-end="url(#a-gray)"/>
-
-      <!-- H  CSV → training workflow (solid blue →, training input)
-           CSV_right(510,212) → x=605 V-lane-A → y=90 → TW_left(625,90) -->
-      <path d="M 510,212 H 605 V 90 H 625" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#a-blue)"/>
-
-      <!-- I  CSV → Evaluation Workflow (dashed green, test data — routes above all blocks y=22)
-           CSV_top_cx(442,185) → y=22 above-all → x=947 → Result_top(947,52) -->
-      <path d="M 442,185 V 22 H 947 V 52" fill="none" stroke="#34d399" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#a-green)"/>
-
-      <!-- J  training workflow → _models (solid purple ↓)
-           TW_bottom_cx(715,145) → _models_top(715,185) -->
-      <path d="M 715,145 V 185" fill="none" stroke="#a78bfa" stroke-width="1.5" marker-end="url(#a-purple)"/>
-
-      <!-- K  training workflow → model artifact (solid yellow, saves checkpoint)
-           TW_right(825,90) → x=850 V-lane-B → y=305 → pt_right(805,305) -->
-      <path d="M 825,90 H 850 V 305 H 805" fill="none" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#a-yellow)"/>
-
-      <!-- L  model artifact → Evaluation Workflow (dashed green, load for eval)
-           pt_right(805,300) → x=836 V-lane-B → y=93 → Result_left(860,93) -->
-      <path d="M 805,300 H 836 V 93 H 860" fill="none" stroke="#34d399" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#a-green)"/>
-
-      <!-- M  model artifact → ONNX Export (solid orange, triggers export)
-           pt_right(805,312) → x=843 V-lane-B → y=212 → ONNX_left(860,212) -->
-      <path d="M 805,312 H 843 V 212 H 860" fill="none" stroke="#fb923c" stroke-width="1.5" marker-end="url(#a-orange)"/>
-
-      <!-- N  ONNX Export → Simulation Converter (solid yellow ↓)
-           ONNX_bottom(947,240) → Simulation Converter_top(947,270) -->
-      <path d="M 947,240 V 270" fill="none" stroke="#fbbf24" stroke-width="1.5" marker-end="url(#a-yellow)"/>
-
-      <!-- O  ONNX Export → MATLAB Out (dashed cyan, generates artifacts)
-           ONNX_left(860,212) → x=843 V-lane-B → y=394 → MATLAB_right(805,394) -->
-      <path d="M 860,212 H 843 V 394 H 805" fill="none" stroke="#22d3ee" stroke-width="1.2" stroke-dasharray="5,4" marker-end="url(#a-cyan)"/>
-
-      <!-- P  Simulation Converter → MATLAB Out (dashed yellow)
-           Simulation Converter_left(860,297) → x=848 → y=394 → MATLAB_right(805,394) -->
-      <path d="M 860,297 H 848 V 394 H 805" fill="none" stroke="#fbbf24" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a-yellow)"/>
-
-      <!-- Q  Sample Data → MF4 hint (dashed ↑) -->
-      <path d="M 82,185 V 120" fill="none" stroke="#2a3a4a" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#a-gray)"/>
-
-      <!-- R  Simulation Converter → export_csv (dashed ↓, utility) -->
-      <path d="M 947,325 V 360" fill="none" stroke="#2a3a4a" stroke-width="1" stroke-dasharray="3,3" marker-end="url(#a-gray)"/>
-
-      <!-- ═══ LEGEND ═══ -->
-      <rect x="12" y="404" width="620" height="28" rx="6" fill="#16161f" stroke="#2a2a3a" stroke-width="1"/>
-      <text x="22" y="422" fill="#5a5a72" font-size="9" font-weight="700">LEGEND</text>
-      <line x1="72"  y1="418" x2="106" y2="418" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#a-blue)"/>
-      <text x="110" y="422" fill="#9898b0" font-size="9">Main data flow</text>
-      <line x1="200" y1="418" x2="234" y2="418" stroke="#5a5a72" stroke-width="1.3" stroke-dasharray="4,3" marker-end="url(#a-gray)"/>
-      <text x="238" y="422" fill="#9898b0" font-size="9">Optional / UI open</text>
-      <line x1="345" y1="418" x2="379" y2="418" stroke="#34d399" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#a-green)"/>
-      <text x="383" y="422" fill="#9898b0" font-size="9">Eval / test path</text>
-      <line x1="468" y1="418" x2="502" y2="418" stroke="#fb923c" stroke-width="1.5" marker-end="url(#a-orange)"/>
-      <text x="506" y="422" fill="#9898b0" font-size="9">Export path</text>
-      <text x="590" y="422" fill="#5a5a72" font-size="9">Select items for details</text>
-    </svg></div>
-      <div class="caption">Architecture summary covers MF4 input, main workflow, training workflow, model registry, model artifact, exports, and evaluation window.</div>
-  <div id="arch-info">
-    <div id="arch-info-placeholder">
-      <span style="font-size:18px">ⓘ</span>
-      Click any block in the diagram above to see its original description.
-    </div>
-    <div id="arch-info-content">
-      <div id="info-header">
-        <span id="info-tag"></span>
-        <span id="info-title"></span>
-      </div>
-      <div id="info-body"></div>
-      <div id="info-pills"></div>
-      <div id="info-imgs" style="display:none;margin-top:16px;display:flex;gap:12px;flex-wrap:wrap;"></div>
-    </div>
-  </div>
+    <section class="case-section">
+      <div class="section-title"><span>01</span><h2>Context</h2></div>
+      <p>The ADAS team collected real-vehicle and calibration data mainly through CANape in MF4 format. Each module owner needed a repeatable way to turn raw measurement logs into model-ready datasets for AI-based experiments.</p>
+      <p>The workbench was designed around the existing engineering workflow: load the log, select useful signals, trim the usable range, normalize the data, run a module-specific model script, and export the trained result for later validation.</p>
     </section>
 
-    <section class="evidence-panel">
-      <h3>Original Model Plugin Architecture</h3>
-      <div class="inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 240" width="900" height="240"
-         style="max-width:100%;height:auto;display:block;font-family:-apple-system,sans-serif;">
-      <rect width="900" height="240" fill="#111118"/>
-
-      <!-- discover_models() -->
-      <rect x="30" y="80" width="170" height="80" rx="10" fill="#1a2a4a" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="115" y="112" fill="#60a5fa" font-size="12" text-anchor="middle" font-weight="700">discover_models()</text>
-      <text x="115" y="130" fill="#9898b0" font-size="10" text-anchor="middle">__init__.py</text>
-      <text x="115" y="148" fill="#5a5a72" font-size="10" text-anchor="middle">Scan *_model.py → hot-reload</text>
-
-      <!-- Arrow to Shared Model Interface -->
-      <path d="M 200,120 C 220,120 220,120 240,120" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
-      <polygon points="240,120 231,115 231,125" fill="#3b82f6"/>
-
-      <!-- Shared Model Interface -->
-      <rect x="240" y="70" width="160" height="100" rx="10" fill="#2a1a4a" stroke="#7c3aed" stroke-width="2"/>
-      <text x="320" y="102" fill="#a78bfa" font-size="12" text-anchor="middle" font-weight="700">Shared Model Interface</text>
-      <text x="320" y="120" fill="#9898b0" font-size="10" text-anchor="middle">abstract interface</text>
-      <text x="320" y="138" fill="#5a5a72" font-size="10" text-anchor="middle">model family</text>
-      <text x="320" y="153" fill="#5a5a72" font-size="10" text-anchor="middle">default_training settings() · create()</text>
-      <text x="320" y="164" fill="#5a5a72" font-size="10" text-anchor="middle">fit() · predict()</text>
-
-      <!-- Arrows to model classes -->
-      <path d="M 400,95 C 420,85 440,75 460,75" fill="none" stroke="#7c3aed" stroke-width="1.3"/>
-      <polygon points="460,75 451,70 451,80" fill="#7c3aed"/>
-      <path d="M 400,120 C 430,120 445,120 460,120" fill="none" stroke="#7c3aed" stroke-width="1.3"/>
-      <polygon points="460,120 451,115 451,125" fill="#7c3aed"/>
-      <path d="M 400,145 C 420,155 440,165 460,165" fill="none" stroke="#7c3aed" stroke-width="1.3"/>
-      <polygon points="460,165 451,160 451,170" fill="#7c3aed"/>
-      <path d="M 400,158 C 420,175 440,200 460,205" fill="none" stroke="#7c3aed" stroke-width="1.3" stroke-dasharray="3,3"/>
-      <polygon points="460,205 451,200 451,210" fill="#7c3aed"/>
-
-      <!-- TCN family -->
-      <rect x="460" y="50" width="150" height="55" rx="8" fill="#1a2a4a" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="535" y="74" fill="#60a5fa" font-size="12" text-anchor="middle" font-weight="700">TCN family</text>
-      <text x="535" y="91" fill="#9898b0" font-size="10" text-anchor="middle">TCN model</text>
-      <text x="535" y="99" fill="#5a5a72" font-size="9" text-anchor="middle">Dilated causal Conv1d · residual</text>
-
-      <!-- LSTM family -->
-      <rect x="460" y="95" width="150" height="55" rx="8" fill="#0d4a32" stroke="#15803d" stroke-width="1.5"/>
-      <text x="535" y="119" fill="#34d399" font-size="12" text-anchor="middle" font-weight="700">LSTM family</text>
-      <text x="535" y="136" fill="#9898b0" font-size="10" text-anchor="middle">LSTM model</text>
-      <text x="535" y="144" fill="#5a5a72" font-size="9" text-anchor="middle">Stacked LSTM · last hidden → FC</text>
-
-      <!-- Transformer family -->
-      <rect x="460" y="140" width="150" height="55" rx="8" fill="#4a2a0d" stroke="#fb923c" stroke-width="1.5"/>
-      <text x="535" y="164" fill="#fb923c" font-size="12" text-anchor="middle" font-weight="700">Transformer family</text>
-      <text x="535" y="181" fill="#9898b0" font-size="10" text-anchor="middle">Transformer model</text>
-      <text x="535" y="189" fill="#5a5a72" font-size="9" text-anchor="middle">Encoder-only · positional enc</text>
-
-      <!-- MyModel template -->
-      <rect x="460" y="185" width="150" height="45" rx="8" fill="#111820" stroke="#2a3a4a" stroke-width="1.5" stroke-dasharray="5,3"/>
-      <text x="535" y="205" fill="#9898b0" font-size="11" text-anchor="middle" font-weight="700">custom model</text>
-      <text x="535" y="223" fill="#5a5a72" font-size="9" text-anchor="middle">Drop-in via custom template</text>
-
-      <!-- Arrow to training workflow -->
-      <path d="M 610,120 C 660,120 700,120 730,120" fill="none" stroke="#3b82f6" stroke-width="1.5"/>
-      <polygon points="730,120 721,115 721,125" fill="#3b82f6"/>
-
-      <!-- {model family: Class} dict -->
-      <rect x="730" y="85" width="145" height="70" rx="8" fill="#2a2a1a" stroke="#ca8a04" stroke-width="1.5"/>
-      <text x="802" y="113" fill="#fbbf24" font-size="12" text-anchor="middle" font-weight="700">{ model family: Class }</text>
-      <text x="802" y="131" fill="#9898b0" font-size="10" text-anchor="middle">Returned to training workflow</text>
-      <text x="802" y="148" fill="#5a5a72" font-size="9" text-anchor="middle">Combo-box model selector</text>
-    </svg></div>
-      <div class="caption">The model registry is a plugin-style registry for TCN, LSTM, Transformer, and custom model classes.</div>
+    <section class="case-section">
+      <div class="section-title"><span>02</span><h2>Problem</h2></div>
+      <p>Without a shared workflow, each developer had to repeatedly write custom scripts for trimming, signal selection, normalization, training, evaluation, and export. That made AI experimentation slow, inconsistent, and difficult to compare across modules.</p>
+      <div class="callout">The bottleneck was not only model training. The bigger issue was converting real ADAS measurement logs into a clean, reproducible AI workflow that module owners could reuse.</div>
     </section>
-    <section class="evidence-panel">
-      <h3>Export Flow</h3>
-      <div class="inner"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 920 310" width="920" height="310"
-         style="max-width:100%;height:auto;display:block;font-family:-apple-system,sans-serif;">
-      <rect width="920" height="310" fill="#111118"/>
 
-      <defs>
-        <marker id="ep-blue"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#3b82f6"/></marker>
-        <marker id="ep-cyan"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#22d3ee"/></marker>
-        <marker id="ep-purple" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#a78bfa"/></marker>
-        <marker id="ep-green"  markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#34d399"/></marker>
-        <marker id="ep-gray"   markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><polygon points="0,0 8,4 0,8" fill="#5a5a72"/></marker>
-      </defs>
-
-      <!-- ── Trained Model Checkpoint (model artifact) ── cx=100 cy=140 -->
-      <rect x="15" y="95" width="168" height="90" rx="10" fill="#2a2a1a" stroke="#ca8a04" stroke-width="1.5"/>
-      <text x="99" y="125" fill="#fbbf24" font-size="12" text-anchor="middle" font-weight="700">model artifact</text>
-      <text x="99" y="142" fill="#fbbf24" font-size="11" text-anchor="middle" font-weight="700">(model artifact)</text>
-      <text x="99" y="159" fill="#9898b0" font-size="10" text-anchor="middle">any user-defined model</text>
-      <text x="99" y="174" fill="#5a5a72" font-size="9" text-anchor="middle">weights + public metadata</text>
-
-      <!-- model artifact → ONNX Export -->
-      <path d="M 183,140 H 228" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ep-blue)"/>
-
-      <!-- ── ONNX Export ── cx=310 cy=140 -->
-      <rect x="228" y="88" width="164" height="104" rx="10" fill="#1a2a4a" stroke="#3b82f6" stroke-width="1.5"/>
-      <text x="310" y="116" fill="#60a5fa" font-size="12" text-anchor="middle" font-weight="700">ONNX Export</text>
-      <text x="310" y="134" fill="#9898b0" font-size="10" text-anchor="middle">ONNX export</text>
-      <text x="310" y="150" fill="#5a5a72" font-size="9" text-anchor="middle">works with any nn.Module</text>
-      <text x="310" y="165" fill="#5a5a72" font-size="9" text-anchor="middle">opset 11 · model-agnostic</text>
-      <text x="310" y="180" fill="#5a5a72" font-size="9" text-anchor="middle">TCN / LSTM / Transformer / custom</text>
-
-      <!-- ONNX Export → model.onnx -->
-      <path d="M 392,140 H 430" fill="none" stroke="#22d3ee" stroke-width="1.5" marker-end="url(#ep-cyan)"/>
-
-      <!-- ── model.onnx ── cx=502 cy=140 -->
-      <rect x="430" y="100" width="144" height="80" rx="10" fill="#0a3a4a" stroke="#0e7490" stroke-width="2"/>
-      <text x="502" y="132" fill="#22d3ee" font-size="13" text-anchor="middle" font-weight="700">model.onnx</text>
-      <text x="502" y="150" fill="#9898b0" font-size="10" text-anchor="middle">portable · framework-free</text>
-      <text x="502" y="166" fill="#5a5a72" font-size="9" text-anchor="middle">any architecture</text>
-
-      <!-- Branch point x=608 -->
-      <path d="M 574,140 H 608" fill="none" stroke="#22d3ee" stroke-width="1.5"/>
-      <!-- → ONNX Runtime (top) -->
-      <path d="M 608,140 V 57 H 640" fill="none" stroke="#34d399" stroke-width="1.5" marker-end="url(#ep-green)"/>
-      <!-- → Runtime Bypass App (middle) -->
-      <path d="M 608,140 H 640" fill="none" stroke="#a78bfa" stroke-width="2" marker-end="url(#ep-purple)"/>
-      <!-- → MATLAB (bottom, dashed) -->
-      <path d="M 608,140 V 250 H 640" fill="none" stroke="#5a5a72" stroke-width="1.3" stroke-dasharray="5,4" marker-end="url(#ep-gray)"/>
-
-      <!-- ── ONNX Runtime ── top -->
-      <rect x="640" y="22" width="188" height="70" rx="10" fill="#0d2a1a" stroke="#34d399" stroke-width="1.5"/>
-      <text x="734" y="48" fill="#34d399" font-size="12" text-anchor="middle" font-weight="700">ONNX Runtime</text>
-      <text x="734" y="65" fill="#9898b0" font-size="10" text-anchor="middle">onnxruntime.InferenceSession</text>
-      <text x="734" y="80" fill="#5a5a72" font-size="9" text-anchor="middle">CPU / GPU · no PyTorch needed</text>
-
-      <!-- ── Runtime Bypass App ── middle — PRIMARY -->
-      <rect x="640" y="112" width="188" height="90" rx="10" fill="#1e1040" stroke="#a78bfa" stroke-width="2.5"/>
-      <text x="734" y="140" fill="#a78bfa" font-size="13" text-anchor="middle" font-weight="800">Runtime Bypass App</text>
-      <text x="734" y="158" fill="#9898b0" font-size="10" text-anchor="middle">runtime model bypass</text>
-      <text x="734" y="173" fill="#5a5a72" font-size="9" text-anchor="middle">Vehicle &#8596; Laptop &#8596; Vehicle</text>
-      <text x="734" y="187" fill="#5a5a72" font-size="9" text-anchor="middle">Real-time ECU-in-the-loop</text>
-      <rect x="643" y="115" width="68" height="14" rx="3" fill="rgba(167,139,250,.2)" stroke="rgba(167,139,250,.4)" stroke-width="1"/>
-      <text x="677" y="125" fill="#a78bfa" font-size="8" text-anchor="middle" font-weight="700">PRIMARY</text>
-
-      <!-- ── MATLAB / Simulink ── bottom — sim only -->
-      <rect x="640" y="222" width="188" height="65" rx="10" fill="#16161f" stroke="#333348" stroke-width="1.5"/>
-      <text x="734" y="248" fill="#9898b0" font-size="12" text-anchor="middle" font-weight="700">MATLAB / Simulink</text>
-      <text x="734" y="265" fill="#5a5a72" font-size="10" text-anchor="middle">importONNXNetwork()</text>
-      <text x="734" y="279" fill="#5a5a72" font-size="9" text-anchor="middle">Simulation only — not deployment</text>
-      <rect x="707" y="284" width="54" height="14" rx="3" fill="#2a2a1a" stroke="#5a5a72" stroke-width="1"/>
-      <text x="734" y="294" fill="#5a5a72" font-size="8" text-anchor="middle" font-weight="700">SIM ONLY</text>
-
-      <!-- Legend -->
-      <rect x="12" y="283" width="430" height="20" rx="6" fill="#16161f" stroke="#2a2a3a" stroke-width="1"/>
-      <line x1="22" y1="293" x2="50" y2="293" stroke="#a78bfa" stroke-width="2"/>
-      <text x="55" y="297" fill="#9898b0" font-size="9">Runtime bypass app</text>
-      <line x1="192" y1="293" x2="220" y2="293" stroke="#34d399" stroke-width="1.5"/>
-      <text x="225" y="297" fill="#9898b0" font-size="9">ONNX Runtime</text>
-      <line x1="316" y1="293" x2="344" y2="293" stroke="#5a5a72" stroke-width="1.3" stroke-dasharray="4,3"/>
-      <text x="349" y="297" fill="#9898b0" font-size="9">Simulation only</text>
-    </svg></div>
-      <div class="caption">Export path supports ONNX Runtime deployment, MATLAB import/simulation, and model reload.</div>
-    </section>
-    
-    <section class="note-box">
-      <h3>Team Impact</h3>
+    <section class="case-section">
+      <div class="section-title"><span>03</span><h2>Constraint</h2></div>
+      <p>The tool had to fit engineers who were not trying to build a full ML platform from scratch. It also had to stay compatible with existing MF4 measurement files, Python-based model scripts, normalization settings, and downstream simulation or bypass workflows.</p>
       <ul>
-        <li>Gives each ADAS module owner a reusable AI training pipeline instead of isolated scripts.</li>
-        <li>Exports ONNX models for simulation and controlled validation workflows.</li>
+        <li>Input data came from real calibration/measurement logs rather than curated ML datasets.</li>
+        <li>Different module owners could have different model architectures and hyperparameters.</li>
+        <li>The export path had to support portable model artifacts, not only local Python execution.</li>
       </ul>
     </section>
+
+    <section class="case-section">
+      <div class="section-title"><span>04</span><h2>Decision</h2></div>
+      <p>I designed a GUI-based workbench where engineers can load MF4 data, preprocess selected signals, configure model training, run independently written Python training scripts, and export trained artifacts to ONNX or MATLAB-compatible formats.</p>
+      <p>The key design choice was to separate the shared data workflow from the model-owner-specific training logic. This keeps preprocessing standardized while still allowing each developer to plug in their own model implementation.</p>
+    </section>
+
+    <section class="case-section">
+      <div class="section-title"><span>05</span><h2>Impact</h2></div>
+      <p>The tool gives each module owner a reusable path from vehicle logs to AI model artifacts. It reduces duplicated preprocessing work and makes experiments easier to standardize across ADAS functions.</p>
+      <div class="grid">
+        <div class="mini-card"><strong>For module owners</strong>Less time rewriting conversion scripts; more time evaluating model behavior.</div>
+        <div class="mini-card"><strong>For validation workflow</strong>A cleaner path from log-based training to ONNX/MATLAB-oriented artifacts.</div>
+      </div>
+    </section>
+
+    <section class="case-section">
+      <div class="section-title"><span>06</span><h2>Implementation</h2></div>
+      <ul>
+        <li>MF4/CANape log loading workflow for ADAS time-series data.</li>
+        <li>Signal selection and preprocessing pipeline for trimming, alignment, and normalization.</li>
+        <li>Dataset export path for preprocessed signals.</li>
+        <li>Configurable training workflow with hyperparameter settings.</li>
+        <li>Support for independently written model scripts by individual module owners.</li>
+        <li>Result visualization and evaluation page for model output review.</li>
+        <li>ONNX and MATLAB-oriented export path for simulation or controlled validation workflows.</li>
+      </ul>
+    </section>
+
+    <section class="case-section boundary">
+      <div class="section-title"><span>07</span><h2>Public-Safe Boundary</h2></div>
+      <p>This page contains a public-safe workflow summary only. Proprietary vehicle logs, internal signal names, model parameters, calibration values, datasets, and company-specific validation criteria are intentionally omitted.</p>
+    </section>
   </main>
-
-
-<script>
-const typeColor = {
-  input:    '#9898b0',
-  entry:    'var(--accent2)',
-  core:     'var(--accent2)',
-  training: 'var(--accent2)',
-  models:   'var(--purple)',
-  eval:     'var(--green)',
-  export:   'var(--orange)',
-  util:     'var(--cyan)',
-  asset:    'var(--purple)',
-  artifact: 'var(--yellow)',
-  output:   'var(--cyan)',
-};
-
-const nodeImages = {};
-
-let _activeNode = null;
-
-function showModal(type, title, body, pills) {
-  const color = typeColor[type] || '#9898b0';
-  const panel = document.getElementById('arch-info');
-
-  // Update active node highlight
-  if (_activeNode) _activeNode.classList.remove('arch-active');
-  _activeNode = event.currentTarget;
-  if (_activeNode) _activeNode.classList.add('arch-active');
-
-  // Fill content
-  document.getElementById('info-tag').textContent = type.toUpperCase();
-  document.getElementById('info-tag').style.color = color;
-  document.getElementById('info-title').textContent = title;
-  document.getElementById('info-title').style.color = color;
-  document.getElementById('info-body').innerHTML = body.replace(/`([^`]+)`/g, '<code>$1</code>');
-
-  const pillsEl = document.getElementById('info-pills');
-  pillsEl.innerHTML = '';
-  if (pills) {
-    pills.forEach(p => {
-      const span = document.createElement('span');
-      span.className = 'info-pill';
-      span.textContent = p;
-      pillsEl.appendChild(span);
-    });
-  }
-
-  panel.style.borderLeftColor = color;
-  panel.classList.add('has-content');
-
-  // Show associated screenshots
-  const imgsEl = document.getElementById('info-imgs');
-  imgsEl.innerHTML = '';
-  const shots = nodeImages[type] || [];
-  if (shots.length) {
-    imgsEl.style.display = 'flex';
-    shots.forEach(s => {
-      const wrap = document.createElement('div');
-      wrap.className = 'arch-thumb-wrap';
-      wrap.innerHTML = `<div class="arch-thumb-label">${s.label}</div><img src="${s.src}" alt="${s.label}"/>`;
-      imgsEl.appendChild(wrap);
-    });
-  } else {
-    imgsEl.style.display = 'none';
-  }
-}
-
-// Smooth scroll for nav links
-document.querySelectorAll('nav a').forEach(a => {
-  a.addEventListener('click', e => {
-    e.preventDefault();
-    const target = document.querySelector(a.getAttribute('href'));
-    if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
-  });
-});
-</script>
 </body>
 </html>
