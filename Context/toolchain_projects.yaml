@@ -4,11 +4,11 @@ projects:
     repo_name: realtime-vehicle-ai-validation-studio
     repo_url: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio
     stack: Python / C++ / CANape / VN1640 / XCP over CAN-FD / ONNX
-    hook: Resource-constrained real-vehicle AI validation prototype built from the team’s existing CANape/VN1640 laptop workflow.
+    hook: Resource-constrained AI-transition platform for testing learned-model behavior on real vehicle signals using the team's existing calibration setup.
     objective: >-
-      Help commercial-vehicle ADAS module owners explore learned-model validation on real vehicles before full Ethernet/HPC infrastructure adoption by reusing the available CANape/VN1640/laptop calibration workflow.
+      Build a minimum viable real-vehicle AI validation loop for a commercial-vehicle ADAS team that had limited access to Ethernet-based validation equipment and high-end AI compute platforms. Instead of waiting for full infrastructure, the project reused the available CANape/VN1640/laptop workflow to make learned-model experimentation approachable for ADAS module owners.
     impact: >-
-      Provided a practical stepping stone from legacy calibration to AI validation under limited equipment, enabling model owners to map real vehicle signals, run ONNX/Python model experiments, and learn future validation concepts without waiting for Ethernet interface hardware or dedicated AI compute platforms.
+      Created a practical bridge from conventional calibration workflows to AI-assisted validation by connecting learned models, real vehicle signals, and XCP-over-CAN-FD communication under existing field-test constraints. The project is positioned as a proactive AI-transition prototype rather than a fully deployed production tool.
     tags:
       - Python
       - C++
@@ -16,7 +16,6 @@ projects:
       - CAN-FD
       - ONNX
       - CANape/VN1640
-      - AI Validation Transition
     detail_output: toolchains/e2e-xcp-bypass/index.html
     source_type: html
     source: Context/Projects/toolchains/e2e_xcp_bypass/format/detail.html
@@ -26,18 +25,17 @@ projects:
     repo_name: adas-log-to-ai-workbench
     repo_url: https://github.com/jwhwang91/adas-log-to-ai-workbench
     stack: Python / MF4 / PyTorch / ONNX / MATLAB Export
-    hook: CANape/MF4-to-AI workbench for module-owner learning, dataset preparation, and model-artifact export.
+    hook: CANape/MF4-to-AI workflow for turning real vehicle measurement logs into AI-ready datasets, training runs, and exportable model artifacts.
     objective: >-
-      Help ADAS module owners turn familiar MF4 logs into AI-ready datasets and model artifacts through a repeatable preprocess/train/evaluate/export workflow, rather than forcing each engineer to build separate scripts or a full ML platform from day one.
+      Help ADAS module owners reuse familiar CANape/MF4 measurement data for AI experimentation without requiring a full ML platform from day one. The workbench structures preprocessing, trimming, normalization, model-script execution, evaluation, and export into a repeatable learning workflow.
     impact: >-
-      Lowered the entry barrier for AI experimentation by connecting the existing log-analysis workflow to Python training and ONNX/MATLAB export, giving engineers a practical transition path from conventional signal review to model-behavior learning.
+      Defined a practical transition path from conventional vehicle-log analysis to AI model experimentation. It reduces the entry barrier for module owners to study learned-model behavior, compare preprocessing choices, and generate artifacts for later validation workflows, while remaining clearly positioned as an AI-transition support prototype.
     tags:
       - Python
       - MF4
       - PyTorch
       - ONNX
       - MATLAB Export
-      - AI Training Workflow
     detail_output: toolchains/timeseries-ai-training/index.html
     source_type: html
     source: Context/Projects/toolchains/timeseries_ai_training/format/detail.html
@@ -47,18 +45,17 @@ projects:
     repo_name: bev-target-selection-validation-studio
     repo_url: https://github.com/jwhwang91/bev-target-selection-validation-studio
     stack: MATLAB Script / Simulink / Base Workspace / ADAS Visualization
-    hook: Production-development BEV replay tool used for TOS/ODP false-target analysis in commercial-vehicle programs.
+    hook: Production-development replay studio for explaining and reducing false target-selection behavior using real logs and production TOS/ODP logic.
     objective: >-
-      Replay real vehicle logs through production TOS/ODP logic to investigate false target selection and reduce repeated real-road trials, especially bus-only-lane scenarios that were difficult to reproduce on demand.
+      Reproduce rare commercial-vehicle target-selection edge cases in a repeatable MATLAB/Simulink workflow instead of relying on repeated real-bus road tests after every TOS/ODP logic or parameter change.
     impact: >-
-      Used frequently during HMC commercial-vehicle production development; in bus scenarios, reduced repeated road-validation loops from about 10 trips to about 5 for similar issues, cutting 4–5 hour test trips roughly in half before final real-vehicle confirmation.
+      Actively used during commercial-vehicle mass-production development to replay real logs through production TOS/ODP logic, investigate false detections, and prepare logic or calibration improvements before final vehicle confirmation. For rare bus-only-lane scenarios, it helped reduce repeated real-bus validation trips from about 10 to around 5, with each trip typically requiring 4-5 hours.
     tags:
       - MATLAB
       - Simulink
       - ADAS
       - BEV
       - TOS/ODP
-      - Log Replay
     detail_output: toolchains/tos-odp-bev-simulator/index.html
     source_type: html
     source: Context/Projects/toolchains/tos_odp_bev_simulator/format/detail.html
