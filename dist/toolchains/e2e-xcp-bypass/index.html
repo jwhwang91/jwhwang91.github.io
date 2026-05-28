@@ -3,26 +3,33 @@
 <head>
   <meta charset="UTF-8"/>
   <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
-  <title>Turning a Legacy Calibration Setup into an ADAS AI Validation Loop</title>
+  <title>Turning a Legacy Calibration Setup into an ADAS AI Validation Loop | Technical Case Study</title>
   <link rel="stylesheet" href="../../style.css"/>
   <style>
-    .case-shell{max-width:1040px}
-    .case-header,.case-block{background:#fff;border:1px solid var(--line);border-radius:14px;box-shadow:var(--shadow)}
-    .case-header{padding:34px;margin-bottom:16px}
-    .case-header h1{font-size:36px;line-height:1.08;margin-bottom:10px}
-    .case-header h2{font-size:16px;color:var(--accent);margin-bottom:12px}
-    .case-header p,.case-block p,.case-block li{color:var(--muted);line-height:1.65}
-    .case-block{padding:20px 22px;margin:14px 0}
-    .case-block h3{font-size:18px;margin-bottom:10px}
-    .case-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px}
-    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:10px;margin-top:12px}
-    .flow div{border:1px solid var(--line);border-radius:10px;padding:12px;background:#fafafa;text-align:center}
-    .flow strong{display:block;font-size:13px;color:var(--ink);margin-bottom:4px}
-    .flow span{font-size:11px;color:var(--muted)}
-    .tag-row{display:flex;flex-wrap:wrap;gap:6px;margin-top:14px}
-    .tag-row span{border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:750}
-    @media(max-width:850px){.case-grid,.flow{grid-template-columns:1fr}.case-header h1{font-size:30px}}
-    @media print{.case-header,.case-block{box-shadow:none;break-inside:avoid}.top-nav{display:none!important}}
+
+  .case-study-shell{max-width:1120px}
+  .case-hero{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:34px;margin-bottom:18px}
+  .case-hero h1{font-size:36px;line-height:1.08;letter-spacing:-.035em;margin-bottom:10px}
+  .case-hero p:not(.eyebrow){font-size:14px;color:var(--muted);max-width:880px;margin-bottom:14px}
+  .case-tags{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 16px}
+  .case-tags span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;color:#3f4349}
+  .case-map{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:18px}
+  .case-map span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 7px;text-align:center;font-size:11px;font-weight:800;color:var(--muted)}
+  .case-section{display:grid;grid-template-columns:72px 1fr;gap:14px;margin-bottom:14px}
+  .case-index{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:18px 10px;text-align:center;color:var(--accent);font-size:20px;font-weight:900;line-height:1}
+  .case-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 6px 24px rgba(18,18,18,.045)}
+  .case-card h2{font-size:19px;letter-spacing:-.015em;margin-bottom:10px}
+  .case-card p{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .case-card ul{padding-left:18px;margin-top:8px}
+  .case-card li{font-size:12.7px;color:var(--muted);margin-bottom:5px}
+  .impact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+  .impact-card{border:1px solid #d9e3ff;background:linear-gradient(135deg,#fff,#f8faff);border-radius:12px;padding:13px}
+  .impact-card strong{display:block;font-size:12px;color:var(--accent);margin-bottom:5px}
+  .impact-card span{display:block;font-size:12.2px;color:var(--muted)}
+  .diagram{background:#111827;color:#f8fafc;border-radius:12px;padding:14px;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre-wrap;margin-top:10px}
+  .boundary-note{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:14px 16px;color:#27324a!important}
+  @media(max-width:860px){.case-map{grid-template-columns:1fr 1fr}.case-section{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr}.case-hero h1{font-size:30px}}
+
   </style>
 </head>
 <body class="detail-page">
@@ -34,98 +41,94 @@
     <button class="print-btn" onclick="window.print()">Export PDF</button>
   </nav>
 
-  <main class="detail-shell case-shell">
-    <header class="case-header">
-      <p class="eyebrow">Selected Toolchain Project</p>
+  <main class="detail-shell case-study-shell">
+    <header class="case-hero">
+      <p class="eyebrow">Technical Case Study</p>
       <h1>Turning a Legacy Calibration Setup into an ADAS AI Validation Loop</h1>
-      <h2>Python / C++ / CANape / VN1640 / XCP over CAN-FD / Shared Memory / ONNX</h2>
-      <p>
-        This project converted an existing CANape/VN1640 laptop-based calibration workflow into a minimum viable ADAS AI validation loop for real-vehicle experimentation.
-      </p>
-      <p>
-        The production ECU technically supported Ethernet communication, which would have been the preferred path for a high-bandwidth AI validation workflow.
-        However, the available field development process was still based on CANape, VN1640, and a laptop used for flashing, calibration, and measurement.
-      </p>
-      <div class="tag-row">
-        <span>Constraint-Driven Prototype</span><span>Legacy Calibration Workflow</span><span>Minimum Viable AI Validation Loop</span><span>AI-Assisted Implementation</span>
-      </div>
+      <p>A resource-constrained real-vehicle AI validation prototype built from the commercial-vehicle ADAS team’s existing CANape/VN1640 laptop workflow.</p>
+      <div class="case-tags"><span>Python</span><span>C++</span><span>CANape/VN1640</span><span>XCP over CAN-FD</span><span>ONNX</span><span>AI Validation Transition</span></div>
+      <a href="../../index.html" class="detail-link no-print">Back to resume</a>
     </header>
 
-    <section class="case-block">
-      <h3>Context</h3>
-      <p>
-        The limitation was not the ECU itself, but the available test equipment and team workflow. Vector Ethernet interface hardware was not available in the test environment,
-        so the project repurposed the tools already present in field testing.
-      </p>
-      <p>
-        The engineering value was not in choosing XCP as the ideal transport. It was in converting a legacy calibration workflow into a practical AI validation loop under real production-development constraints.
-      </p>
-    </section>
+    <div class="case-map no-print"><span>Context</span><span>Problem</span><span>Constraint</span><span>Decision</span><span>Impact</span><span>Implementation</span><span>Boundary</span></div>
 
-    <section class="case-grid">
-      <article class="case-block">
-        <h3>Problem</h3>
-        <p>The team wanted to explore AI-based ADAS validation on real vehicles, but the field test workflow was still built around laptop-based calibration and flashing.</p>
-      </article>
-      <article class="case-block">
-        <h3>Constraint</h3>
-        <p>The mass-production ECU supported Ethernet, but the team did not have the Vector Ethernet interface hardware required to use that path. The available setup was CANape + VN1640 + laptop.</p>
-      </article>
-      <article class="case-block">
-        <h3>Decision</h3>
-        <p>I chose not to wait for ideal infrastructure. I reused the existing calibration workflow and built a bypass bridge on top of XCP over CAN-FD.</p>
-      </article>
-      <article class="case-block">
-        <h3>Impact</h3>
-        <p>Enabled real-vehicle AI model validation without new Ethernet interface hardware, connected legacy calibration practice with learned-model experimentation, and created a stepping stone toward future Ethernet/HPC-based validation.</p>
-      </article>
-    </section>
+    <section class="case-section">
+  <div class="case-index">01</div>
+  <article class="case-card">
+    <h2>Context</h2>
 
-    <section class="case-block">
-      <h3>Implementation</h3>
-      <ul>
-        <li>XCP-over-CAN-FD access from production ECU through the available calibration setup.</li>
-        <li>C++ communication backend for real-time vehicle-facing data movement.</li>
-        <li>Shared-memory IPC between backend and Python layer.</li>
-        <li>Python/PyQt visualization and control UI.</li>
-        <li>ONNX/Python model runtime.</li>
-        <li>Minimal public-safe data set to fit bandwidth and timing constraints.</li>
-      </ul>
-      <div class="flow" aria-label="Public-safe validation loop">
-        <div><strong>Production ECU</strong><span>available vehicle source</span></div>
-        <div><strong>CANape + VN1640</strong><span>legacy field workflow</span></div>
-        <div><strong>C++ Backend</strong><span>communication bridge</span></div>
-        <div><strong>Python Runtime</strong><span>visualization + model</span></div>
-        <div><strong>Validation Review</strong><span>engineer-owned decision</span></div>
-      </div>
-    </section>
+    <p>Commercial-vehicle ADAS teams need to prepare for AI-based validation while still supporting production programs, calibration work, and field-test schedules. In this environment, the practical workflow was built around CANape, VN1640, a laptop, XCP/CAN-FD, flashing, calibration, and measurement.</p>
+    <p>Unlike better-equipped AI/HPC validation environments, this workflow did not assume immediate access to Ethernet-based interface hardware or Thor/Orin-class compute platforms. The project focused on what could be built using the equipment already available to the team.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">02</div>
+  <article class="case-card">
+    <h2>Problem</h2>
 
-    <section class="case-block">
-      <h3>AI-Assisted Development, Human-Owned Architecture</h3>
-      <p>
-        This project was developed using an AI-assisted coding workflow, but the engineering ownership remained human-driven.
-      </p>
-      <p>
-        I defined the initial requirements, designed the system architecture, decomposed the feature set, specified module boundaries, reviewed generated code,
-        debugged runtime failures, tested the tool against real workflows, and iterated the implementation until the bypass loop became usable.
-      </p>
-      <p>
-        The AI coding agent was useful for accelerating implementation, refactoring, and UI/tooling iteration, but it frequently produced incomplete or brittle code.
-        The practical value came from repeatedly converting vehicle-domain requirements into precise implementation tasks, executing the code, identifying failures,
-        feeding back corrections, and making the final engineering decisions manually.
-      </p>
-      <p>
-        The result was a working ADAS AI validation bypass prototype delivered in approximately two months under legacy field-equipment constraints.
-      </p>
-    </section>
+    <p>ADAS module owners needed a way to connect learned-model concepts to real vehicle signals without waiting for a full future AI validation infrastructure. The challenge was not only communication bandwidth; it was helping engineers move from conventional calibration practice into a repeatable AI validation loop.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">03</div>
+  <article class="case-card">
+    <h2>Constraint</h2>
 
-    <section class="case-block">
-      <h3>Public-Safe Boundary</h3>
-      <p>
-        This page contains a public-safe technical summary only. Proprietary source code, ECU signal names, calibration metadata, CAN database content, calibration values,
-        thresholds, vehicle logs, internal screenshots, and company-confidential implementation details are intentionally omitted.
-      </p>
-    </section>
+    <ul>
+      <li>Field workflow centered on CANape, VN1640, and laptop-based measurement/calibration.</li>
+      <li>Ethernet validation hardware and high-end AI compute platforms were not readily available in the commercial-vehicle team environment.</li>
+      <li>The prototype had to remain understandable to ADAS module owners already familiar with calibration workflows.</li>
+      <li>Public portfolio material had to avoid proprietary ECU signals, CAN database details, calibration values, and real logs.</li>
+    </ul>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">04</div>
+  <article class="case-card">
+    <h2>Decision</h2>
+
+    <p>I chose not to wait for ideal infrastructure. I reused the existing calibration setup and built a minimum viable bypass loop on top of XCP over CAN-FD, with a C++ vehicle-facing bridge and a Python runtime layer for visualization and learned-model experimentation.</p>
+    <p>The engineering point was not that XCP/CAN-FD is the ideal AI transport. The value was converting a legacy calibration setup into a practical stepping stone toward future Ethernet/HPC-based validation.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">05</div>
+  <article class="case-card">
+    <h2>Impact</h2>
+
+    <div class="impact-grid">
+      <div class="impact-card"><strong>AI transition</strong><span>Gave module owners a practical way to understand learned-model validation using familiar tools.</span></div>
+      <div class="impact-card"><strong>Resource constraint</strong><span>Avoided dependence on unavailable Ethernet/HPC infrastructure for early learning and experimentation.</span></div>
+      <div class="impact-card"><strong>Vehicle relevance</strong><span>Connected model experiments to real-vehicle signal workflows rather than only offline notebooks.</span></div>
+    </div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">06</div>
+  <article class="case-card">
+    <h2>Implementation</h2>
+
+    <ul>
+      <li>XCP-over-CAN-FD access path through the available calibration setup.</li>
+      <li>C++ backend for vehicle-facing data movement and timing-sensitive communication.</li>
+      <li>Python UI/runtime layer for signal mapping, model execution, and operator-facing review.</li>
+      <li>ONNX/Python model loading path for learned-model experimentation.</li>
+      <li>AI-assisted coding was used for implementation acceleration, while architecture, requirements, testing, debugging, and engineering decisions remained human-owned.</li>
+    </ul>
+    <div class="diagram">Production ECU / vehicle signals
+        ↓
+CANape + VN1640 legacy field workflow
+        ↓
+C++ communication bridge
+        ↓
+Python runtime + ONNX model experiment
+        ↓
+Validation review by module owner</div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">07</div>
+  <article class="case-card">
+    <h2>Public-Safe Boundary</h2>
+
+    <p class="boundary-note">This page contains a public-safe technical summary only. Proprietary source code, ECU signal names, CAN database content, calibration metadata, thresholds, vehicle logs, internal screenshots, and company-confidential implementation details are intentionally omitted.</p>
+  </article>
+</section>
   </main>
+  <script src="../../site.js"></script>
 </body>
 </html>

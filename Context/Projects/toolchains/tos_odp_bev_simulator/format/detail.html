@@ -1,207 +1,135 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>BEV Target Selection Validation Studio | Technical Case Study</title>
+  <link rel="stylesheet" href="../../style.css"/>
   <style>
-    :root {
-      --bg: #f6f8fb;
-      --paper: #ffffff;
-      --ink: #172033;
-      --muted: #637083;
-      --line: #dde4ee;
-      --accent: #204ecf;
-      --soft: #eef3ff;
-      --code: #f4f6f8;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.65;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .shell { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px; }
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 20px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
-    .hero, .case-section {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: 0 18px 50px rgba(23, 32, 51, 0.06);
-    }
-    .hero { padding: 34px; margin-bottom: 18px; }
-    .eyebrow {
-      margin: 0 0 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--accent);
-      font-weight: 750;
-      font-size: 12px;
-    }
-    h1 { margin: 0; font-size: clamp(32px, 5vw, 54px); line-height: 1.05; letter-spacing: -0.04em; }
-    .subtitle { margin: 14px 0 0; font-size: 18px; color: var(--muted); max-width: 780px; }
-    .meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: var(--soft);
-      color: #263f86;
-      font-size: 13px;
-      font-weight: 650;
-    }
-    .case-section { padding: 28px 30px; margin: 16px 0; }
-    .section-title { display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px; }
-    .section-title span { color: var(--accent); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; }
-    h2 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
-    p { margin: 0 0 12px; }
-    ul { margin: 12px 0 0; padding-left: 20px; }
-    li { margin: 7px 0; }
-    .callout {
-      border-left: 4px solid var(--accent);
-      background: #f8faff;
-      padding: 15px 18px;
-      border-radius: 14px;
-      color: #263246;
-      margin-top: 14px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
-    .mini-card { background: var(--code); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
-    .mini-card strong { display: block; margin-bottom: 5px; }
-    .architecture {
-      margin-top: 16px;
-      background: #101828;
-      color: #d9e2f1;
-      border-radius: 18px;
-      padding: 20px;
-      overflow-x: auto;
-      font-family: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
-      font-size: 13px;
-      line-height: 1.55;
-    }
-    .architecture b { color: #ffffff; }
-    .boundary { background: #fffaf0; border-color: #f2ddb5; }
-    @media (max-width: 760px) {
-      .hero, .case-section { padding: 24px; border-radius: 18px; }
-      .grid { grid-template-columns: 1fr; }
-      .top-nav { align-items: flex-start; flex-direction: column; }
-    }
-    @media print {
-      body { background: white; }
-      .shell { padding: 0; }
-      .top-nav { display: none; }
-      .hero, .case-section { box-shadow: none; break-inside: avoid; }
-    }
+
+  .case-study-shell{max-width:1120px}
+  .case-hero{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:34px;margin-bottom:18px}
+  .case-hero h1{font-size:36px;line-height:1.08;letter-spacing:-.035em;margin-bottom:10px}
+  .case-hero p:not(.eyebrow){font-size:14px;color:var(--muted);max-width:880px;margin-bottom:14px}
+  .case-tags{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 16px}
+  .case-tags span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;color:#3f4349}
+  .case-map{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:18px}
+  .case-map span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 7px;text-align:center;font-size:11px;font-weight:800;color:var(--muted)}
+  .case-section{display:grid;grid-template-columns:72px 1fr;gap:14px;margin-bottom:14px}
+  .case-index{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:18px 10px;text-align:center;color:var(--accent);font-size:20px;font-weight:900;line-height:1}
+  .case-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 6px 24px rgba(18,18,18,.045)}
+  .case-card h2{font-size:19px;letter-spacing:-.015em;margin-bottom:10px}
+  .case-card p{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .case-card ul{padding-left:18px;margin-top:8px}
+  .case-card li{font-size:12.7px;color:var(--muted);margin-bottom:5px}
+  .impact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+  .impact-card{border:1px solid #d9e3ff;background:linear-gradient(135deg,#fff,#f8faff);border-radius:12px;padding:13px}
+  .impact-card strong{display:block;font-size:12px;color:var(--accent);margin-bottom:5px}
+  .impact-card span{display:block;font-size:12.2px;color:var(--muted)}
+  .diagram{background:#111827;color:#f8fafc;border-radius:12px;padding:14px;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre-wrap;margin-top:10px}
+  .boundary-note{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:14px 16px;color:#27324a!important}
+  @media(max-width:860px){.case-map{grid-template-columns:1fr 1fr}.case-section{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr}.case-hero h1{font-size:30px}}
+
   </style>
 </head>
-<body>
-  <main class="shell">
-    <nav class="top-nav">
-      <strong>Jae Woong Hwang</strong>
-      <div class="nav-links">
-        <a href="../../index.html#resume">Resume</a>
-        <a href="../../index.html#experience">Experience</a>
-        <a href="../../index.html#toolchains">Toolchains</a>
-      </div>
-    </nav>
+<body class="detail-page">
+  <nav class="top-nav no-print">
+    <a class="nav-brand" href="../../index.html">Jae Woong Hwang</a>
+    <a href="../../index.html#resume">Resume</a>
+    <a href="../../index.html#experience">Experience</a>
+    <a href="../../index.html#toolchains">Toolchains</a>
+    <button class="print-btn" onclick="window.print()">Export PDF</button>
+  </nav>
 
-    <header class="hero">
-      <p class="eyebrow">Selected Toolchain Project</p>
+  <main class="detail-shell case-study-shell">
+    <header class="case-hero">
+      <p class="eyebrow">Technical Case Study</p>
       <h1>BEV Target Selection Validation Studio</h1>
-      <p class="subtitle">MATLAB/Simulink replay and visualization tool for validating commercial-vehicle ADAS target-selection behavior.</p>
-      <div class="meta-row">
-        <span class="chip">MATLAB Script</span>
-        <span class="chip">Simulink</span>
-        <span class="chip">Base Workspace</span>
-        <span class="chip">BEV Visualization</span>
-        <span class="chip">TOS / ODP</span>
-      </div>
+      <p>A production-development BEV replay tool used to investigate commercial-vehicle target-selection false detections by running real logs through production TOS/ODP logic.</p>
+      <div class="case-tags"><span>MATLAB</span><span>Simulink</span><span>Base Workspace</span><span>TOS/ODP</span><span>BEV Replay</span><span>Commercial Vehicle ADAS</span></div>
+      <a href="../../index.html" class="detail-link no-print">Back to resume</a>
     </header>
 
-    <section class="case-section">
-      <div class="section-title"><span>01</span><h2>Context</h2></div>
-      <p>During commercial bus ADAS development, some target-selection issues appeared only in rare road and traffic situations, especially around bus-only-lane scenarios and dense surrounding vehicles.</p>
-      <p>The original development environment already depended on MATLAB/Simulink and MATLAB workspace variables. The validation tool therefore needed to fit the existing model workflow instead of replacing it with a separate application stack.</p>
-    </section>
+    <div class="case-map no-print"><span>Context</span><span>Problem</span><span>Constraint</span><span>Decision</span><span>Impact</span><span>Implementation</span><span>Boundary</span></div>
 
     <section class="case-section">
-      <div class="section-title"><span>02</span><h2>Problem</h2></div>
-      <p>Reproducing the same scenario with a real bus after every logic or parameter change was expensive, slow, and often impractical. The team needed a way to repeatedly replay the issue, inspect TOS/ODP behavior, and validate modifications before final vehicle confirmation.</p>
-      <div class="callout">The core problem was not simply visualization. It was reducing the loop time between field issue, logic change, parameter tuning, and validation review.</div>
-    </section>
+  <div class="case-index">01</div>
+  <article class="case-card">
+    <h2>Context</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>03</span><h2>Constraint</h2></div>
-      <p>The original TOS/ODP logic and signal flow existed inside MATLAB/Simulink with workspace-driven scripts. The simulator had to integrate with that architecture and preserve the way engineers already exchanged variables between MATLAB scripts, the Base Workspace, and Simulink models.</p>
-      <ul>
-        <li>Vehicle scenarios had to be replayed from logged driving data.</li>
-        <li>Signal replacement needed to work through MATLAB Base Workspace variables.</li>
-        <li>Simulink model integration had to support repeated ODP/TOS logic modification.</li>
-        <li>The output had to be understandable as a BEV target-selection debugging view.</li>
-      </ul>
-    </section>
+    <p>During commercial-vehicle ADAS development, some target-selection problems appeared only in rare road and traffic conditions, especially around bus-only-lane or wide-road scenarios with surrounding vehicles. Reproducing those cases repeatedly with a real bus was slow and expensive.</p>
+    <p>The team’s original logic and signal flow existed in MATLAB/Simulink and workspace-based development scripts, so the validation tool had to fit that environment instead of replacing it.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">02</div>
+  <article class="case-card">
+    <h2>Problem</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>04</span><h2>Decision</h2></div>
-      <p>I built a MATLAB/Simulink-based BEV simulator that replays logged driving situations, injects ODP/TOS-related signals through the MATLAB Base Workspace, visualizes target tracks and road geometry, and supports repeated logic tuning.</p>
-      <p>The architecture intentionally stayed close to the original development environment: MATLAB GUI for control and replay, Base Workspace for shared signal state, and Simulink models for ODP/TOS logic validation.</p>
-      <div class="architecture">
-        <b>MATLAB GUI</b><br />
-        ├─ Load / replay driving log data<br />
-        ├─ Manage ODP/TOS signal mappings<br />
-        └─ Draw BEV target and road geometry overlays<br /><br />
-        <b>MATLAB Base Workspace</b><br />
-        ├─ Shared simulation variables<br />
-        ├─ Track position arrays and RoadRadius signals<br />
-        └─ Input-replacement variables for Simulink<br /><br />
-        <b>Simulink Model</b><br />
-        ├─ ODP obstacle data processing logic<br />
-        ├─ TOS target object selection logic<br />
-        └─ To Workspace outputs for post-simulation review
-      </div>
-    </section>
+    <p>When a false target selection occurred, the team needed to replay the same situation repeatedly, inspect how TOS/ODP logic behaved, and check whether parameter or logic changes reduced the false detection before spending more time on real-road confirmation.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">03</div>
+  <article class="case-card">
+    <h2>Constraint</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>05</span><h2>Impact</h2></div>
-      <p>The simulator reduced dependence on repeated real-bus testing for every parameter or logic change. It helped the team debug false target-selection behavior, tune logic more efficiently, and prepare changes before final real-vehicle confirmation.</p>
-      <div class="grid">
-        <div class="mini-card"><strong>Validation loop</strong>Replay the same edge case repeatedly instead of waiting for rare road conditions.</div>
-        <div class="mini-card"><strong>Engineering review</strong>Inspect BEV target behavior and Simulink outputs before final vehicle confirmation.</div>
-      </div>
-    </section>
+    <ul>
+      <li>Rare bus-lane or large-road scenarios could not be reproduced on demand.</li>
+      <li>One real-road validation trip could take roughly 4–5 hours.</li>
+      <li>The analysis had to use the same production TOS/ODP logic path as the ECU-side development workflow.</li>
+      <li>Public portfolio content could not expose internal Simulink blocks, signal names, thresholds, or real logs.</li>
+    </ul>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">04</div>
+  <article class="case-card">
+    <h2>Decision</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>06</span><h2>Implementation</h2></div>
-      <ul>
-        <li>MATLAB GUI for scenario replay, signal loading, and BEV visualization.</li>
-        <li>Simulink model integration through Base Workspace variables.</li>
-        <li>ODP/TOS signal mapping and update scripts for simulation input replacement.</li>
-        <li>Track position, road-radius, and lane-related visualization overlays.</li>
-        <li>Replay-based debugging workflow for false target-selection behavior.</li>
-        <li>To Workspace output hooks for post-simulation review.</li>
-        <li>Support for repeated logic modification and parameter tuning before real-vehicle confirmation.</li>
-      </ul>
-    </section>
+    <p>I built a MATLAB/Simulink-based BEV validation studio that replays logged driving situations, injects ODP/TOS-related signals through MATLAB Base Workspace variables, visualizes target tracks and road geometry, and supports repeated logic tuning before final vehicle confirmation.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">05</div>
+  <article class="case-card">
+    <h2>Impact</h2>
 
-    <section class="case-section boundary">
-      <div class="section-title"><span>07</span><h2>Public-Safe Boundary</h2></div>
-      <p>This page contains a public-safe technical summary only. Proprietary Simulink logic, internal signal names, calibration values, test logs, vehicle data, thresholds, and company-confidential validation results are intentionally omitted.</p>
-    </section>
+    <div class="impact-grid">
+      <div class="impact-card"><strong>Production use</strong><span>Used frequently during HMC commercial-vehicle production development across the commercial platforms listed on the HMC page.</span></div>
+      <div class="impact-card"><strong>Bus validation</strong><span>Especially useful for bus-only-lane and wide-road scenarios that were hard to reproduce repeatedly.</span></div>
+      <div class="impact-card"><strong>Time reduction</strong><span>Reduced repeated real-bus validation loops from about 10 trips to about 5 for similar issues, cutting 4–5 hour test trips roughly in half.</span></div>
+    </div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">06</div>
+  <article class="case-card">
+    <h2>Implementation</h2>
+
+    <ul>
+      <li>MATLAB GUI for scenario replay and BEV visualization.</li>
+      <li>Simulink integration through MATLAB Base Workspace variables.</li>
+      <li>ODP/TOS signal mapping and update scripts.</li>
+      <li>Track-position, ego-path, road-radius, and target-selection visualization.</li>
+      <li>Replay workflow for false-detection debugging and parameter/logic review.</li>
+    </ul>
+    <div class="diagram">Real driving log
+        ↓
+MATLAB GUI replay controller
+        ↓
+Base Workspace signal injection
+        ↓
+Production TOS / ODP Simulink logic
+        ↓
+BEV target-selection review
+        ↓
+Reduced real-road re-test loop before final confirmation</div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">07</div>
+  <article class="case-card">
+    <h2>Public-Safe Boundary</h2>
+
+    <p class="boundary-note">This page contains a public-safe technical summary only. Proprietary Simulink logic, internal signal names, calibration values, test logs, vehicle data, thresholds, and company-confidential validation results are intentionally omitted.</p>
+  </article>
+</section>
   </main>
+  <script src="../../site.js"></script>
 </body>
 </html>

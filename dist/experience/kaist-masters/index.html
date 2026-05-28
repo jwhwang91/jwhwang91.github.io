@@ -21,15 +21,12 @@
     .evidence-grid figure,.wide-proof{margin:0;border:1px solid var(--line);border-radius:12px;overflow:hidden;background:#fff}
     .evidence-grid img,.wide-proof img{display:block;width:100%;height:auto}
     .evidence-grid figcaption,.wide-proof figcaption{padding:10px 12px;font-size:12.4px;color:var(--muted);border-top:1px solid var(--line)}
-    .result-box{background:linear-gradient(135deg,#fff,#f8faff);border:1px solid #d9e3ff;border-radius:12px;padding:18px}
+    .result-box{background:linear-gradient(135deg,#fff,#f8faff);border:1px solid #d9e3ff;border-radius:12px;padding:18px;margin-bottom:18px}
     .result-box h2{margin-bottom:10px}
     .result-box ul{padding-left:18px}
     .result-box li{font-size:12.8px;color:var(--muted);margin-bottom:5px}
     .thesis-note{font-size:12.5px;color:var(--muted);margin-top:12px}
-    @media(max-width:860px){
-      .professional-grid,.evidence-grid{grid-template-columns:1fr}
-      .phase-block h2{font-size:28px}
-    }
+    @media(max-width:860px){.professional-grid,.evidence-grid{grid-template-columns:1fr}.phase-block h2{font-size:28px}}
   </style>
 </head>
 <body class="detail-page">
@@ -47,18 +44,17 @@
       <h1>Turret Motion Stabilization on Mobile Platforms</h1>
       <p>
         Master's thesis at KAIST focused on building a real embedded motion-control system for a turret mounted on a moving platform.
-        Instead of presenting a raw slide dump, this page distills the work into a systems-architecture narrative:
-        physical bottleneck, core control math, and quantitative proof on actual hardware.
+        This page distills the work into a systems-architecture narrative: physical bottleneck, core control math, and quantitative proof on actual hardware.
       </p>
       <a href="../../index.html" class="detail-link no-print">Back to resume</a>
     </header>
 
     <section class="phase-block">
       <div class="phase-label">Foundation</div>
-      <h2>Turret Motion Stabilization on Mobile Platforms</h2>
+      <h2>Control, Estimation, and Real-Hardware Validation</h2>
       <p class="phase-summary">
-        This project built the mathematical and hardware foundation for later work in vehicle controls, EKF-based estimation,
-        and architecture-level thinking. The key point is not just “I did a thesis,” but “I closed the loop on real hardware under physical disturbance.”
+        This project built the mathematical and hardware foundation for later work in vehicle controls, EKF-based estimation, and production validation.
+        The key point is not just that it was a thesis, but that the control logic was closed-loop tested on real hardware under physical disturbance.
       </p>
     </section>
 
@@ -66,9 +62,9 @@
       <article class="detail-card">
         <h2>Problem: The Physical Bottleneck</h2>
         <ul>
-          <li><strong>Coupled Disturbances:</strong> severe performance degradation due to unpredictable base-motion dynamics and non-linear friction in the physical hardware.</li>
-          <li><strong>Sensor Noise:</strong> high-frequency noise from INS/Gyro and MTF sensors made simple PID or rule-based control mathematically insufficient for precision tracking.</li>
-          <li><strong>Why this matters:</strong> the problem demanded a controller that understood the plant, not just a quick software patch.</li>
+          <li><strong>Coupled disturbances:</strong> performance degraded under unpredictable base-motion dynamics and nonlinear friction in the physical hardware.</li>
+          <li><strong>Sensor noise:</strong> high-frequency INS/Gyro and MTF sensor noise made simple PID or rule-based control insufficient for precision tracking.</li>
+          <li><strong>Engineering meaning:</strong> the problem required a controller that understood plant behavior, not just a software-side quick fix.</li>
         </ul>
       </article>
 
@@ -77,32 +73,17 @@
         <div class="math-stack">
           <div class="math-item">
             <h3>Two-Mass Dynamics Modeling</h3>
-            <p>
-              Modeled the physical plant (turret and gear structures) as a two-mass spring-damper system,
-              then used loop-shaping to identify and isolate resonance behavior before controller tuning.
-            </p>
+            <p>Modeled the physical plant as a two-mass spring-damper system, then used loop-shaping to identify and isolate resonance behavior before controller tuning.</p>
           </div>
-
           <div class="math-item">
             <h3>Time Delay Estimation (TDE)</h3>
-            <p>
-              Avoided heavy full-order modeling of unknown non-linear dynamics by estimating and canceling the continuous disturbance term in real time.
-            </p>
-            <div class="equation">
-              d<sub>tot</sub>(t<sub>k</sub>) ≈ d<sub>tot</sub>(t<sub>k-1</sub>) =
-              τ<sub>m</sub>(t<sub>k-1</sub>) − J̄ · ω̇(t<sub>k-1</sub>)
-            </div>
+            <p>Avoided heavy full-order modeling of unknown nonlinear dynamics by estimating and canceling the continuous disturbance term in real time.</p>
+            <div class="equation">d<sub>tot</sub>(t<sub>k</sub>) ≈ d<sub>tot</sub>(t<sub>k-1</sub>) = τ<sub>m</sub>(t<sub>k-1</sub>) − J̄ · ω̇(t<sub>k-1</sub>)</div>
           </div>
-
           <div class="math-item">
             <h3>Sensor Fusion via Kalman Filter</h3>
-            <p>
-              Designed a discrete-time Kalman Filter to fuse INS/Gyro and MTF sensor data,
-              filtering high-frequency noise and guaranteeing precision of pod velocity estimation.
-            </p>
-            <div class="equation">
-              x̂<sub>k|k−1</sub> = A x̂<sub>k−1|k−1</sub> + B u<sub>k−1</sub>
-            </div>
+            <p>Designed a discrete-time Kalman Filter to fuse INS/Gyro and MTF data, filtering high-frequency noise and improving pod velocity estimation.</p>
+            <div class="equation">x̂<sub>k|k−1</sub> = A x̂<sub>k−1|k−1</sub> + B u<sub>k−1</sub></div>
           </div>
         </div>
       </article>
@@ -111,13 +92,11 @@
     <section class="result-box">
       <h2>Result: Quantitative Proof</h2>
       <ul>
-        <li>Successfully deployed the C/C++ control logic onto the actual physical hardware.</li>
-        <li>Crushed the baseline controller’s position error and achieved stable tracking close to zero steady-state error under artificial base-motion disturbance.</li>
-        <li>Demonstrated that the proposed logic was not just mathematically valid, but physically verified on a real system.</li>
+        <li>Successfully deployed the C/C++ control logic onto actual physical hardware.</li>
+        <li>Significantly reduced baseline position error and achieved stable tracking close to zero steady-state error under artificial base-motion disturbance.</li>
+        <li>Demonstrated that the proposed logic was not only mathematically valid, but physically verified on a real system.</li>
       </ul>
-      <p class="thesis-note">
-        The two figures below are the strongest evidence: one shows measured tracking performance, and the other proves that the controller was applied to actual turret hardware for verification.
-      </p>
+      <p class="thesis-note">The two figures below are retained from the original page: one shows measured tracking performance, and the other proves that the controller was applied to actual turret hardware for verification.</p>
     </section>
 
     <section class="image-evidence">
@@ -125,21 +104,15 @@
       <div class="evidence-grid">
         <figure>
           <img src="assets/tracking_performance.png" alt="Tracking performance plots comparing controller behavior under disturbance."/>
-          <figcaption>
-            Tracking performance and position-error plots under disturbance. The plots show that the proposed control approach maintained stable response and better tracking behavior than the baseline controller.
-          </figcaption>
+          <figcaption>Tracking performance and position-error plots under disturbance. The plots show stable response and improved tracking behavior compared with the baseline controller.</figcaption>
         </figure>
-
         <figure>
           <img src="assets/hardware_validation.png" alt="Actual turret hardware validation photos."/>
-          <figcaption>
-            Actual hardware validation photos. These images demonstrate that the control algorithm was not limited to simulation and was deployed on the real turret platform for experimental verification.
-          </figcaption>
+          <figcaption>Actual hardware validation photos. These images demonstrate that the control algorithm was deployed on the real turret platform for experimental verification.</figcaption>
         </figure>
       </div>
     </section>
   </main>
-
   <script src="../../site.js"></script>
 </body>
 </html>
