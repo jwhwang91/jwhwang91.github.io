@@ -3,9 +3,9 @@ title: "Commercial-Vehicle ADAS Controls & Validation"
 pill: "Public-Safe Production ADAS Case Study"
 summary: >
   This page summarizes my public-safe experience in production commercial-vehicle ADAS controls and validation at Hyundai Motor Company.
-  The work involved SCC/L2 ADAS behavior logic, calibration and validation workflows, production issue response, and vehicle-level debugging
-  across heavy-duty truck, tractor, and bus platforms. Proprietary source code, signal names, calibration metadata, CAN database content,
-  calibration values, thresholds, vehicle logs, and internal implementation details are intentionally omitted.
+  The work involved selected SCC/L2 ADAS behavior logic, calibration and validation workflows, production issue response, vehicle-level debugging,
+  and practical toolchains across heavy-duty truck, tractor, bus, ICE, and FCEV platforms.
+  Proprietary source code, signal names, calibration metadata, CAN database content, calibration values, thresholds, vehicle logs, and internal implementation details are intentionally omitted.
 
 hero_image:
   file: "hmc_qz_fcev_na.jpg"
@@ -17,51 +17,54 @@ highlights:
   - label: "Platforms"
     value: "Truck, tractor, and bus variants with ICE and FCEV powertrains"
   - label: "Workflow"
-    value: "MILS, HILS, dynamometer, and real-vehicle validation"
+    value: "MILS, HILS, dynamometer, real-vehicle validation, and log replay"
   - label: "Toolchain"
-    value: "CANape, VN1640, XCP, CAN-FD, Python/C++ validation tooling"
+    value: "CANape, VN1640, XCP/CAN-FD, MF4, MATLAB/Simulink, Python/C++ validation tooling"
 
 sections:
   - title: "Ownership Boundary"
     body: >
       I did not own the entire SCC/L2 ADAS stack end-to-end. My work focused on selected production-facing behavior logic,
-      validation workflows, calibration/debugging support, and issue-resolution activities within the broader ADAS development team.
+      validation workflows, calibration/debugging support, production issue analysis, and public-safe workflow toolchains within the broader ADAS development team.
       This page describes my individual contribution areas in public-safe form.
 
   - title: "Role"
-    body: "Commercial-vehicle ADAS controls and validation engineer focused on production SCC/L2 ADAS behavior."
+    body: "Commercial-vehicle ADAS controls and validation engineer focused on production SCC/L2 ADAS behavior, target-selection robustness, road-curvature estimation, and validation workflow improvement."
 
   - title: "Platforms"
     body: "Worked across commercial vehicle variants including truck, tractor, and bus platforms with ICE and FCEV powertrains."
 
   - title: "Responsibilities"
     bullets:
-      - "Production ADAS behavior logic development."
-      - "SCC/L2 ADAS calibration and validation."
-      - "Target-selection robustness improvement."
-      - "Brake and stop-state behavior logic support."
-      - "MILS/HILS/dynamometer/real-vehicle validation."
-      - "Production issue analysis and release support."
-      - "Internal tooling and workflow improvement."
+      - "Production-facing ADAS behavior logic development for selected SCC/L2 functions."
+      - "SCC emergency-stop state behavior development and validation."
+      - "Road-radius fusion logic development using steering-intent, yaw-rate, and conditional lane/camera validity concepts."
+      - "SCC/FOC tuning, state-transition updates, calibration, regression testing, and release-readiness support."
+      - "Target-selection robustness improvement and false-detection analysis using real logs and BEV replay workflows."
+      - "MILS/HILS/dynamometer/real-vehicle validation and production issue response."
+      - "Internal tooling and workflow improvement for validation bottleneck reduction and future AI-validation transition."
 
 case_studies:
   - title: "SCC Emergency-Stop State Behavior"
     problem: >
-      Production commercial-vehicle SCC/L2 workflows require deterministic behavior when emergency-stop state handling is needed.
+      Production commercial-vehicle SCC/L2 workflows require deterministic and safe behavior when the driver is incapacitated or unable to respond.
     contribution:
-      - "Developed and validated state-behavior logic related to SCC emergency-stop handling in production commercial-vehicle ADAS workflows."
-      - "Structured the public description around safe handover and stop-state behavior without exposing internal state names or calibration values."
+      - "Independently developed and validated SCC emergency-stop behavior for selected production-facing commercial-vehicle ADAS workflows."
+      - "Structured the public description around safe handover and stop-state behavior without exposing internal state names, thresholds, or calibration values."
     outcome: >
-      Supported robust stop-state behavior for selected production-facing SCC/L2 ADAS workflows.
+      Supported robust stop-state behavior for selected SCC/L2 ADAS workflows in commercial-vehicle production development.
 
   - title: "Road-Radius Fusion Logic"
     problem: >
-      Heavy-duty vehicles can show delayed yaw response during lane changes or curvature transitions, making road-curvature estimation important for consistent ADAS behavior.
+      Heavy-duty vehicles have long wheelbases and slower yaw response than passenger vehicles. During lane changes or curvature transitions,
+      yaw-rate-only road-radius estimation can be delayed, while camera/lane information may be unreliable in commercial-vehicle conditions.
     contribution:
-      - "Worked on road-curvature estimation and fusion logic to improve ADAS behavior consistency in curved-road scenarios."
-      - "Combined steering-intent, yaw-rate, and lane-validity concepts in a public-safe architecture description."
+      - "Independently developed production-applied road-radius fusion logic using steering-wheel/tire-angle-based RoadRadius and EBS yaw-rate-based RoadRadius."
+      - "Developed lane-validity conditions so lane information is blended only when usable, because commercial-vehicle camera/lane information was not always reliable."
+      - "Built a steering-wheel-to-tire-angle conversion model and used a 2D bicycle-model concept to account for understeer and estimate steering-intent-based radius."
+      - "Fused steering-based and yaw-rate-based radius estimates through an Extended Kalman Filter for faster and more stable RoadRadius estimation."
     outcome: >
-      Improved ego-path prediction robustness under long-wheelbase dynamics and unreliable lane-perception conditions.
+      Improved ego-path prediction robustness under long-wheelbase dynamics, lane changes, curvature transitions, and unreliable lane-perception conditions.
     architecture:
       title: "Public-Safe Road-Radius Fusion Architecture"
       image: "road_radius_fusion_public.svg"
@@ -81,16 +84,17 @@ case_studies:
       while avoiding unnecessary overuse of the foundation brake. This is especially important during long downhill driving, where foundation-brake overuse can create
       thermal, durability, fuel-efficiency, and driver-acceptance issues.
     contribution:
-      - "Developed rule-based brake distribution logic that selects auxiliary brake and foundation brake usage according to ADAS-requested deceleration and ego/forward-target conditions."
+      - "Participated in SCC tuning and front-object-control-related tuning work within the SCC part."
+      - "Worked on rule-based brake distribution concepts that select auxiliary brake and foundation brake usage according to ADAS-requested deceleration and ego/forward-target conditions."
       - "Used scenario factors such as ego speed, forward-target speed, speed gradient, relative distance, and required deceleration to decide brake contribution."
-      - "Biased the logic toward active auxiliary-brake usage in long downhill or high thermal-load situations to reduce unnecessary foundation-brake demand."
       - "Balanced heavy-duty deceleration quality with brake durability, fuel efficiency, and driver acceptance."
     outcome: >
       Improved front-target deceleration behavior robustness across commercial-vehicle scenarios where braking strategy matters as much as pure deceleration tracking.
     architecture:
       title: "Public-Safe Front-Target Brake Distribution Architecture"
       image: "foc_brake_distribution_public.svg"
-      caption: "Public-safe front-target brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted."
+      caption: >
+        Public-safe front-target brake-distribution diagram. Internal thresholds, calibration values, brake maps, and platform-specific control parameters are intentionally omitted.
       body: >
         For heavy-duty vehicles, braking strategy during forward-target deceleration must consider not only requested deceleration but also thermal load,
         downhill duration, brake durability, fuel efficiency, and driver acceptance. The diagram keeps the logic rule-based and public-safe.
@@ -100,14 +104,17 @@ case_studies:
         - "Foundation brake is blended when required to satisfy deceleration demand and safety constraints."
         - "The final brake command balances safety, durability, fuel efficiency, and driver acceptance."
 
-  - title: "Target-Selection Robustness"
+  - title: "Target-Selection Robustness and BEV Replay Validation"
     problem: >
-      Curved-road and lane-specific scenarios can create false or unstable target behavior risk when predicted ego path and actual road geometry diverge.
+      Curved-road, bus-only-lane, and large-road scenarios can create false or unstable target behavior risk when predicted ego path and actual road geometry diverge.
+      Reproducing the same scenario repeatedly with a real bus can require long test trips and rare traffic conditions.
     contribution:
-      - "Improved target-selection robustness for curved-road and lane-specific scenarios, reducing false or unstable target behavior risk."
-      - "Connected the logic to repeatable public-safe BEV scenario replay concepts for analysis without exposing internal datasets."
+      - "Used a BEV target-selection validation studio to replay real logs through the same TOS/ODP logic used for production ECU behavior analysis."
+      - "Investigated why false target selection occurred, compared logic/parameter changes, and prepared fixes before final real-vehicle confirmation."
+      - "Applied this workflow across the commercial-vehicle programs listed on this page, with especially strong usefulness during bus development."
     outcome: >
-      Reduced false target-selection risk in difficult real-road commercial-vehicle scenarios and supported production release-readiness workflows.
+      Reduced repeated bus-only-lane road-test loops from about 10 trips to about 5 for similar false-detection issues. Since each trip could take roughly 4-5 hours,
+      the tool helped cut scenario-debugging test time by about half before final real-vehicle confirmation.
 
   - title: "Validation and Release Support"
     problem: >
@@ -115,6 +122,7 @@ case_studies:
     contribution:
       - "Supported calibration, regression testing, vehicle-level debugging, and production release-readiness workflows across multiple commercial-vehicle platforms."
       - "Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows."
+      - "Analyzed production-development issues and supported logic/calibration updates under platform, regulation, and field-test constraints."
     outcome: >
       Helped move selected ADAS behavior updates through production-development validation workflows.
 
@@ -157,12 +165,13 @@ validation_workflow:
 toolchain_context:
   title: "Public-Safe Toolchain Connection"
   body: >
-    Separate portfolio toolchain pages show mock versions of engineering tools built to reduce validation bottlenecks.
-    They are not presented as company production logic and do not include company code, real datasets, calibration metadata, database IDs, or calibration parameters.
+    Separate portfolio toolchain pages show public-safe versions of engineering tools built to reduce validation bottlenecks and prepare for AI-based ADAS validation.
+    The first two toolchains are proactive AI-transition platforms built under commercial-vehicle resource constraints; they are not presented as already deployed team-wide production tools.
+    The BEV target-selection validation studio reflects a workflow that was actively used during commercial-vehicle production development to investigate real-log false-detection behavior.
   bullets:
-    - "Legacy Calibration Setup to ADAS AI Validation Loop: constraint-driven use of CANape/VN1640/laptop field workflow."
-    - "Time-Series AI Training Tool: mock model-training workflow for converting synthetic logged time-series data into runtime-ready models."
-    - "TOS / ODP BEV Simulator: mock replay of ego-path prediction versus varying-curvature road geometry for target-selection analysis."
+    - "Legacy Calibration Setup to ADAS AI Validation Loop: resource-constrained prototype using CANape/VN1640/laptop field workflow to help module owners experiment with learned models on real vehicle signals."
+    - "ADAS Log-to-AI Workbench: MF4-to-AI transition workflow for converting familiar measurement logs into reusable datasets, model training runs, and exportable artifacts."
+    - "BEV Target Selection Validation Studio: production-development replay workflow using real logs and TOS/ODP logic to reduce repeated road-test loops for false target-selection analysis."
 
 patents:
   title: "Patents & Inventions"
@@ -171,5 +180,5 @@ patents:
     Details for unpublished or pending filings remain omitted.
 
 public_reference_note: >
-  Public-Safe Boundary: This page contains a public-safe technical summary only. Proprietary source code, ECU signal names, calibration metadata,
-  CAN database content, calibration values, thresholds, vehicle logs, internal screenshots, and company-confidential implementation details are intentionally omitted.
+  Public-Safe Boundary: This page contains a public-safe technical summary only. Proprietary source code, ECU signal names, calibration metadata, CAN database content,
+  calibration values, thresholds, vehicle logs, internal screenshots, and company-confidential implementation details are intentionally omitted.

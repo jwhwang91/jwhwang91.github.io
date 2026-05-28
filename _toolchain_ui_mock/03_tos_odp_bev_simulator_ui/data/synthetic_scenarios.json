@@ -1,9 +1,0 @@
-{
-  "note": "Synthetic public scenario metadata. Not real company data.",
-  "scenarios": [
-    "bus_lane",
-    "curve_cutin",
-    "lane_drop"
-  ],
-  "hidden": "No production parameters, signal names, vehicle data, or algorithm detail included."
-}

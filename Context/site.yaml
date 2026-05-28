@@ -1,10 +1,10 @@
 name: "Jae Woong Hwang"
 title: "ADAS Controls, Embedded Validation & Vehicle Toolchain Engineer"
-
 headline: "Production ADAS controls, embedded validation, and vehicle-development toolchain experience across commercial trucks, tractors, buses, and fuel-cell platforms."
 one_liner: >
-  I connect production-facing behavior logic, full V-cycle validation workflows,
-  calibration/debugging environments, and Python/C++ tooling under real vehicle-development constraints.
+  I connect production-facing ADAS behavior logic, full V-cycle validation workflows,
+  resource-constrained calibration environments, and practical Python/C++/MATLAB toolchains
+  for commercial-vehicle development.
 
 keywords:
   - "Commercial-Vehicle ADAS"
@@ -16,13 +16,15 @@ keywords:
   - "Dynamometer / Real Vehicle"
   - "CANape / VN1640"
   - "XCP / CAN-FD Legacy Workflow"
-  - "C++ / Python Tooling"
+  - "MF4 Log Processing"
   - "MATLAB / Simulink"
+  - "BEV Replay Debugging"
   - "ONNX"
-  - "AI-Assisted Development"
+  - "ADAS AI Validation Transition"
+  - "Resource-Constrained Tooling"
 
 main_focus:
   - "Production-facing commercial-vehicle ADAS controls experience across SCC/L2 behavior logic and release-readiness support."
   - "Embedded validation experience across MILS, HILS, dynamometer, and real-vehicle workflows."
-  - "Legacy calibration workflow experience with CANape, VN1640, XCP, and CAN-FD in constrained field-test environments."
-  - "AI-assisted implementation with human-owned requirements, architecture, debugging, integration, and validation."
+  - "Resource-constrained vehicle toolchain development using existing field equipment such as CANape, VN1640, MF4 logs, XCP, CAN-FD, Python, C++, and MATLAB/Simulink."
+  - "Proactive ADAS AI-validation transition platforms that help module owners learn, train, and test learned-model workflows before full Ethernet/HPC infrastructure adoption."

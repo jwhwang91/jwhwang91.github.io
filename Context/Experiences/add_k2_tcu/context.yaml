@@ -1,23 +1,21 @@
 id: "add-k2-tcu"
-title: "ADD K2 TCU Software Development - Perfect V-Cycle"
+title: "Sensorless Shift Control & V-Cycle Validation for Heavy-Duty TCU"
 pill: "Transmission Control / Heavy Vehicle Productization"
 summary: >
-  TCU application software development for the K2 55-ton tracked vehicle,
-  covering control algorithms, hydraulic/mechanical plant modeling, HILS,
-  dynamometer validation, vehicle field testing, calibration, and reliability support.
-
+  TCU application software development for the K2 55-ton tracked vehicle, covering sensorless shift-control logic,
+  hydraulic/mechanical plant modeling, MILS/HILS verification, powerpack dynamometer validation, actual vehicle field testing,
+  calibration, and reliability support.
 sections:
   - title: "Project Scope"
     body: >
-      Developed and validated TCU application software for tracked-vehicle transmission control.
-      The work connected model-based development, software verification, powerpack testing,
-      and real vehicle field validation.
+      Developed and validated TCU application software for tracked-vehicle transmission control. The work connected model-based development,
+      software verification, powerpack testing, calibration, and real vehicle field validation.
   - title: "My Role"
     bullets:
-      - "Developed core TCU control algorithms."
+      - "Developed core TCU control algorithms and shift-state logic."
       - "Built MILS/HILS transmission plant models for hydraulic and mechanical behavior."
       - "Verified TCU software using RCP/MABx HILS environment."
-      - "Supported dynamometer and actual vehicle tests using development TCU hardware."
+      - "Supported powerpack dynamometer and actual vehicle tests using development TCU hardware."
       - "Performed software verification, correction, parameter calibration, and reliability-test support."
   - title: "V-Cycle Evidence"
     bullets:
@@ -29,12 +27,11 @@ sections:
     bullets:
       - "Shift-state and driver-intent decision logic."
       - "Shift-map selection, gear/clutch combination decision, and clutch pressure logic."
-      - "Clutch adaptation, EOL gap learning, and kiss-point pressure learning."
+      - "Sensorless clutch adaptation, EOL gap learning, and kiss-point pressure learning."
       - "CAN communication, Vector CANape calibration, vFlash, UDS, and J1939-related workflows."
-
 images:
   - file: "01_k2_project_overview.png"
-    caption: "PDF page 5 - K2 TCU localization overview, assigned responsibilities, and partner system context."
+    caption: "PDF page 5 - K2 TCU project overview, assigned responsibilities, and partner system context."
   - file: "02_transmission_modeling.png"
     caption: "PDF page 6 - Hydraulic clutch and mechanical automatic-transmission modeling."
   - file: "03_tcu_core_algorithm.png"

@@ -1,180 +1,133 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
   <title>ADAS Log-to-AI Workbench | Technical Case Study</title>
+  <link rel="stylesheet" href="../../style.css"/>
   <style>
-    :root {
-      --bg: #f6f8fb;
-      --paper: #ffffff;
-      --ink: #172033;
-      --muted: #637083;
-      --line: #dde4ee;
-      --accent: #204ecf;
-      --soft: #eef3ff;
-      --code: #f4f6f8;
-    }
-    * { box-sizing: border-box; }
-    body {
-      margin: 0;
-      font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
-      background: var(--bg);
-      color: var(--ink);
-      line-height: 1.65;
-    }
-    a { color: var(--accent); text-decoration: none; }
-    a:hover { text-decoration: underline; }
-    .shell { max-width: 1080px; margin: 0 auto; padding: 28px 20px 64px; }
-    .top-nav {
-      display: flex;
-      justify-content: space-between;
-      gap: 16px;
-      align-items: center;
-      margin-bottom: 20px;
-      color: var(--muted);
-      font-size: 14px;
-    }
-    .nav-links { display: flex; gap: 12px; flex-wrap: wrap; }
-    .hero, .case-section {
-      background: var(--paper);
-      border: 1px solid var(--line);
-      border-radius: 22px;
-      box-shadow: 0 18px 50px rgba(23, 32, 51, 0.06);
-    }
-    .hero { padding: 34px; margin-bottom: 18px; }
-    .eyebrow {
-      margin: 0 0 10px;
-      text-transform: uppercase;
-      letter-spacing: 0.16em;
-      color: var(--accent);
-      font-weight: 750;
-      font-size: 12px;
-    }
-    h1 { margin: 0; font-size: clamp(32px, 5vw, 54px); line-height: 1.05; letter-spacing: -0.04em; }
-    .subtitle { margin: 14px 0 0; font-size: 18px; color: var(--muted); max-width: 780px; }
-    .meta-row { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 22px; }
-    .chip {
-      display: inline-flex;
-      align-items: center;
-      gap: 6px;
-      padding: 7px 11px;
-      border-radius: 999px;
-      background: var(--soft);
-      color: #263f86;
-      font-size: 13px;
-      font-weight: 650;
-    }
-    .case-section { padding: 28px 30px; margin: 16px 0; }
-    .section-title { display: flex; align-items: baseline; gap: 12px; margin: 0 0 12px; }
-    .section-title span { color: var(--accent); font-weight: 800; font-size: 13px; letter-spacing: 0.12em; }
-    h2 { margin: 0; font-size: 24px; letter-spacing: -0.02em; }
-    p { margin: 0 0 12px; }
-    ul { margin: 12px 0 0; padding-left: 20px; }
-    li { margin: 7px 0; }
-    .callout {
-      border-left: 4px solid var(--accent);
-      background: #f8faff;
-      padding: 15px 18px;
-      border-radius: 14px;
-      color: #263246;
-      margin-top: 14px;
-    }
-    .grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 14px; margin-top: 16px; }
-    .mini-card { background: var(--code); border: 1px solid var(--line); border-radius: 16px; padding: 16px; }
-    .mini-card strong { display: block; margin-bottom: 5px; }
-    .boundary { background: #fffaf0; border-color: #f2ddb5; }
-    @media (max-width: 760px) {
-      .hero, .case-section { padding: 24px; border-radius: 18px; }
-      .grid { grid-template-columns: 1fr; }
-      .top-nav { align-items: flex-start; flex-direction: column; }
-    }
-    @media print {
-      body { background: white; }
-      .shell { padding: 0; }
-      .top-nav { display: none; }
-      .hero, .case-section { box-shadow: none; break-inside: avoid; }
-    }
+
+  .case-study-shell{max-width:1120px}
+  .case-hero{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:16px;padding:34px;margin-bottom:18px}
+  .case-hero h1{font-size:36px;line-height:1.08;letter-spacing:-.035em;margin-bottom:10px}
+  .case-hero p:not(.eyebrow){font-size:14px;color:var(--muted);max-width:880px;margin-bottom:14px}
+  .case-tags{display:flex;flex-wrap:wrap;gap:7px;margin:14px 0 16px}
+  .case-tags span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;color:#3f4349}
+  .case-map{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;margin-bottom:18px}
+  .case-map span{background:#fff;border:1px solid var(--line);border-radius:10px;padding:8px 7px;text-align:center;font-size:11px;font-weight:800;color:var(--muted)}
+  .case-section{display:grid;grid-template-columns:72px 1fr;gap:14px;margin-bottom:14px}
+  .case-index{background:#fff;border:1px solid var(--line);box-shadow:var(--shadow);border-radius:14px;padding:18px 10px;text-align:center;color:var(--accent);font-size:20px;font-weight:900;line-height:1}
+  .case-card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:22px;box-shadow:0 6px 24px rgba(18,18,18,.045)}
+  .case-card h2{font-size:19px;letter-spacing:-.015em;margin-bottom:10px}
+  .case-card p{font-size:13px;color:var(--muted);margin-bottom:10px}
+  .case-card ul{padding-left:18px;margin-top:8px}
+  .case-card li{font-size:12.7px;color:var(--muted);margin-bottom:5px}
+  .impact-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin-top:10px}
+  .impact-card{border:1px solid #d9e3ff;background:linear-gradient(135deg,#fff,#f8faff);border-radius:12px;padding:13px}
+  .impact-card strong{display:block;font-size:12px;color:var(--accent);margin-bottom:5px}
+  .impact-card span{display:block;font-size:12.2px;color:var(--muted)}
+  .diagram{background:#111827;color:#f8fafc;border-radius:12px;padding:14px;font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:12px;line-height:1.55;overflow-x:auto;white-space:pre-wrap;margin-top:10px}
+  .boundary-note{border-left:4px solid var(--accent);background:var(--accent-soft);border-radius:12px;padding:14px 16px;color:#27324a!important}
+  @media(max-width:860px){.case-map{grid-template-columns:1fr 1fr}.case-section{grid-template-columns:1fr}.impact-grid{grid-template-columns:1fr}.case-hero h1{font-size:30px}}
+
   </style>
 </head>
-<body>
-  <main class="shell">
-    <nav class="top-nav">
-      <strong>Jae Woong Hwang</strong>
-      <div class="nav-links">
-        <a href="../../index.html#resume">Resume</a>
-        <a href="../../index.html#experience">Experience</a>
-        <a href="../../index.html#toolchains">Toolchains</a>
-      </div>
-    </nav>
+<body class="detail-page">
+  <nav class="top-nav no-print">
+    <a class="nav-brand" href="../../index.html">Jae Woong Hwang</a>
+    <a href="../../index.html#resume">Resume</a>
+    <a href="../../index.html#experience">Experience</a>
+    <a href="../../index.html#toolchains">Toolchains</a>
+    <button class="print-btn" onclick="window.print()">Export PDF</button>
+  </nav>
 
-    <header class="hero">
-      <p class="eyebrow">Selected Toolchain Project</p>
+  <main class="detail-shell case-study-shell">
+    <header class="case-hero">
+      <p class="eyebrow">Technical Case Study</p>
       <h1>ADAS Log-to-AI Workbench</h1>
-      <p class="subtitle">MF4 preprocessing, model training, normalization, and ONNX/MATLAB export workflow for ADAS engineers.</p>
-      <div class="meta-row">
-        <span class="chip">Python</span>
-        <span class="chip">MF4 / ASAM MDF4</span>
-        <span class="chip">PyTorch</span>
-        <span class="chip">ONNX</span>
-        <span class="chip">MATLAB Export</span>
-      </div>
+      <p>A CANape/MF4-to-AI workbench designed to help ADAS module owners convert familiar vehicle logs into AI-ready datasets, training runs, and exportable model artifacts.</p>
+      <div class="case-tags"><span>Python</span><span>MF4 / ASAM MDF4</span><span>Preprocessing</span><span>PyTorch</span><span>ONNX</span><span>MATLAB Export</span></div>
+      <a href="../../index.html" class="detail-link no-print">Back to resume</a>
     </header>
 
-    <section class="case-section">
-      <div class="section-title"><span>01</span><h2>Context</h2></div>
-      <p>The ADAS team collected real-vehicle and calibration data mainly through CANape in MF4 format. Each module owner needed a repeatable way to turn raw measurement logs into model-ready datasets for AI-based experiments.</p>
-      <p>The workbench was designed around the existing engineering workflow: load the log, select useful signals, trim the usable range, normalize the data, run a module-specific model script, and export the trained result for later validation.</p>
-    </section>
+    <div class="case-map no-print"><span>Context</span><span>Problem</span><span>Constraint</span><span>Decision</span><span>Impact</span><span>Implementation</span><span>Boundary</span></div>
 
     <section class="case-section">
-      <div class="section-title"><span>02</span><h2>Problem</h2></div>
-      <p>Without a shared workflow, each developer had to repeatedly write custom scripts for trimming, signal selection, normalization, training, evaluation, and export. That made AI experimentation slow, inconsistent, and difficult to compare across modules.</p>
-      <div class="callout">The bottleneck was not only model training. The bigger issue was converting real ADAS measurement logs into a clean, reproducible AI workflow that module owners could reuse.</div>
-    </section>
+  <div class="case-index">01</div>
+  <article class="case-card">
+    <h2>Context</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>03</span><h2>Constraint</h2></div>
-      <p>The tool had to fit engineers who were not trying to build a full ML platform from scratch. It also had to stay compatible with existing MF4 measurement files, Python-based model scripts, normalization settings, and downstream simulation or bypass workflows.</p>
-      <ul>
-        <li>Input data came from real calibration/measurement logs rather than curated ML datasets.</li>
-        <li>Different module owners could have different model architectures and hyperparameters.</li>
-        <li>The export path had to support portable model artifacts, not only local Python execution.</li>
-      </ul>
-    </section>
+    <p>The commercial-vehicle ADAS team collected real-vehicle and calibration data mainly through CANape in MF4 format. Module owners were comfortable with signal review and calibration workflows, but AI experimentation required a repeatable path from logs to datasets, model training, evaluation, and export.</p>
+    <p>This workbench was designed as a transition platform: keep the familiar measurement data flow, then add structured AI preparation and model-artifact export on top.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">02</div>
+  <article class="case-card">
+    <h2>Problem</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>04</span><h2>Decision</h2></div>
-      <p>I designed a GUI-based workbench where engineers can load MF4 data, preprocess selected signals, configure model training, run independently written Python training scripts, and export trained artifacts to ONNX or MATLAB-compatible formats.</p>
-      <p>The key design choice was to separate the shared data workflow from the model-owner-specific training logic. This keeps preprocessing standardized while still allowing each developer to plug in their own model implementation.</p>
-    </section>
+    <p>Without a common workflow, each engineer would have to repeatedly write separate scripts for trimming, normalization, signal selection, training, evaluation, and export. That makes AI learning slow, inconsistent, and hard to compare across modules.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">03</div>
+  <article class="case-card">
+    <h2>Constraint</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>05</span><h2>Impact</h2></div>
-      <p>The tool gives each module owner a reusable path from vehicle logs to AI model artifacts. It reduces duplicated preprocessing work and makes experiments easier to standardize across ADAS functions.</p>
-      <div class="grid">
-        <div class="mini-card"><strong>For module owners</strong>Less time rewriting conversion scripts; more time evaluating model behavior.</div>
-        <div class="mini-card"><strong>For validation workflow</strong>A cleaner path from log-based training to ONNX/MATLAB-oriented artifacts.</div>
-      </div>
-    </section>
+    <ul>
+      <li>The workflow had to start from existing CANape/MF4 measurement data.</li>
+      <li>Module owners needed to plug in their own Python model scripts rather than adopting a full ML platform from day one.</li>
+      <li>The tool had to support learning and experimentation before formal team-wide operational adoption.</li>
+      <li>Public material could not include proprietary logs, signal names, datasets, model parameters, or validation criteria.</li>
+    </ul>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">04</div>
+  <article class="case-card">
+    <h2>Decision</h2>
 
-    <section class="case-section">
-      <div class="section-title"><span>06</span><h2>Implementation</h2></div>
-      <ul>
-        <li>MF4/CANape log loading workflow for ADAS time-series data.</li>
-        <li>Signal selection and preprocessing pipeline for trimming, alignment, and normalization.</li>
-        <li>Dataset export path for preprocessed signals.</li>
-        <li>Configurable training workflow with hyperparameter settings.</li>
-        <li>Support for independently written model scripts by individual module owners.</li>
-        <li>Result visualization and evaluation page for model output review.</li>
-        <li>ONNX and MATLAB-oriented export path for simulation or controlled validation workflows.</li>
-      </ul>
-    </section>
+    <p>I designed a GUI-based workbench where engineers can load MF4 logs, select and preprocess signals, apply trimming/normalization, run module-specific Python training scripts, inspect results, and export model artifacts for downstream validation workflows.</p>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">05</div>
+  <article class="case-card">
+    <h2>Impact</h2>
 
-    <section class="case-section boundary">
-      <div class="section-title"><span>07</span><h2>Public-Safe Boundary</h2></div>
-      <p>This page contains a public-safe workflow summary only. Proprietary vehicle logs, internal signal names, model parameters, calibration values, datasets, and company-specific validation criteria are intentionally omitted.</p>
-    </section>
+    <div class="impact-grid">
+      <div class="impact-card"><strong>Lower barrier</strong><span>Made AI experimentation approachable from the team’s existing vehicle-log workflow.</span></div>
+      <div class="impact-card"><strong>Repeatability</strong><span>Standardized the path from raw MF4 logs to datasets, training, and export artifacts.</span></div>
+      <div class="impact-card"><strong>Transition value</strong><span>Helped module owners learn model behavior without needing a full ML platform immediately.</span></div>
+    </div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">06</div>
+  <article class="case-card">
+    <h2>Implementation</h2>
+
+    <ul>
+      <li>MF4/CANape log loading workflow.</li>
+      <li>Signal selection, trimming, normalization, and dataset preparation pipeline.</li>
+      <li>Training-page structure for independently written module-owner Python scripts.</li>
+      <li>Result visualization and model evaluation page.</li>
+      <li>ONNX and MATLAB-oriented export path for later validation workflows.</li>
+    </ul>
+    <div class="diagram">CANape MF4 logs
+        ↓
+Preprocess: trim / normalize / select signals
+        ↓
+Train: module-owner Python model script
+        ↓
+Result review
+        ↓
+ONNX / MATLAB-oriented export</div>
+  </article>
+</section><section class="case-section">
+  <div class="case-index">07</div>
+  <article class="case-card">
+    <h2>Public-Safe Boundary</h2>
+
+    <p class="boundary-note">This page contains a public-safe workflow summary only. Proprietary vehicle logs, internal signal names, model weights, hyperparameters, datasets, calibration values, and company-specific validation criteria are intentionally omitted.</p>
+  </article>
+</section>
   </main>
+  <script src="../../site.js"></script>
 </body>
 </html>
