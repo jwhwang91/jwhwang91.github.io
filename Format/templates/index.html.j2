@@ -17,6 +17,7 @@
       {% if personal.linkedin.url %}
         <div><a href="{{ personal.linkedin.url }}" target="_blank" rel="noopener noreferrer">{{ personal.linkedin.label }}</a></div>
       {% endif %}
+      
       {% if personal.github.url %}
         <div><a href="{{ personal.github.url }}" target="_blank" rel="noopener noreferrer">{{ personal.github.label }}</a></div>
       {% endif %}
@@ -155,7 +156,10 @@
   <section class="footer-cta">
     <strong>Links:</strong>
     {% if personal.portfolio.url %}
-      <span><a href="{{ personal.portfolio.url }}" target="_blank" rel="noopener noreferrer">{{ personal.portfolio.url }}</a></span>
+      <span><a href="{{ personal.portfolio.url }}" target="_blank" rel="noopener noreferrer">{{ personal.portfolio.label }}</a></span>
+    {% endif %}
+    {% if personal.linkedin.url %}
+      <span><a href="{{ personal.linkedin.url }}" target="_blank" rel="noopener noreferrer">{{ personal.linkedin.label }}</a></span>
     {% endif %}
     {% if personal.github.url %}
       <span><a href="{{ personal.github.url }}" target="_blank" rel="noopener noreferrer">{{ personal.github.label }}</a></span>
