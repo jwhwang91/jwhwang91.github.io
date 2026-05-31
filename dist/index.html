@@ -15,30 +15,22 @@
     <button class="print-btn" onclick="window.print()">Export PDF</button>
   </nav>
 
-
-<main class="resume-sheet">
-
-  <header class="resume-header" id="resume">
-
+<main class="resume-sheet" id="resume">
+  <header class="resume-header">
     <div>
-      <p class="eyebrow">Resume / Portfolio Main Page</p>
+      <div class="eyebrow">Resume / Portfolio Main Page</div>
       <h1>Jae Woong Hwang</h1>
       <h2>Vehicle Systems Validation Engineer</h2>
       <p class="headline">Hardware-near vehicle systems engineer with production experience in commercial-vehicle ADAS, embedded control, and real-vehicle validation.</p>
       <p class="one-liner">I turn messy field behavior into replayable tools, structured evidence, and clear engineering stories across vehicle dynamics, control logic, calibration workflows, and validation environments.</p>
     </div>
-
-    <div class="contact-box">
-      <div>South Korea</div>
-      <div>jwhwang91@gmail.com</div>
-      <div>+82-10-5775-1863</div>
-<div><a href="https://github.com/jwhwang91/jwhwang91.github.io" target="_blank">Portfolio Source</a></div>    </div>
-
+    <aside class="contact-box" aria-label="Contact information">
+<div>South Korea</div><div><a href="mailto:jwhwang91@gmail.com">jwhwang91@gmail.com</a></div><div>+82-10-5775-1863</div>        <div><a href="https://www.linkedin.com/in/jaewoong-hwang-a19b6a1ba/" target="_blank" rel="noopener noreferrer">LinkedIn</a></div>
+        <div><a href="https://github.com/jwhwang91/jwhwang91.github.io" target="_blank" rel="noopener noreferrer">Portfolio Source</a></div>
+    </aside>
   </header>
 
-  <section class="notion-block">
-    <h3>Target Roles</h3>
-    <div class="keyword-strip">
+  <section class="keyword-strip" aria-label="Target roles and keywords">
       <span>Vehicle Systems Validation</span>
       <span>Commercial-Vehicle ADAS</span>
       <span>Embedded Control Software</span>
@@ -53,24 +45,24 @@
       <span>MATLAB / Simulink</span>
       <span>Python / C++ Tooling</span>
       <span>AI-Transition Platforms</span>
-    </div>
   </section>
 
   <section class="notion-block">
     <h3>Professional Summary</h3>
     <ul class="tight-list">
-      <li>Vehicle systems validation engineer with hands-on production experience across commercial-vehicle ADAS behavior logic, embedded control software, and real-vehicle validation.</li>
-      <li>Hardware-near engineering background spanning KAIST real-hardware motion control, K2 tracked-vehicle TCU software productization, and HMC commercial-vehicle ADAS mass-production development.</li>
-      <li>Turns messy field behavior into structured evidence by connecting real logs, vehicle signals, ECU logic, calibration workflows, and replay-based validation tools.</li>
-      <li>Builds practical validation toolchains under real engineering constraints, including production BEV target-selection debugging and resource-constrained AI-transition platforms for ADAS module owners.</li>
+        <li>Vehicle systems validation engineer with hands-on production experience across commercial-vehicle ADAS behavior logic, embedded control software, and real-vehicle validation.</li>
+        <li>Hardware-near engineering background spanning KAIST real-hardware motion control, K2 tracked-vehicle TCU software productization, and HMC commercial-vehicle ADAS mass-production development.</li>
+        <li>Turns messy field behavior into structured evidence by connecting real logs, vehicle signals, ECU logic, calibration workflows, and replay-based validation tools.</li>
+        <li>Builds practical validation toolchains under real engineering constraints, including production BEV target-selection debugging and resource-constrained AI-transition platforms for ADAS module owners.</li>
     </ul>
   </section>
 
   <section class="notion-block">
     <h3>Core Competencies</h3>
-    <p><strong>Control:</strong> Vehicle dynamics / Commercial-vehicle ADAS controls / Embedded control software / SCC/L2 ADAS behavior logic / Front-target deceleration behavior / Target-selection robustness / Road-curvature estimation / Sensor fusion</p>
-    <p><strong>Validation:</strong> Vehicle systems validation / MILS / HILS / Dynamometer / Real-vehicle validation / Replay-based debugging / Calibration/debugging / Release-readiness support</p>
-    <p><strong>Software:</strong> Python / C/C++ / MATLAB/Simulink / CANape/VN1640 / XCP over CAN-FD / ONNX / Validation toolchains / AI-transition platforms</p>
+      <p><strong>Control:</strong> Vehicle dynamics / Commercial-vehicle ADAS controls / Embedded control software / SCC/L2 ADAS behavior logic / Front-target deceleration behavior / Target-selection robustness / Road-curvature estimation / Sensor fusion</p>
+      <p><strong>Validation:</strong> Vehicle systems validation / MILS / HILS / Dynamometer / Real-vehicle validation / Replay-based debugging / Calibration/debugging / Release-readiness support</p>
+      <p><strong>Software:</strong> Python / C/C++ / MATLAB/Simulink / CANape/VN1640 / XCP over CAN-FD / ONNX / Validation toolchains / AI-transition platforms</p>
+      <p><strong>Qualifications:</strong> Korean Class 1 Large Vehicle Driver's License / Korean Trailer Driver's License</p>
   </section>
 
   <section class="notion-block" id="experience">
@@ -82,16 +74,16 @@
             <strong>Researcher - KAIST Master's Research</strong>
             <span>Korea Advanced Institute of Science and Technology (KAIST) | 2015.03 - 2017.08</span>
           </div>
-          <a href="experience/kaist-masters/index.html" class="detail-link no-print">Technical Case Study</a>
+          <div class="entry-actions no-print">
+            <a class="detail-link" href="experience/kaist-masters/index.html">Technical Case Study</a>
+          </div>
         </div>
-
-        <p class="hook">Real-hardware control foundation: designed and validated motion-stabilization control for turret hardware under moving-platform disturbance.</p>
-        <ul>
-          <li>Built a foundation in dynamics, control, estimation, sensor noise handling, and hardware validation through real turret motion-control research.</li>
-          <li>Designed control logic to stabilize turret motion under artificial base-motion disturbance, connecting model-based controller design with physical hardware behavior.</li>
-          <li>Developed the control and estimation background later reused in vehicle dynamics, road-curvature estimation, and sensor-fusion work.</li>
+<p class="hook">Real-hardware control foundation: designed and validated motion-stabilization control for turret hardware under moving-platform disturbance.</p>        <ul>
+            <li>Built a foundation in dynamics, control, estimation, sensor noise handling, and hardware validation through real turret motion-control research.</li>
+            <li>Designed control logic to stabilize turret motion under artificial base-motion disturbance, connecting model-based controller design with physical hardware behavior.</li>
+            <li>Developed the control and estimation background later reused in vehicle dynamics, road-curvature estimation, and sensor-fusion work.</li>
         </ul>
-        <p class="print-url print-only">Detail: experience/kaist-masters/index.html</p>
+          <p class="print-only">Detail: experience/kaist-masters/index.html</p>
       </article>
       <article class="experience-card">
         <div class="entry-top">
@@ -99,16 +91,16 @@
             <strong>Researcher - TCU Application Software</strong>
             <span>Agency for Defense Development (ADD), Ground Technology Research Institute | 2017.09 - 2021.03</span>
           </div>
-          <a href="experience/add-k2-tcu/index.html" class="detail-link no-print">Technical Case Study</a>
+          <div class="entry-actions no-print">
+            <a class="detail-link" href="experience/add-k2-tcu/index.html">Technical Case Study</a>
+          </div>
         </div>
-
-        <p class="hook">Full V-cycle embedded control experience: developed K2 tracked-vehicle TCU software from control logic and plant modeling to HILS, dynamometer, and field validation.</p>
-        <ul>
-          <li>Developed application software for the K2 tracked-vehicle transmission control unit, working close to physical drivetrain behavior, actuator constraints, and vehicle-level validation.</li>
-          <li>Experienced full V-cycle validation across MILS, HILS, powerpack dynamometer, and actual vehicle field testing.</li>
-          <li>Worked on sensorless shift control, plant modeling, calibration, parameter correction, and reliability-test support for heavy-duty transmission software productization.</li>
+<p class="hook">Full V-cycle embedded control experience: developed K2 tracked-vehicle TCU software from control logic and plant modeling to HILS, dynamometer, and field validation.</p>        <ul>
+            <li>Developed application software for the K2 tracked-vehicle transmission control unit, working close to physical drivetrain behavior, actuator constraints, and vehicle-level validation.</li>
+            <li>Experienced full V-cycle validation across MILS, HILS, powerpack dynamometer, and actual vehicle field testing.</li>
+            <li>Worked on sensorless shift control, plant modeling, calibration, parameter correction, and reliability-test support for heavy-duty transmission software productization.</li>
         </ul>
-        <p class="print-url print-only">Detail: experience/add-k2-tcu/index.html</p>
+          <p class="print-only">Detail: experience/add-k2-tcu/index.html</p>
       </article>
       <article class="experience-card">
         <div class="entry-top">
@@ -116,26 +108,25 @@
             <strong>Commercial Vehicle ADAS Controls & Validation Engineer</strong>
             <span>Hyundai Motor Company (HMC) | 2021.03 - Present</span>
           </div>
-          <a href="experience/hmc-adas/index.html" class="detail-link no-print">Technical Case Study</a>
+          <div class="entry-actions no-print">
+            <a class="detail-link" href="experience/hmc-adas/index.html">Technical Case Study</a>
+          </div>
         </div>
-
-        <p class="hook">Production commercial-vehicle ADAS work across SCC/L2 behavior logic, road-curvature fusion, target-selection robustness, and real-vehicle validation.</p>
-        <ul>
-          <li>Developed and validated selected production ADAS behavior logic for commercial trucks, tractors, buses, and fuel-cell platform variants.</li>
-          <li>Owned independent contributions including SCC emergency-stop behavior and EKF-based RoadRadius fusion using steering-angle and yaw-rate information under commercial-vehicle sensing constraints.</li>
-          <li>Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows.</li>
-          <li>Built and used replay-based validation tooling to analyze false target-selection behavior with real logs and production TOS/ODP logic, reducing repeated real-bus validation loops for rare bus-lane scenarios.</li>
-          <li>Designed resource-constrained AI-transition toolchains that reused existing CANape/VN1640/MF4 workflows to help ADAS module owners experiment with learned models before dedicated AI validation infrastructure was available.</li>
+<p class="hook">Production commercial-vehicle ADAS work across SCC/L2 behavior logic, road-curvature fusion, target-selection robustness, and real-vehicle validation.</p>        <ul>
+            <li>Developed and validated selected production ADAS behavior logic for commercial trucks, tractors, buses, and fuel-cell platform variants.</li>
+            <li>Owned independent contributions including SCC emergency-stop behavior and EKF-based RoadRadius fusion using steering-angle and yaw-rate information under commercial-vehicle sensing constraints.</li>
+            <li>Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows.</li>
+            <li>Built and used replay-based validation tooling to analyze false target-selection behavior with real logs and production TOS/ODP logic, reducing repeated real-bus validation loops for rare bus-lane scenarios.</li>
+            <li>Designed resource-constrained AI-transition toolchains that reused existing CANape/VN1640/MF4 workflows to help ADAS module owners experiment with learned models before dedicated AI validation infrastructure was available.</li>
         </ul>
-        <p class="print-url print-only">Detail: experience/hmc-adas/index.html</p>
+          <p class="print-only">Detail: experience/hmc-adas/index.html</p>
       </article>
     </div>
   </section>
 
-  <section class="notion-block" id="toolchains">
+  <section class="narrative-block" id="toolchains">
     <h3>Selected Technical Projects</h3>
-    <p class="section-note">Public-safe technical case studies for validation tooling, AI-assisted implementation, and commercial-vehicle ADAS debugging workflows.</p>
-
+    <p class="section-note">Public-safe technical case studies for validation tooling, AI-transition prototypes, and commercial-vehicle ADAS debugging workflows.</p>
     <div class="toolchain-list">
       <article class="toolchain-card">
         <div class="entry-top">
@@ -143,30 +134,23 @@
             <strong>Turning a Legacy Calibration Setup into an ADAS AI Validation Loop</strong>
             <span>Python / C++ / CANape / VN1640 / XCP over CAN-FD / ONNX</span>
           </div>
-
           <div class="entry-actions no-print">
-            <a href="toolchains/e2e-xcp-bypass/index.html" class="detail-link">Technical Case Study</a>
-            <a href="https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="detail-link" href="toolchains/e2e-xcp-bypass/index.html">Technical Case Study</a>
+              <a class="detail-link mock-link" href="https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
         </div>
-
-        <p class="hook">Resource-constrained AI-transition platform for testing learned-model behavior on real vehicle signals using the team's existing calibration setup.</p>
-        <div class="objective-impact">
-          <p><b>Objective:</b> Build a minimum viable real-vehicle AI validation loop for a commercial-vehicle ADAS team that had limited access to Ethernet-based validation equipment and high-end AI compute platforms. Instead of waiting for full infrastructure, the project reused the available CANape/VN1640/laptop workflow to make learned-model experimentation approachable for ADAS module owners.</p>
-          <p><b>Impact:</b> Created a practical bridge from conventional calibration workflows to AI-assisted validation by connecting learned models, real vehicle signals, and XCP-over-CAN-FD communication under existing field-test constraints. The project is positioned as a proactive AI-transition prototype rather than a fully deployed production tool.</p>
-        </div>
-
+<p class="hook">Resource-constrained AI-transition platform for testing learned-model behavior on real vehicle signals using the team's existing calibration setup.</p>        <div class="objective-impact">
+<p><strong>Objective:</strong> Build a minimum viable real-vehicle AI validation loop for a commercial-vehicle ADAS team that had limited access to Ethernet-based validation equipment and high-end AI compute platforms. Instead of waiting for full infrastructure, the project reused the available CANape/VN1640/laptop workflow to make learned-model experimentation approachable for ADAS module owners.</p><p><strong>Impact:</strong> Created a practical bridge from conventional calibration workflows to AI-assisted validation by connecting learned models, real vehicle signals, and XCP-over-CAN-FD communication under existing field-test constraints. The project is positioned as a proactive AI-transition prototype rather than a fully deployed production tool.</p>        </div>
         <div class="tag-row">
-          <span>Python</span>
-          <span>C++</span>
-          <span>XCP</span>
-          <span>CAN-FD</span>
-          <span>ONNX</span>
-          <span>CANape/VN1640</span>
+            <span>Python</span>
+            <span>C++</span>
+            <span>XCP</span>
+            <span>CAN-FD</span>
+            <span>ONNX</span>
+            <span>CANape/VN1640</span>
         </div>
-
-        <p class="print-url print-only">Detail: toolchains/e2e-xcp-bypass/index.html</p>
-        <p class="print-url print-only">GitHub: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio</p>
+        <div class="print-only">
+<p>Detail: toolchains/e2e-xcp-bypass/index.html</p><p>GitHub: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio</p>        </div>
       </article>
       <article class="toolchain-card">
         <div class="entry-top">
@@ -174,29 +158,22 @@
             <strong>ADAS Log-to-AI Workbench</strong>
             <span>Python / MF4 / PyTorch / ONNX / MATLAB Export</span>
           </div>
-
           <div class="entry-actions no-print">
-            <a href="toolchains/timeseries-ai-training/index.html" class="detail-link">Technical Case Study</a>
-            <a href="https://github.com/jwhwang91/adas-log-to-ai-workbench" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="detail-link" href="toolchains/timeseries-ai-training/index.html">Technical Case Study</a>
+              <a class="detail-link mock-link" href="https://github.com/jwhwang91/adas-log-to-ai-workbench" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
         </div>
-
-        <p class="hook">CANape/MF4-to-AI workflow for turning real vehicle measurement logs into AI-ready datasets, training runs, and exportable model artifacts.</p>
-        <div class="objective-impact">
-          <p><b>Objective:</b> Help ADAS module owners reuse familiar CANape/MF4 measurement data for AI experimentation without requiring a full ML platform from day one. The workbench structures preprocessing, trimming, normalization, model-script execution, evaluation, and export into a repeatable learning workflow.</p>
-          <p><b>Impact:</b> Defined a practical transition path from conventional vehicle-log analysis to AI model experimentation. It reduces the entry barrier for module owners to study learned-model behavior, compare preprocessing choices, and generate artifacts for later validation workflows, while remaining clearly positioned as an AI-transition support prototype.</p>
-        </div>
-
+<p class="hook">CANape/MF4-to-AI workflow for turning real vehicle measurement logs into AI-ready datasets, training runs, and exportable model artifacts.</p>        <div class="objective-impact">
+<p><strong>Objective:</strong> Help ADAS module owners reuse familiar CANape/MF4 measurement data for AI experimentation without requiring a full ML platform from day one. The workbench structures preprocessing, trimming, normalization, model-script execution, evaluation, and export into a repeatable learning workflow.</p><p><strong>Impact:</strong> Defined a practical transition path from conventional vehicle-log analysis to AI model experimentation. It reduces the entry barrier for module owners to study learned-model behavior, compare preprocessing choices, and generate artifacts for later validation workflows, while remaining clearly positioned as an AI-transition support prototype.</p>        </div>
         <div class="tag-row">
-          <span>Python</span>
-          <span>MF4</span>
-          <span>PyTorch</span>
-          <span>ONNX</span>
-          <span>MATLAB Export</span>
+            <span>Python</span>
+            <span>MF4</span>
+            <span>PyTorch</span>
+            <span>ONNX</span>
+            <span>MATLAB Export</span>
         </div>
-
-        <p class="print-url print-only">Detail: toolchains/timeseries-ai-training/index.html</p>
-        <p class="print-url print-only">GitHub: https://github.com/jwhwang91/adas-log-to-ai-workbench</p>
+        <div class="print-only">
+<p>Detail: toolchains/timeseries-ai-training/index.html</p><p>GitHub: https://github.com/jwhwang91/adas-log-to-ai-workbench</p>        </div>
       </article>
       <article class="toolchain-card">
         <div class="entry-top">
@@ -204,63 +181,47 @@
             <strong>BEV Target Selection Validation Studio</strong>
             <span>MATLAB Script / Simulink / Base Workspace / ADAS Visualization</span>
           </div>
-
           <div class="entry-actions no-print">
-            <a href="toolchains/tos-odp-bev-simulator/index.html" class="detail-link">Technical Case Study</a>
-            <a href="https://github.com/jwhwang91/bev-target-selection-validation-studio" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="detail-link" href="toolchains/tos-odp-bev-simulator/index.html">Technical Case Study</a>
+              <a class="detail-link mock-link" href="https://github.com/jwhwang91/bev-target-selection-validation-studio" target="_blank" rel="noopener noreferrer">GitHub</a>
           </div>
         </div>
-
-        <p class="hook">Production-development replay studio for explaining and reducing false target-selection behavior using real logs and production TOS/ODP logic.</p>
-        <div class="objective-impact">
-          <p><b>Objective:</b> Reproduce rare commercial-vehicle target-selection edge cases in a repeatable MATLAB/Simulink workflow instead of relying on repeated real-bus road tests after every TOS/ODP logic or parameter change.</p>
-          <p><b>Impact:</b> Actively used during commercial-vehicle mass-production development to replay real logs through production TOS/ODP logic, investigate false detections, and prepare logic or calibration improvements before final vehicle confirmation. For rare bus-only-lane scenarios, it helped reduce repeated real-bus validation trips from about 10 to around 5, with each trip typically requiring 4-5 hours.</p>
-        </div>
-
+<p class="hook">Production-development replay studio for explaining and reducing false target-selection behavior using real logs and production TOS/ODP logic.</p>        <div class="objective-impact">
+<p><strong>Objective:</strong> Reproduce rare commercial-vehicle target-selection edge cases in a repeatable MATLAB/Simulink workflow instead of relying on repeated real-bus road tests after every TOS/ODP logic or parameter change.</p><p><strong>Impact:</strong> Actively used during commercial-vehicle mass-production development to replay real logs through production TOS/ODP logic, investigate false detections, and prepare logic or calibration improvements before final vehicle confirmation. For rare bus-only-lane scenarios, it helped reduce repeated real-bus validation trips from about 10 to around 5, with each trip typically requiring 4-5 hours.</p>        </div>
         <div class="tag-row">
-          <span>MATLAB</span>
-          <span>Simulink</span>
-          <span>ADAS</span>
-          <span>BEV</span>
-          <span>TOS/ODP</span>
+            <span>MATLAB</span>
+            <span>Simulink</span>
+            <span>ADAS</span>
+            <span>BEV</span>
+            <span>TOS/ODP</span>
         </div>
-
-        <p class="print-url print-only">Detail: toolchains/tos-odp-bev-simulator/index.html</p>
-        <p class="print-url print-only">GitHub: https://github.com/jwhwang91/bev-target-selection-validation-studio</p>
+        <div class="print-only">
+<p>Detail: toolchains/tos-odp-bev-simulator/index.html</p><p>GitHub: https://github.com/jwhwang91/bev-target-selection-validation-studio</p>        </div>
       </article>
     </div>
   </section>
 
-  <section class="two-col">
-    <div class="notion-block">
-      <h3>Education</h3>
+  <section class="notion-block">
+    <h3>Education</h3>
+    <div class="two-col">
       <div class="mini-entry">
         <strong>University of California Los Angeles (UCLA)</strong>
         <span>B.S. Mechanical Engineering | 2010.09 - 2014.06</span>
-      </div>
+<span>Los Angeles, USA</span>      </div>
       <div class="mini-entry">
         <strong>Korea Advanced Institute of Science and Technology (KAIST)</strong>
         <span>M.S. Robotics | 2015.03 - 2017.08</span>
-        <em>Thesis: Controller Design for Motion Stabilization of a Turret on a Moving Platform</em>
-      </div>
-    </div>
-
-    <div class="notion-block">
-      <h3>Skills</h3>
-      <p><strong>Control:</strong> Vehicle dynamics / Commercial-vehicle ADAS controls / Embedded control software / SCC/L2 ADAS behavior logic / Front-target deceleration behavior / Target-selection robustness / Road-curvature estimation / Sensor fusion</p>
-      <p><strong>Validation:</strong> Vehicle systems validation / MILS / HILS / Dynamometer / Real-vehicle validation / Replay-based debugging / Calibration/debugging / Release-readiness support</p>
-      <p><strong>Software:</strong> Python / C/C++ / MATLAB/Simulink / CANape/VN1640 / XCP over CAN-FD / ONNX / Validation toolchains / AI-transition platforms</p>
+<span>Daejeon, South Korea</span><em>Thesis: Controller Design for Motion Stabilization of a Turret on a Moving Platform</em>      </div>
     </div>
   </section>
 
   <section class="footer-cta">
     <strong>Links:</strong>
-    <span><a href="https://jwhwang91.github.io" target="_blank">https://jwhwang91.github.io</a></span>
-<span><a href="https://github.com/jwhwang91/jwhwang91.github.io" target="_blank">Portfolio Source</a></span>    <p>Use this resume-style page for PDF export. Use detail pages for public-safe technical case studies and sanitized engineering notes.</p>
+      <span><a href="https://jwhwang91.github.io" target="_blank" rel="noopener noreferrer">https://jwhwang91.github.io</a></span>
+      <span><a href="https://github.com/jwhwang91/jwhwang91.github.io" target="_blank" rel="noopener noreferrer">Portfolio Source</a></span>
+    <p>Use this resume-style page for PDF export. Use detail pages for public-safe technical case studies and sanitized engineering notes.</p>
   </section>
-
 </main>
-
 
   <script src="site.js"></script>
 </body>

@@ -8,6 +8,7 @@ education:
     period: "2015.03 - 2017.08"
     location: "Daejeon, South Korea"
     thesis: "Controller Design for Motion Stabilization of a Turret on a Moving Platform"
+
 skills:
   control:
     - "Vehicle dynamics"
@@ -36,3 +37,6 @@ skills:
     - "ONNX"
     - "Validation toolchains"
     - "AI-transition platforms"
+  qualifications:
+    - "Korean Class 1 Large Vehicle Driver's License"
+    - "Korean Trailer Driver's License"

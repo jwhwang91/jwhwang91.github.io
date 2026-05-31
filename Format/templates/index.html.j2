@@ -1,59 +1,66 @@
 {% extends "base.html.j2" %}
-
 {% block body_class %}resume-page{% endblock %}
-
 {% block body %}
-
-<main class="resume-sheet">
-
-  <header class="resume-header" id="resume">
-
+<main class="resume-sheet" id="resume">
+  <header class="resume-header">
     <div>
-      <p class="eyebrow">Resume / Portfolio Main Page</p>
+      <div class="eyebrow">Resume / Portfolio Main Page</div>
       <h1>{{ personal.display_name | default(site.name) }}</h1>
       <h2>{{ site.title }}</h2>
       <p class="headline">{{ site.headline }}</p>
       <p class="one-liner">{{ site.one_liner }}</p>
     </div>
-
-    <div class="contact-box">
-      <div>{{ personal.location }}</div>
-      <div>{{ personal.email }}</div>
-      <div>{{ personal.phone }}</div>
-      {% if personal.linkedin.url %}<div><a href="{{ personal.linkedin.url }}" target="_blank">{{ personal.linkedin.label }}</a></div>{% endif %}
-      {% if personal.github.url %}<div><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></div>{% endif %}
-      {% for link in personal.optional_links %}
-      {% if link.url %}
-      <div><a href="{{ link.url }}" target="_blank">{{ link.label }}</a></div>
+    <aside class="contact-box" aria-label="Contact information">
+      {% if personal.location %}<div>{{ personal.location }}</div>{% endif %}
+      {% if personal.email %}<div><a href="mailto:{{ personal.email }}">{{ personal.email }}</a></div>{% endif %}
+      {% if personal.phone %}<div>{{ personal.phone }}</div>{% endif %}
+      {% if personal.linkedin.url %}
+        <div><a href="{{ personal.linkedin.url }}" target="_blank" rel="noopener noreferrer">{{ personal.linkedin.label }}</a></div>
       {% endif %}
+      {% if personal.github.url %}
+        <div><a href="{{ personal.github.url }}" target="_blank" rel="noopener noreferrer">{{ personal.github.label }}</a></div>
+      {% endif %}
+      {% for link in personal.optional_links %}
+        {% if link.url %}
+          <div><a href="{{ link.url }}" target="_blank" rel="noopener noreferrer">{{ link.label }}</a></div>
+        {% endif %}
       {% endfor %}
-    </div>
-
+    </aside>
   </header>
 
-  <section class="notion-block">
-    <h3>Target Roles</h3>
-    <div class="keyword-strip">
-      {% for keyword in site.keywords %}
+  {% if site.keywords %}
+  <section class="keyword-strip" aria-label="Target roles and keywords">
+    {% for keyword in site.keywords %}
       <span>{{ keyword }}</span>
-      {% endfor %}
-    </div>
+    {% endfor %}
   </section>
+  {% endif %}
 
+  {% if site.main_focus %}
   <section class="notion-block">
     <h3>Professional Summary</h3>
     <ul class="tight-list">
       {% for item in site.main_focus %}
-      <li>{{ item }}</li>
+        <li>{{ item }}</li>
       {% endfor %}
     </ul>
   </section>
+  {% endif %}
 
   <section class="notion-block">
     <h3>Core Competencies</h3>
-    <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
-    <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
-    <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
+    {% if resume.skills.control %}
+      <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
+    {% endif %}
+    {% if resume.skills.validation %}
+      <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
+    {% endif %}
+    {% if resume.skills.software %}
+      <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
+    {% endif %}
+    {% if resume.skills.qualifications %}
+      <p><strong>Qualifications:</strong> {{ resume.skills.qualifications | join(" / ") }}</p>
+    {% endif %}
   </section>
 
   <section class="notion-block" id="experience">
@@ -66,25 +73,31 @@
             <strong>{{ exp.role }}</strong>
             <span>{{ exp.organization }} | {{ exp.period }}</span>
           </div>
-          <a href="{{ exp.detail_output }}" class="detail-link no-print">Technical Case Study</a>
+          {% if exp.detail_output %}
+          <div class="entry-actions no-print">
+            <a class="detail-link" href="{{ exp.detail_output }}">Technical Case Study</a>
+          </div>
+          {% endif %}
         </div>
-
-        <p class="hook">{{ exp.hook }}</p>
+        {% if exp.hook %}<p class="hook">{{ exp.hook }}</p>{% endif %}
+        {% if exp.bullets %}
         <ul>
           {% for bullet in exp.bullets %}
-          <li>{{ bullet }}</li>
+            <li>{{ bullet }}</li>
           {% endfor %}
         </ul>
-        <p class="print-url print-only">Detail: {{ exp.detail_output }}</p>
+        {% endif %}
+        {% if exp.detail_output %}
+          <p class="print-only">Detail: {{ exp.detail_output }}</p>
+        {% endif %}
       </article>
       {% endfor %}
     </div>
   </section>
 
-  <section class="notion-block" id="toolchains">
+  <section class="narrative-block" id="toolchains">
     <h3>Selected Technical Projects</h3>
-    <p class="section-note">Public-safe technical case studies for validation tooling, AI-assisted implementation, and commercial-vehicle ADAS debugging workflows.</p>
-
+    <p class="section-note">Public-safe technical case studies for validation tooling, AI-transition prototypes, and commercial-vehicle ADAS debugging workflows.</p>
     <div class="toolchain-list">
       {% for project in toolchains %}
       <article class="toolchain-card">
@@ -93,65 +106,61 @@
             <strong>{{ project.title }}</strong>
             <span>{{ project.stack }}</span>
           </div>
-
           <div class="entry-actions no-print">
-            <a href="{{ project.detail_output }}" class="detail-link">Technical Case Study</a>
+            {% if project.detail_output %}
+              <a class="detail-link" href="{{ project.detail_output }}">Technical Case Study</a>
+            {% endif %}
             {% if project.repo_url %}
-            <a href="{{ project.repo_url }}" class="detail-link mock-link" target="_blank" rel="noopener noreferrer">GitHub</a>
+              <a class="detail-link mock-link" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
             {% endif %}
           </div>
         </div>
-
-        <p class="hook">{{ project.hook }}</p>
+        {% if project.hook %}<p class="hook">{{ project.hook }}</p>{% endif %}
         <div class="objective-impact">
-          <p><b>Objective:</b> {{ project.objective }}</p>
-          <p><b>Impact:</b> {{ project.impact }}</p>
+          {% if project.objective %}<p><strong>Objective:</strong> {{ project.objective }}</p>{% endif %}
+          {% if project.impact %}<p><strong>Impact:</strong> {{ project.impact }}</p>{% endif %}
         </div>
-
+        {% if project.tags %}
         <div class="tag-row">
           {% for tag in project.tags %}
-          <span>{{ tag }}</span>
+            <span>{{ tag }}</span>
           {% endfor %}
         </div>
-
-        <p class="print-url print-only">Detail: {{ project.detail_output }}</p>
-        {% if project.repo_url %}
-        <p class="print-url print-only">GitHub: {{ project.repo_url }}</p>
         {% endif %}
+        <div class="print-only">
+          {% if project.detail_output %}<p>Detail: {{ project.detail_output }}</p>{% endif %}
+          {% if project.repo_url %}<p>GitHub: {{ project.repo_url }}</p>{% endif %}
+        </div>
       </article>
       {% endfor %}
     </div>
   </section>
 
-  <section class="two-col">
-    <div class="notion-block">
-      <h3>Education</h3>
+  {% if resume.education %}
+  <section class="notion-block">
+    <h3>Education</h3>
+    <div class="two-col">
       {% for edu in resume.education %}
       <div class="mini-entry">
         <strong>{{ edu.institute }}</strong>
         <span>{{ edu.degree }} | {{ edu.period }}</span>
-        {% if edu.thesis %}
-        <em>Thesis: {{ edu.thesis }}</em>
-        {% endif %}
+        {% if edu.location %}<span>{{ edu.location }}</span>{% endif %}
+        {% if edu.thesis %}<em>Thesis: {{ edu.thesis }}</em>{% endif %}
       </div>
       {% endfor %}
     </div>
-
-    <div class="notion-block">
-      <h3>Skills</h3>
-      <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
-      <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
-      <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
-    </div>
   </section>
+  {% endif %}
 
   <section class="footer-cta">
     <strong>Links:</strong>
-    <span><a href="{{ personal.portfolio.url }}" target="_blank">{{ personal.portfolio.url }}</a></span>
-    {% if personal.github.url %}<span><a href="{{ personal.github.url }}" target="_blank">{{ personal.github.label }}</a></span>{% endif %}
+    {% if personal.portfolio.url %}
+      <span><a href="{{ personal.portfolio.url }}" target="_blank" rel="noopener noreferrer">{{ personal.portfolio.url }}</a></span>
+    {% endif %}
+    {% if personal.github.url %}
+      <span><a href="{{ personal.github.url }}" target="_blank" rel="noopener noreferrer">{{ personal.github.label }}</a></span>
+    {% endif %}
     <p>Use this resume-style page for PDF export. Use detail pages for public-safe technical case studies and sanitized engineering notes.</p>
   </section>
-
 </main>
-
 {% endblock %}
