@@ -5,13 +5,12 @@
 name: "Jae Woong Hwang"
 display_name: "Jae Woong Hwang"
 location: "South Korea"
-
 email: "jwhwang91@gmail.com"
 phone: "+82-10-XXXX-XXXX"
 
 linkedin:
   label: "LinkedIn"
-  url: ""
+  url: "https://www.linkedin.com/in/jaewoong-hwang-a19b6a1ba/"
 
 github:
   label: "Portfolio Source"
