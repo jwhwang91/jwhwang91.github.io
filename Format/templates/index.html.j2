@@ -4,7 +4,7 @@
 <main class="resume-sheet" id="resume">
   <header class="resume-header">
     <div>
-      <div class="eyebrow">Resume / Portfolio Main Page</div>
+      <div class="eyebrow">{% if variant_mode %}Resume{% else %}Resume / Portfolio Main Page{% endif %}</div>
       <h1>{{ personal.display_name | default(site.name) }}</h1>
       <h2>{{ site.title }}</h2>
       <p class="headline">{{ site.headline }}</p>
@@ -50,18 +50,40 @@
 
   <section class="notion-block">
     <h3>Core Competencies</h3>
-    {% if resume.skills.control %}
-      <p><strong>Control:</strong> {{ resume.skills.control | join(" / ") }}</p>
-    {% endif %}
-    {% if resume.skills.validation %}
-      <p><strong>Validation:</strong> {{ resume.skills.validation | join(" / ") }}</p>
-    {% endif %}
-    {% if resume.skills.software %}
-      <p><strong>Software:</strong> {{ resume.skills.software | join(" / ") }}</p>
-    {% endif %}
-    {% if resume.skills.qualifications %}
-      <p><strong>Qualifications:</strong> {{ resume.skills.qualifications | join(" / ") }}</p>
-    {% endif %}
+    <div class="skill-groups">
+      {% if resume.skills.control %}
+      <div class="skill-group">
+        <span class="skill-label">Control &amp; Algorithms</span>
+        <div class="chip-row">
+          {% for skill in resume.skills.control %}<span>{{ skill }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if resume.skills.validation %}
+      <div class="skill-group">
+        <span class="skill-label">Validation &amp; Test</span>
+        <div class="chip-row">
+          {% for skill in resume.skills.validation %}<span>{{ skill }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if resume.skills.software %}
+      <div class="skill-group">
+        <span class="skill-label">Software &amp; Tools</span>
+        <div class="chip-row">
+          {% for skill in resume.skills.software %}<span>{{ skill }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+      {% if resume.skills.qualifications %}
+      <div class="skill-group">
+        <span class="skill-label">Licenses &amp; Qualifications</span>
+        <div class="chip-row">
+          {% for skill in resume.skills.qualifications %}<span>{{ skill }}</span>{% endfor %}
+        </div>
+      </div>
+      {% endif %}
+    </div>
   </section>
 
   <section class="notion-block" id="experience">
@@ -70,15 +92,16 @@
       {% for exp in experiences %}
       <article class="experience-card">
         <div class="entry-top">
-          <div>
-            <strong>{{ exp.role }}</strong>
-            <span>{{ exp.organization }} | {{ exp.period }}</span>
+          <div class="entry-head">
+            <strong class="role-title">{{ exp.role }}</strong>
+            <span class="employer">{{ exp.organization }}</span>
           </div>
-          {% if exp.detail_output %}
-          <div class="entry-actions no-print">
-            <a class="detail-link" href="{{ exp.detail_output }}">Technical Case Study</a>
+          <div class="entry-side">
+            <span class="period">{{ exp.period }}</span>
+            {% if exp.detail_output %}
+            <a class="detail-link no-print" href="{{ link_base | default('') }}{{ exp.detail_output }}">Technical Case Study</a>
+            {% endif %}
           </div>
-          {% endif %}
         </div>
         {% if exp.hook %}<p class="hook">{{ exp.hook }}</p>{% endif %}
         {% if exp.bullets %}
@@ -88,8 +111,11 @@
           {% endfor %}
         </ul>
         {% endif %}
+        {% if exp.keywords %}
+        <p class="exp-keywords"><strong>Relevant:</strong> {{ exp.keywords | join(' · ') }}</p>
+        {% endif %}
         {% if exp.detail_output %}
-          <p class="print-only">Detail: {{ exp.detail_output }}</p>
+          <p class="print-only">Detail: {{ link_base | default('') }}{{ exp.detail_output }}</p>
         {% endif %}
       </article>
       {% endfor %}
@@ -109,7 +135,7 @@
           </div>
           <div class="entry-actions no-print">
             {% if project.detail_output %}
-              <a class="detail-link" href="{{ project.detail_output }}">Technical Case Study</a>
+              <a class="detail-link" href="{{ link_base | default('') }}{{ project.detail_output }}">Technical Case Study</a>
             {% endif %}
             {% if project.repo_url %}
               <a class="detail-link mock-link" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
@@ -129,7 +155,7 @@
         </div>
         {% endif %}
         <div class="print-only">
-          {% if project.detail_output %}<p>Detail: {{ project.detail_output }}</p>{% endif %}
+          {% if project.detail_output %}<p>Detail: {{ link_base | default('') }}{{ project.detail_output }}</p>{% endif %}
           {% if project.repo_url %}<p>GitHub: {{ project.repo_url }}</p>{% endif %}
         </div>
       </article>

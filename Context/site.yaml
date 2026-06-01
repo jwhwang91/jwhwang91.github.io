@@ -1,9 +1,11 @@
 name: "Jae Woong Hwang"
 title: "Vehicle Systems Validation Engineer"
-headline: "Hardware-near vehicle systems engineer with production experience in commercial-vehicle ADAS, embedded control, and real-vehicle validation."
+headline: "Hardware-near vehicle systems engineer with 8+ years taking safety-critical functions from control-algorithm design through embedded implementation and full V-cycle validation, across commercial-vehicle ADAS, defense, and robotics platforms."
 one_liner: >-
-  I turn messy field behavior into replayable tools, structured evidence, and clear engineering stories across vehicle dynamics, control logic, calibration workflows, and validation environments.
+  I turn messy field behavior into replayable tools, structured evidence, and clear engineering stories, across vehicle dynamics, control logic, calibration workflows, and validation environments, from defense drivetrain software to production commercial-vehicle ADAS.
 keywords:
+  - "Control Systems"
+  - "Model-Based Design"
   - "Vehicle Systems Validation"
   - "Commercial-Vehicle ADAS"
   - "Embedded Control Software"
@@ -19,7 +21,7 @@ keywords:
   - "Python / C++ Tooling"
   - "AI-Transition Platforms"
 main_focus:
-  - "Vehicle systems validation engineer with hands-on production experience across commercial-vehicle ADAS behavior logic, embedded control software, and real-vehicle validation."
+  - "8+ years across the full control-systems V-cycle: control-algorithm design, embedded implementation, and MILS/HILS/dynamometer/real-vehicle validation on safety-critical commercial-vehicle, defense, and robotics platforms."
   - "Hardware-near engineering background spanning KAIST real-hardware motion control, K2 tracked-vehicle TCU software productization, and HMC commercial-vehicle ADAS mass-production development."
   - "Turns messy field behavior into structured evidence by connecting real logs, vehicle signals, ECU logic, calibration workflows, and replay-based validation tools."
   - "Builds practical validation toolchains under real engineering constraints, including production BEV target-selection debugging and resource-constrained AI-transition platforms for ADAS module owners."
