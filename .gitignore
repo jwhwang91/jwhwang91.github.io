@@ -1,0 +1,17 @@
+# This repo is PUBLIC (deploys to jwhwang91.github.io). Keep job-application
+# artifacts out of git so the companies you apply to and your tailored resumes
+# stay private.
+
+# Generated, ready-to-send resumes:
+/Applications/
+
+# Per-application variant folders (hold jd.txt + overlay.yaml + notes.md).
+# Flat Context/variants/*.yaml lenses (e.g. a reusable field focus) are NOT
+# ignored and may be committed if you want them public.
+/Context/variants/*/
+
+# Python
+__pycache__/
+*.pyc
+.venv/
+venv/

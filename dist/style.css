@@ -42,9 +42,21 @@ a{color:inherit}
 .detail-link:hover{border-color:var(--accent);background:#e3ebff}
 .mock-link{background:#111827;color:#fff;border-color:#111827;letter-spacing:.04em}
 .mock-link:hover{background:#0f766e;border-color:#0f766e;color:#fff}
-.hook{font-size:13.5px!important;color:var(--ink)!important;font-weight:780;margin:9px 0!important}
+.hook{font-size:12.5px!important;color:var(--muted)!important;font-weight:500;margin:8px 0 7px!important}
 .experience-card ul,.narrative-block ul,.detail-card ul{padding-left:18px}
 .experience-card li,.narrative-block li,.detail-card li{font-size:12.5px;color:var(--muted);margin-bottom:4px}
+/* Experience entry hierarchy: title >> employer > dates >> description */
+.entry-head{min-width:0}
+.experience-card .role-title{display:block;font-size:18px;font-weight:800;color:var(--ink);letter-spacing:-.02em;line-height:1.18}
+.experience-card .employer{display:block;font-size:13.5px;font-weight:750;color:var(--accent);margin-top:3px}
+.entry-side{display:flex;flex-direction:column;align-items:flex-end;gap:6px;text-align:right;white-space:nowrap;flex-shrink:0}
+.period{font-size:12px;color:var(--muted);font-weight:650}
+/* Scannable skill chips instead of run-on slash lists */
+.skill-groups{display:flex;flex-direction:column;gap:9px}
+.skill-group{display:grid;grid-template-columns:170px 1fr;gap:10px;align-items:start}
+.skill-label{font-size:12px;font-weight:800;color:var(--ink);padding-top:4px}
+.chip-row{display:flex;flex-wrap:wrap;gap:6px}
+.chip-row span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;color:#3f4349}
 .narrative-block{background:linear-gradient(135deg,#fff,#f8faff);border-color:#d9e3ff}
 .narrative-block p{font-size:13px;color:var(--ink);font-weight:650;margin-bottom:8px}
 .section-note{font-size:12.5px;color:var(--muted);margin-bottom:12px}
@@ -76,6 +88,8 @@ a{color:inherit}
   .contact-box{text-align:left}
   .resume-header h1{font-size:34px}
   .entry-top{flex-direction:column}
+  .entry-side{align-items:flex-start;text-align:left}
+  .skill-group{grid-template-columns:1fr;gap:4px}
 }
 
 @media print{
@@ -90,10 +104,15 @@ a{color:inherit}
   .headline{font-size:13.5px}
   .one-liner,.contact-box,.notion-block p,.experience-card li,.toolchain-card p,.tight-list li{font-size:10.5px!important}
   .keyword-strip{gap:4px;margin:10px 0}
-  .keyword-strip span,.tag-row span{font-size:8.5px;padding:2px 6px}
+  .keyword-strip span,.tag-row span,.chip-row span{font-size:8.5px;padding:2px 6px}
   .notion-block,.narrative-block,.footer-cta{break-inside:avoid;border-radius:8px;padding:10px 12px;margin:8px 0}
   .experience-card,.toolchain-card{break-inside:avoid;padding:9px 10px}
-  .hook{font-size:11px!important}
+  .hook{font-size:10.5px!important}
+  .role-title{font-size:13px!important}
+  .employer{font-size:11px!important}
+  .period{font-size:10px!important}
+  .skill-group{grid-template-columns:140px 1fr;gap:6px}
+  .skill-label{font-size:9px}
   .two-col{gap:8px}
   .objective-impact{grid-template-columns:1fr 1fr;gap:8px}
   .footer-cta{color:#111;background:#fff;border-color:var(--line)}

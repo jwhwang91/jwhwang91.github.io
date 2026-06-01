@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import argparse
 import shutil
 import base64
 import mimetypes
@@ -17,6 +18,11 @@ FORMAT = ROOT / "Format"
 TEMPLATES = FORMAT / "templates"
 STYLE = ROOT / "Style"
 DIST = ROOT / "dist"
+VARIANTS = CONTEXT / "variants"
+# Generated, ready-to-send job-application resumes, one user-named folder each
+# (e.g. "Tesla 1"). Kept OUTSIDE dist/ so the backbone build never wipes them,
+# and gitignored because this repo is public.
+APPLICATIONS = ROOT / "Applications"
 
 
 def load_yaml(path: Path) -> dict[str, Any]:
@@ -273,6 +279,186 @@ def render_toolchain_pages(env: Environment) -> None:
         out_dir.write_text(html, encoding="utf-8")
 
 
+# ---------------------------------------------------------------------------
+# Per-job-description variants — the regulated loop
+#
+# A variant is a thin "lens" over the backbone (Context/*.yaml): it ONLY lists
+# overrides; anything omitted is inherited. The default build (`python main.py`)
+# is unchanged and never builds variants, so the public site is always the
+# backbone. A variant renders a LEAN, self-contained resume to
+# Applications/<name>/resume.html — case-study links point to the live portfolio,
+# so deep case studies live there and are never bundled into each resume.
+#
+# Two source layouts are supported:
+#   Context/variants/<name>/overlay.yaml   (folder: also holds jd.txt + notes.md;
+#                                            the per-application "regulated loop")
+#   Context/variants/<name>.yaml           (flat lens, e.g. a reusable field focus)
+# ---------------------------------------------------------------------------
+
+OVERLAY_TEMPLATE = """\
+# Lens for "{name}" — a thin overlay over the backbone (Context/*.yaml).
+# It ONLY lists overrides; anything omitted is inherited from the backbone.
+# Leaving a value blank would BLANK that field, so keep unused fields commented out.
+# This file never edits Context/*.yaml. Build with:
+#     python main.py --variant "{name}"
+# Output: Applications/{name}/resume.html  (lean, self-contained; case-study links
+# point to the live portfolio, so deep case studies are NOT bundled into the resume).
+
+label: ""   # private human note for you, e.g. "Tesla - Autopilot Controls"
+
+# --- site overrides (per key; uncomment only what you want to change) ---
+site:
+  # title: ""        # headline role line shown under your name
+  # headline: ""
+  # one_liner: ""
+  # keywords:         # Target Roles / ATS keyword strip (replaces the backbone list)
+  #   - ""
+  # main_focus:       # Professional Summary bullets (replaces the backbone list)
+  #   - ""
+
+# --- resume overrides (per key, e.g. reorder/replace a skill group) ---
+# resume:
+#   skills:
+#     software: ["Python", "C++", "..."]
+
+# --- experiences: subset/reorder by id, plus per-id field overrides ---
+# backbone ids: hmc-adas, add-k2-tcu, kaist-masters
+experiences:
+  include: [hmc-adas, add-k2-tcu, kaist-masters]
+  # overrides:
+  #   hmc-adas:
+  #     hook: "..."
+  #     bullets: ["...", "..."]              # honest, JD-front-loaded rewrites only
+  #     keywords: ["ISO 26262", "AUTOSAR"]   # ATS keyword line under the bullets
+
+# --- toolchains: subset/reorder by id (omit to keep all) ---
+# backbone ids: e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator
+toolchains:
+  include: [e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator]
+"""
+
+NOTES_TEMPLATE = """\
+# Notes - {name}
+
+## JD signal (filled in during analysis)
+
+## Rationale for this overlay (Claude)
+
+## Review feedback (you - the regulation gate: edits, rejections, "tone down X")
+
+## Lessons to carry to the next application
+"""
+
+
+def variant_source(name: str) -> Path | None:
+    """Resolve a variant name to its overlay file: folder layout preferred, then flat."""
+    folder = VARIANTS / name / "overlay.yaml"
+    if folder.exists():
+        return folder
+    flat = VARIANTS / f"{name}.yaml"
+    if flat.exists():
+        return flat
+    return None
+
+
+def load_variant(name: str) -> dict[str, Any]:
+    src = variant_source(name)
+    if src is None:
+        raise FileNotFoundError(
+            f"No variant '{name}' found under {VARIANTS}.\n"
+            f"Scaffold it first:  python main.py --new-variant \"{name}\""
+        )
+    variant = load_yaml(src)
+    variant.setdefault("id", name)
+    return variant
+
+
+def select_and_override(items: list[dict[str, Any]], cfg: dict[str, Any] | None) -> list[dict[str, Any]]:
+    """Filter/reorder a list of id'd dicts by cfg['include'] and apply cfg['overrides']."""
+    cfg = cfg or {}
+    by_id = {item.get("id"): item for item in items}
+    include = cfg.get("include")
+    selected = [by_id[i] for i in include if i in by_id] if include else list(items)
+    overrides = cfg.get("overrides") or {}
+    return [{**item, **overrides.get(item.get("id"), {})} for item in selected]
+
+
+def apply_variant(context: dict[str, Any], variant: dict[str, Any]) -> dict[str, Any]:
+    if variant.get("site"):
+        context["site"] = {**context["site"], **variant["site"]}
+    if variant.get("resume"):
+        context["resume"] = {**context["resume"], **variant["resume"]}
+    context["experiences"] = select_and_override(context["experiences"], variant.get("experiences"))
+    context["toolchains"] = select_and_override(context["toolchains"], variant.get("toolchains"))
+    context["noindex"] = variant.get("noindex", True)
+    return context
+
+
+def render_application(env: Environment, name: str) -> Path:
+    """Render a lean, self-contained resume for one application to Applications/<name>/."""
+    context = apply_variant(load_index_context(), load_variant(name))
+    portfolio = (context["personal"].get("portfolio") or {}).get("url", "").rstrip("/")
+    link_base = f"{portfolio}/" if portfolio else ""
+
+    context.update(
+        inline_css=(STYLE / "theme.css").read_text(encoding="utf-8"),
+        inline_js=load_site_js(),
+        link_base=link_base,            # case-study links -> live portfolio
+        home_path=portfolio or "index.html",
+        variant_mode=True,
+    )
+    html = env.get_template("index.html.j2").render(**context)
+
+    out_dir = APPLICATIONS / name
+    out_dir.mkdir(parents=True, exist_ok=True)
+    out_path = out_dir / "resume.html"
+    out_path.write_text(html, encoding="utf-8")
+    return out_path
+
+
+def list_variants() -> list[str]:
+    if not VARIANTS.exists():
+        return []
+    names = set()
+    for p in VARIANTS.iterdir():
+        if p.is_dir() and (p / "overlay.yaml").exists():
+            names.add(p.name)
+        elif p.is_file() and p.suffix == ".yaml":
+            names.add(p.stem)
+    return sorted(names)
+
+
+def scaffold_variant(name: str) -> Path:
+    folder = VARIANTS / name
+    folder.mkdir(parents=True, exist_ok=True)
+    for filename, template in (
+        ("jd.txt", ""),
+        ("overlay.yaml", OVERLAY_TEMPLATE.format(name=name)),
+        ("notes.md", NOTES_TEMPLATE.format(name=name)),
+    ):
+        path = folder / filename
+        if not path.exists():
+            path.write_text(template, encoding="utf-8")
+    return folder
+
+
+def build_variant(name: str) -> None:
+    out_path = render_application(make_env(), name)
+    print(f"Built application resume '{name}': {out_path.relative_to(ROOT)}")
+    print("Open it, review, then use Export PDF to send for that job.")
+
+
+def build_all_variants() -> None:
+    names = list_variants()
+    if not names:
+        print(f"No variants found under {VARIANTS}.")
+        return
+    env = make_env()
+    for name in names:
+        out_path = render_application(env, name)
+        print(f"Built '{name}': {out_path.relative_to(ROOT)}")
+
+
 def build() -> None:
     ensure_clean_dist()
     copy_static_files()
@@ -290,4 +476,48 @@ def build() -> None:
 
 
 if __name__ == "__main__":
-    build()
+    parser = argparse.ArgumentParser(description="Build the resume/portfolio site.")
+    parser.add_argument(
+        "--variant",
+        metavar="NAME",
+        help="Build one job-tailored resume into Applications/NAME/resume.html "
+             '(e.g. --variant "Tesla 1").',
+    )
+    parser.add_argument(
+        "--all-variants",
+        action="store_true",
+        help="Build every variant under Context/variants/ into Applications/.",
+    )
+    parser.add_argument(
+        "--new-variant",
+        metavar="NAME",
+        help="Scaffold Context/variants/NAME/ (jd.txt, overlay.yaml, notes.md), then stop.",
+    )
+    parser.add_argument(
+        "--list-variants",
+        action="store_true",
+        help="List variants that have an overlay.",
+    )
+    args = parser.parse_args()
+
+    if args.new_variant:
+        folder = scaffold_variant(args.new_variant)
+        print(f"Scaffolded variant: {folder.relative_to(ROOT)}")
+        print(f"  1. Paste the JD into {(folder / 'jd.txt').relative_to(ROOT)}")
+        print("  2. Ask Claude to analyze it and propose the overlay.")
+        print(f'  3. Review, then build:  python main.py --variant "{args.new_variant}"')
+    elif args.list_variants:
+        names = list_variants()
+        if not names:
+            print('No variants yet. Create one with --new-variant "<name>".')
+        else:
+            print("Variants:")
+            for name in names:
+                built = (APPLICATIONS / name / "resume.html").exists()
+                print(f"  - {name}{'  (built)' if built else ''}")
+    elif args.all_variants:
+        build_all_variants()
+    elif args.variant:
+        build_variant(args.variant)
+    else:
+        build()

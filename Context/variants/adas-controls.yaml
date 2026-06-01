@@ -1,0 +1,50 @@
+# Example variant: tailors the backbone toward ADAS controls / behavior-logic roles.
+#
+# A variant is a thin "lens" over the backbone (Context/*.yaml). It ONLY lists overrides;
+# anything omitted here is inherited from the backbone. Build with:
+#     python main.py --variant adas-controls
+# Output: dist/adas-controls.html  (noindex; reuses the backbone's CSS, detail pages, assets)
+
+id: adas-controls
+label: "ADAS Controls / Behavior-Logic focus"
+noindex: true
+
+# --- site overrides (per key; omit a key to keep the backbone's) ---
+site:
+  title: "ADAS Controls & Behavior-Logic Engineer"
+  headline: "Production ADAS controls engineer: SCC/L2 behavior logic, road-curvature fusion, and target-selection robustness, validated from MIL/HIL through real vehicles."
+  keywords:
+    - "ADAS Controls"
+    - "SCC / L2 / ACC"
+    - "Behavior Logic"
+    - "Sensor Fusion"
+    - "Road-Curvature Estimation"
+    - "Target Selection"
+    - "Vehicle Dynamics"
+    - "MATLAB / Simulink"
+    - "MILS / HILS / Vehicle Test"
+    - "Python / C++"
+  main_focus:
+    - "Production SCC/L2 ADAS behavior logic on commercial trucks, tractors, buses, and fuel-cell platforms."
+    - "EKF-based road-radius fusion and target-selection robustness under real-world sensing constraints."
+    - "Full V-cycle validation (MIL, HIL, dynamometer, real-vehicle) plus calibration and release support."
+    - "Control foundation from real-hardware motion control and tracked-vehicle TCU software."
+
+# --- experience selection / ordering / per-job overrides ---
+# include: subset + order by id (omit to keep all in backbone order)
+# overrides: per-id replacement of any field (here: tightened, ADAS-front-loaded bullets)
+experiences:
+  include: [hmc-adas, add-k2-tcu, kaist-masters]
+  overrides:
+    hmc-adas:
+      hook: "Production commercial-vehicle ADAS: SCC/L2 behavior logic, road-curvature fusion, and target-selection robustness."
+      bullets:
+        - "Developed and validated production SCC/L2 ADAS behavior logic across truck, tractor, bus, and fuel-cell variants."
+        - "Owned SCC emergency-stop behavior and EKF-based road-radius fusion (steering-angle + yaw-rate) under commercial-vehicle sensing limits."
+        - "Improved target-selection robustness for curved-road and bus-lane scenarios, reducing false-target behavior."
+        - "Drove SCC/FOC tuning, regression, and vehicle-level debugging across MIL/HIL/dyno/real-vehicle release workflows."
+    add-k2-tcu:
+      bullets:
+        - "Developed K2 tracked-vehicle TCU control software, close to drivetrain dynamics and actuator constraints."
+        - "Validated across the full V-cycle: MIL, HIL, powerpack dynamometer, and field testing."
+        - "Built plant models and shift control; supported calibration and reliability testing."
