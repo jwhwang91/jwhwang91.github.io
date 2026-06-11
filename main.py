@@ -5,6 +5,7 @@ import shutil
 import base64
 import mimetypes
 import re
+import sys
 from pathlib import Path
 from typing import Any
 
@@ -290,9 +291,10 @@ def render_toolchain_pages(env: Environment) -> None:
 # so deep case studies live there and are never bundled into each resume.
 #
 # Two source layouts are supported:
-#   Context/variants/<name>/overlay.yaml   (folder: also holds jd.txt + notes.md;
-#                                            the per-application "regulated loop")
-#   Context/variants/<name>.yaml           (flat lens, e.g. a reusable field focus)
+#   Applications/<name>/overlay.yaml   (per-application folder — also holds jd.txt,
+#                                        notes.md, result.md, and the rendered
+#                                        resume.html; the "regulated loop")
+#   Context/variants/<name>.yaml       (flat lens, e.g. a reusable field focus)
 # ---------------------------------------------------------------------------
 
 OVERLAY_TEMPLATE = """\
@@ -303,6 +305,11 @@ OVERLAY_TEMPLATE = """\
 #     python main.py --variant "{name}"
 # Output: Applications/{name}/resume.html  (lean, self-contained; case-study links
 # point to the live portfolio, so deep case studies are NOT bundled into the resume).
+#
+# TOP PRIORITY when filling this in: pass the ATS keyword filter. Mirror the JD's
+# exact wording (term + acronym) for every skill the backbone TRULY supports, and
+# front-load must-haves in keywords/main_focus/per-experience keyword lines. Never
+# invent a skill to win a keyword. See Context/variants/PLAYBOOK.md.
 
 label: ""   # private human note for you, e.g. "Tesla - Autopilot Controls"
 
@@ -346,13 +353,39 @@ NOTES_TEMPLATE = """\
 
 ## Review feedback (you - the regulation gate: edits, rejections, "tone down X")
 
+## Outcome & post-rejection diagnosis
+<!-- Filled by the rejection pipeline (Context/variants/REJECTION_PIPELINE.md).
+     Record: applied date, outcome + date, timing, channel, filter class,
+     sponsorship weight, real vs. recoverable gaps, chosen next move. -->
+
 ## Lessons to carry to the next application
+"""
+
+RESULT_TEMPLATE = """\
+# Result - {name}
+
+You own this file. Update it as the application moves; the deeper diagnosis lives in
+notes.md (## Outcome & post-rejection diagnosis). `python main.py --insights` reads the
+fields below across all applications to score ATS pass-through and evolve the playbook.
+
+Status:        <!-- draft | applied | screening | interview | offer | rejected | withdrawn -->
+ATS:           <!-- pass | fail | unknown -- pass = reached a human/interview; fail = auto/early reject -->
+Applied:       <!-- YYYY-MM-DD -->
+Outcome date:  <!-- YYYY-MM-DD -->
+Stage reached: <!-- ATS/early screen | recruiter | technical | onsite | offer -->
+Why:           <!-- one line: the deciding factor (keyword gap? auto-knockout like sponsorship/location?) -->
+Next move:     <!-- referral / re-apply / stand down / ... -->
 """
 
 
 def variant_source(name: str) -> Path | None:
-    """Resolve a variant name to its overlay file: folder layout preferred, then flat."""
-    folder = VARIANTS / name / "overlay.yaml"
+    """Resolve a variant name to its overlay file.
+
+    Per-application folder preferred (Applications/<name>/overlay.yaml — source and
+    output now live together there), then a flat reusable lens
+    (Context/variants/<name>.yaml).
+    """
+    folder = APPLICATIONS / name / "overlay.yaml"
     if folder.exists():
         return folder
     flat = VARIANTS / f"{name}.yaml"
@@ -417,24 +450,26 @@ def render_application(env: Environment, name: str) -> Path:
 
 
 def list_variants() -> list[str]:
-    if not VARIANTS.exists():
-        return []
     names = set()
-    for p in VARIANTS.iterdir():
-        if p.is_dir() and (p / "overlay.yaml").exists():
-            names.add(p.name)
-        elif p.is_file() and p.suffix == ".yaml":
-            names.add(p.stem)
+    if APPLICATIONS.exists():
+        for p in APPLICATIONS.iterdir():
+            if p.is_dir() and (p / "overlay.yaml").exists():
+                names.add(p.name)
+    if VARIANTS.exists():
+        for p in VARIANTS.iterdir():
+            if p.is_file() and p.suffix == ".yaml":
+                names.add(p.stem)
     return sorted(names)
 
 
 def scaffold_variant(name: str) -> Path:
-    folder = VARIANTS / name
+    folder = APPLICATIONS / name
     folder.mkdir(parents=True, exist_ok=True)
     for filename, template in (
         ("jd.txt", ""),
         ("overlay.yaml", OVERLAY_TEMPLATE.format(name=name)),
         ("notes.md", NOTES_TEMPLATE.format(name=name)),
+        ("result.md", RESULT_TEMPLATE.format(name=name)),
     ):
         path = folder / filename
         if not path.exists():
@@ -457,6 +492,141 @@ def build_all_variants() -> None:
     for name in names:
         out_path = render_application(env, name)
         print(f"Built '{name}': {out_path.relative_to(ROOT)}")
+
+
+# ---------------------------------------------------------------------------
+# Evolving pipeline — turn accumulated outcomes into ATS optimization.
+#
+# Each Applications/<name>/result.md carries a few controlled-vocab fields
+# (Status, ATS, Stage reached, ...). gather_results() parses them and
+# print_insights() (`--insights`) prints a deterministic scoreboard: how often
+# the resume passed the company ATS filter (proxied by reaching a human), and
+# which applications were knocked out before a human ever read them. The
+# countable facts live here; pattern mining + ledger synthesis is Claude's job
+# (see Context/variants/EVOLUTION.md + ATS_LEDGER.md).
+# ---------------------------------------------------------------------------
+
+RESULT_FIELDS = ("status", "ats", "applied", "outcome date", "stage reached", "why", "next move")
+# Statuses/stages that imply a human read the resume (i.e. it cleared the ATS).
+_HUMAN_STATUSES = {"screening", "interview", "offer", "hired"}
+_HUMAN_STAGES = {"recruiter", "technical", "onsite", "offer"}
+
+
+def parse_result(path: Path) -> dict[str, str]:
+    """Parse a result.md into {field: value}, skipping unfilled <!-- ... --> placeholders."""
+    data: dict[str, str] = {}
+    for line in path.read_text(encoding="utf-8").splitlines():
+        m = re.match(r"^([A-Za-z][A-Za-z ]*?):\s*(.*)$", line)
+        if not m:
+            continue
+        key = m.group(1).strip().lower()
+        if key not in RESULT_FIELDS:
+            continue
+        value = m.group(2).strip()
+        if not value or value.startswith("<!--"):
+            continue  # placeholder / unfilled
+        data[key] = value
+    return data
+
+
+def gather_results() -> list[dict[str, str]]:
+    """One parsed record per application that has a result.md (with its folder name)."""
+    if not APPLICATIONS.exists():
+        return []
+    records = []
+    for folder in sorted(APPLICATIONS.iterdir()):
+        result = folder / "result.md"
+        if folder.is_dir() and result.exists():
+            rec = parse_result(result)
+            rec["name"] = folder.name
+            records.append(rec)
+    return records
+
+
+def ats_passed(rec: dict[str, str]) -> bool | None:
+    """True/False if known (explicit ATS field wins; else inferred from stage/status)."""
+    ats = rec.get("ats", "").lower()
+    if ats in ("pass", "fail"):
+        return ats == "pass"
+    if ats == "unknown":
+        return None
+    status = rec.get("status", "").lower()
+    stage = rec.get("stage reached", "").lower()
+    if status in _HUMAN_STATUSES or any(s in stage for s in _HUMAN_STAGES):
+        return True
+    if status == "rejected" and ("ats" in stage or "early" in stage or "auto" in stage):
+        return False
+    return None
+
+
+def pdf_text_warning(folder: Path) -> str | None:
+    """Best-effort: warn if a folder's PDF has ~no extractable text (the Print-to-PDF trap)."""
+    pdfs = list(folder.glob("*.pdf"))
+    if not pdfs:
+        return None
+    try:
+        from pypdf import PdfReader
+    except Exception:
+        return None
+    for pdf in pdfs:
+        try:
+            text = "".join((p.extract_text() or "") for p in PdfReader(str(pdf)).pages)
+        except Exception:
+            continue
+        if len(text.strip()) < 50:
+            return f"{pdf.name}: ~0 extractable text — re-export via browser 'Save as PDF'"
+    return None
+
+
+def print_insights() -> None:
+    # result.md content (and these defaults) may hold non-ASCII; keep the Windows
+    # console from choking (cp949/cp1252) by forcing a tolerant UTF-8 stdout.
+    try:
+        sys.stdout.reconfigure(encoding="utf-8", errors="replace")
+    except Exception:
+        pass
+    records = gather_results()
+    if not records:
+        print("No results yet. Outcomes are recorded in Applications/<name>/result.md.")
+        return
+
+    passed = [r for r in records if ats_passed(r) is True]
+    failed = [r for r in records if ats_passed(r) is False]
+    unknown = [r for r in records if ats_passed(r) is None]
+
+    print(f"Applications: {len(records)}")
+    by_status: dict[str, int] = {}
+    for r in records:
+        by_status[r.get("status", "—").lower()] = by_status.get(r.get("status", "—").lower(), 0) + 1
+    print("  by status:", ", ".join(f"{k}:{v}" for k, v in sorted(by_status.items())))
+
+    known = len(passed) + len(failed)
+    rate = f"{len(passed)}/{known}" if known else "0/0"
+    print(f"ATS-pass (reached a human): {rate}" + (f"   (+{len(unknown)} unknown)" if unknown else ""))
+
+    if failed:
+        print("\nATS-stage rejects (knocked out before a human read it):")
+        for r in failed:
+            why = r.get("why", "—")
+            nxt = r.get("next move", "")
+            print(f"  - {r['name']}: {why}" + (f"  -> {nxt}" if nxt else ""))
+        print("  Note: a fast reject can be a keyword gap OR an auto-knockout (sponsorship/location).")
+        print("  Mine the pattern: see Context/variants/EVOLUTION.md, then evolve ATS_LEDGER.md.")
+
+    print("\nPer-application:")
+    print(f"  {'name':<34} {'status':<10} {'ats':<8} {'stage':<16} outcome")
+    for r in records:
+        ap = ats_passed(r)
+        ats = "pass" if ap is True else "fail" if ap is False else "?"
+        print(f"  {r['name'][:33]:<34} {r.get('status','—')[:9]:<10} {ats:<8} "
+              f"{r.get('stage reached','—')[:15]:<16} {r.get('outcome date','—')}")
+
+    warnings = [(r["name"], w) for r in records
+                if (w := pdf_text_warning(APPLICATIONS / r["name"]))]
+    if warnings:
+        print("\nPDF text-layer WARNINGS (ATS would read these as blank):")
+        for name, w in warnings:
+            print(f"  ! {name}: {w}")
 
 
 def build() -> None:
@@ -486,17 +656,23 @@ if __name__ == "__main__":
     parser.add_argument(
         "--all-variants",
         action="store_true",
-        help="Build every variant under Context/variants/ into Applications/.",
+        help="Build every application under Applications/ (plus flat Context/variants/*.yaml lenses).",
     )
     parser.add_argument(
         "--new-variant",
         metavar="NAME",
-        help="Scaffold Context/variants/NAME/ (jd.txt, overlay.yaml, notes.md), then stop.",
+        help="Scaffold Applications/NAME/ (jd.txt, overlay.yaml, notes.md, result.md), then stop.",
     )
     parser.add_argument(
         "--list-variants",
         action="store_true",
         help="List variants that have an overlay.",
+    )
+    parser.add_argument(
+        "--insights",
+        action="store_true",
+        help="Scoreboard from Applications/*/result.md: ATS pass-through + which apps were "
+             "knocked out before a human read them. Feeds the evolving ATS playbook.",
     )
     args = parser.parse_args()
 
@@ -515,6 +691,8 @@ if __name__ == "__main__":
             for name in names:
                 built = (APPLICATIONS / name / "resume.html").exists()
                 print(f"  - {name}{'  (built)' if built else ''}")
+    elif args.insights:
+        print_insights()
     elif args.all_variants:
         build_all_variants()
     elif args.variant:

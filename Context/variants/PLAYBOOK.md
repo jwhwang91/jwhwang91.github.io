@@ -7,6 +7,28 @@ never touched.
 
 ---
 
+## Top priority: pass the ATS keyword filter
+
+Every variant is optimized **first** to clear automated keyword screening — above
+prose elegance or brevity. Concretely, for every skill the backbone TRULY supports:
+
+- **Mirror the JD's exact wording** (JD says "Hardware-in-the-Loop (HIL)" → use
+  that exact phrase, not a synonym).
+- **Spell out term + acronym** ("Controller Area Network (CAN)") so either matches.
+- **Front-load must-haves** in the keyword strip, summary, and per-experience
+  `keywords:` lines, then reuse them naturally in the bullets.
+- **Match the JD's job-title language** in the resume `title` where truthful.
+- **Surface true-but-unnamed skills** (honest keyword recovery) to raise coverage.
+- **Parse-clean export:** single-column PDF, standard headings (no multi-column
+  scramble).
+
+Bounded by the one rule below: maximize coverage of keywords you *actually have* —
+never keyword-stuff a skill you lack. (ATS-first is necessary but not sufficient:
+form-level knockouts like visa sponsorship sit outside the resume — see
+`REJECTION_PIPELINE.md`.)
+
+---
+
 ## Step 0 — one-time, per application: create the folder
 
 ```powershell
@@ -14,13 +36,13 @@ cd C:\Users\test\PycharmProjects\portfolio
 python main.py --new-variant "Tesla 1"
 ```
 
-Creates `Context\variants\Tesla 1\` with `jd.txt`, `overlay.yaml`, `notes.md`.
-The name (`"Tesla 1"`) is just your label; it becomes `Applications\Tesla 1\resume.html`
-and never appears on the resume.
+Creates `Applications\Tesla 1\` with `jd.txt`, `overlay.yaml`, `notes.md`, `result.md`.
+The name (`"Tesla 1"`) is just your label; the build adds `Applications\Tesla 1\resume.html`
+to the same folder, and the name never appears on the resume.
 
 ## Step 1 — paste the JD
 
-Open `Context\variants\Tesla 1\jd.txt` and paste the **entire** job posting as plain
+Open `Applications\Tesla 1\jd.txt` and paste the **entire** job posting as plain
 text (title, responsibilities, requirements, nice-to-haves — messy copy-paste is fine).
 Save as UTF-8. Optionally put the posting URL on the first line.
 
@@ -29,11 +51,14 @@ Save as UTF-8. Optionally put the posting URL on the first line.
 Paste this to Claude (Claude Code), editing the name:
 
 > **Run the JD loop for "Tesla 1".**
-> Read `Context/variants/Tesla 1/jd.txt` and the backbone, then fill in
-> `overlay.yaml`. Tell me:
+> First read `Context/variants/ATS_LEDGER.md` and apply its confirmed tactics +
+> known gaps. Then read `Applications/Tesla 1/jd.txt` and the backbone, and fill in
+> `overlay.yaml`. **Top priority: maximize ATS keyword-filter pass-through** —
+> mirror the JD's exact wording (term + acronym) for every skill my backbone
+> truly supports. Tell me:
 > 1. the JD's top must-haves and the exact keywords it uses,
 > 2. how you mapped them to my experiences/projects (what you surfaced, reordered, reworded),
-> 3. the ATS keywords you added and where,
+> 3. the ATS keywords you added and where, and my estimated must-have coverage (e.g. 12/15),
 > 4. anything the JD wants that my backbone does NOT support — flag it, do not invent it.
 > Keep every bullet truthful to the backbone. Don't build yet — show me the proposal first.
 

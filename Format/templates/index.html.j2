@@ -32,7 +32,7 @@
   {% if site.keywords %}
   <section class="keyword-strip" aria-label="Target roles and keywords">
     {% for keyword in site.keywords %}
-      <span>{{ keyword }}</span>
+      <span>{{ keyword }}<span class="kw-sep">, </span></span>
     {% endfor %}
   </section>
   {% endif %}
@@ -55,7 +55,7 @@
       <div class="skill-group">
         <span class="skill-label">Control &amp; Algorithms</span>
         <div class="chip-row">
-          {% for skill in resume.skills.control %}<span>{{ skill }}</span>{% endfor %}
+          {% for skill in resume.skills.control %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
         </div>
       </div>
       {% endif %}
@@ -63,7 +63,7 @@
       <div class="skill-group">
         <span class="skill-label">Validation &amp; Test</span>
         <div class="chip-row">
-          {% for skill in resume.skills.validation %}<span>{{ skill }}</span>{% endfor %}
+          {% for skill in resume.skills.validation %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
         </div>
       </div>
       {% endif %}
@@ -71,7 +71,7 @@
       <div class="skill-group">
         <span class="skill-label">Software &amp; Tools</span>
         <div class="chip-row">
-          {% for skill in resume.skills.software %}<span>{{ skill }}</span>{% endfor %}
+          {% for skill in resume.skills.software %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
         </div>
       </div>
       {% endif %}
@@ -79,7 +79,7 @@
       <div class="skill-group">
         <span class="skill-label">Licenses &amp; Qualifications</span>
         <div class="chip-row">
-          {% for skill in resume.skills.qualifications %}<span>{{ skill }}</span>{% endfor %}
+          {% for skill in resume.skills.qualifications %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
         </div>
       </div>
       {% endif %}
@@ -150,7 +150,7 @@
         {% if project.tags %}
         <div class="tag-row">
           {% for tag in project.tags %}
-            <span>{{ tag }}</span>
+            <span>{{ tag }}<span class="kw-sep">, </span></span>
           {% endfor %}
         </div>
         {% endif %}

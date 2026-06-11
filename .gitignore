@@ -2,13 +2,22 @@
 # artifacts out of git so the companies you apply to and your tailored resumes
 # stay private.
 
-# Generated, ready-to-send resumes:
+# Each job application is one private folder here — jd.txt, overlay.yaml, notes.md,
+# result.md, plus the generated resume.html and any PDF/evidence. The whole tree
+# stays out of git (companies you apply to + tailored resumes are private).
 /Applications/
 
-# Per-application variant folders (hold jd.txt + overlay.yaml + notes.md).
-# Flat Context/variants/*.yaml lenses (e.g. a reusable field focus) are NOT
-# ignored and may be committed if you want them public.
-/Context/variants/*/
+# Flat Context/variants/*.yaml lenses (e.g. a reusable field focus like
+# adas-controls.yaml) are NOT ignored and may be committed if you want them public.
+
+# Private job-search constraints (work authorization / visa sponsorship, target
+# list). Source of truth for the loop + rejection pipeline; must stay out of the
+# public repo and is never rendered onto the resume.
+/Context/candidate_profile.yaml
+
+# Private working notes / session summaries — scratch space, not part of the
+# published method. Keep out of the public repo.
+/_session_notes/
 
 # Python
 __pycache__/

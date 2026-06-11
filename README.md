@@ -1,5 +1,8 @@
 # Resume / Portfolio Static Site Generator v3
 
+> **New here?** See [`PIPELINE.md`](PIPELINE.md) for the end-to-end flow — backbone → live
+> site, and the per-job application loop. This README documents the static-site internals.
+
 This version follows the redesigned strategy:
 
 - Main page is a Notion-like, PDF-exportable resume.

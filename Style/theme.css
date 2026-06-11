@@ -23,6 +23,9 @@ a{color:inherit}
 .contact-box{font-size:12px;color:var(--muted);line-height:1.8;text-align:right;align-self:end;word-break:break-word}
 .keyword-strip{display:flex;flex-wrap:wrap;gap:6px;margin:18px 0}
 .keyword-strip span,.tag-row span{display:inline-flex;border:1px solid var(--line);background:var(--chip);border-radius:999px;padding:4px 9px;font-size:11px;font-weight:700;color:#3f4349}
+/* ATS: a real delimiter kept in the PDF text layer (transparent, so chips still
+   look separator-free) — guarantees "Python, C++" not "PythonC++" on extraction. */
+.kw-sep{color:transparent;font-weight:400}
 .notion-block,.narrative-block,.footer-cta{border:1px solid var(--line);border-radius:12px;background:#fff;padding:18px 20px;margin:14px 0}
 .notion-block h3,.narrative-block h3{font-size:16px;margin-bottom:10px;letter-spacing:-.01em}
 .tight-list{padding-left:18px}
