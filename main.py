@@ -71,6 +71,11 @@ def load_index_context() -> dict[str, Any]:
     narrative = load_yaml(CONTEXT / "narrative.yaml")
     experiences = load_yaml(CONTEXT / "experiences.yaml").get("experiences", [])
     toolchains = load_yaml(CONTEXT / "toolchain_projects.yaml").get("projects", [])
+    # Second spine of the backbone: self-built software / web / AI / desktop
+    # products (DeckFlip, DecisionCanvas, etc.). Optional file so the build never
+    # breaks if it's absent; an empty list just hides the section.
+    software_path = CONTEXT / "software_projects.yaml"
+    software = load_yaml(software_path).get("projects", []) if software_path.exists() else []
 
     return {
         "site": site,
@@ -79,6 +84,7 @@ def load_index_context() -> dict[str, Any]:
         "narrative": narrative,
         "experiences": experiences,
         "toolchains": toolchains,
+        "software": software,
     }
 
 
@@ -310,6 +316,14 @@ OVERLAY_TEMPLATE = """\
 # exact wording (term + acronym) for every skill the backbone TRULY supports, and
 # front-load must-haves in keywords/main_focus/per-experience keyword lines. Never
 # invent a skill to win a keyword. See Context/variants/PLAYBOOK.md.
+#
+# DUAL-TRACK: the backbone now has two spines. Pick the framing the JD wants:
+#   - Automotive / controls / embedded role -> surface `experiences` + `toolchains`,
+#     and hide the software section with `software: {include: []}`. See
+#     Context/variants/adas-controls.yaml.
+#   - Software / web / AI / desktop role -> reframe the experience bullets around the
+#     software you built, front-load the `software` projects, and (optionally) trim
+#     `toolchains` to the AI-transition ones. See Context/variants/software-ai.yaml.
 
 label: ""   # private human note for you, e.g. "Tesla - Autopilot Controls"
 
@@ -338,10 +352,16 @@ experiences:
   #     bullets: ["...", "..."]              # honest, JD-front-loaded rewrites only
   #     keywords: ["ISO 26262", "AUTOSAR"]   # ATS keyword line under the bullets
 
-# --- toolchains: subset/reorder by id (omit to keep all) ---
+# --- toolchains (automotive / validation tooling): subset/reorder by id ---
 # backbone ids: e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator
 toolchains:
   include: [e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator]
+
+# --- software / web / AI / desktop products: subset/reorder by id ---
+# backbone ids: deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot
+# For a pure controls/embedded role, hide this section with: software: {include: []}
+software:
+  include: [deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot]
 """
 
 NOTES_TEMPLATE = """\
@@ -411,7 +431,10 @@ def select_and_override(items: list[dict[str, Any]], cfg: dict[str, Any] | None)
     cfg = cfg or {}
     by_id = {item.get("id"): item for item in items}
     include = cfg.get("include")
-    selected = [by_id[i] for i in include if i in by_id] if include else list(items)
+    # `include` omitted (None) -> keep all in backbone order. An explicit empty
+    # list (`include: []`) means "show none" -> hide the section (e.g. a pure-
+    # controls variant hides the software spine). Don't conflate the two.
+    selected = list(items) if include is None else [by_id[i] for i in include if i in by_id]
     overrides = cfg.get("overrides") or {}
     return [{**item, **overrides.get(item.get("id"), {})} for item in selected]
 
@@ -423,6 +446,7 @@ def apply_variant(context: dict[str, Any], variant: dict[str, Any]) -> dict[str,
         context["resume"] = {**context["resume"], **variant["resume"]}
     context["experiences"] = select_and_override(context["experiences"], variant.get("experiences"))
     context["toolchains"] = select_and_override(context["toolchains"], variant.get("toolchains"))
+    context["software"] = select_and_override(context.get("software", []), variant.get("software"))
     context["noindex"] = variant.get("noindex", True)
     return context
 

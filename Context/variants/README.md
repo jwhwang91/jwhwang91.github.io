@@ -46,14 +46,24 @@ case studies stay at https://jwhwang91.github.io and are never duplicated per ap
 ## overlay.yaml schema
 
 A thin lens; anything omitted is inherited from the backbone. `--new-variant` writes a
-fully commented template. Backbone ids: experiences `hmc-adas`, `add-k2-tcu`,
-`kaist-masters`; toolchains `e2e-xcp-bypass`, `timeseries-ai-training`,
-`tos-odp-bev-simulator`.
+fully commented template. Backbone ids:
+- experiences: `hmc-adas`, `add-k2-tcu`, `kaist-masters`
+- toolchains (automotive / validation tooling): `e2e-xcp-bypass`, `timeseries-ai-training`, `tos-odp-bev-simulator`
+- software (web / AI / desktop products): `deckflip`, `decisioncanvas`, `voiceprint`, `pinterest-exporter`, `pathpilot`
+
+**Dual-track.** The backbone has two project spines. A controls/embedded JD surfaces
+`experiences` + `toolchains` and hides software (`software: {include: []}`); a software/web/AI
+JD reframes the experience bullets around the software, front-loads `software`, and trims
+`toolchains`. See `adas-controls.yaml` and `software-ai.yaml` for the two ready-made lenses.
 
 | key | effect |
 |-----|--------|
 | `site:` | per-key override of `title`, `headline`, `one_liner`, `keywords` (ATS strip), `main_focus` (summary) |
-| `resume:` | per-key override, e.g. a `skills` group |
+| `resume:` | per-key override, e.g. `skills` (an ordered list of `{label, items}` groups — replace the whole list to reorder which competencies lead) |
 | `experiences: {include, overrides}` | subset/reorder by id; per-id `hook`, `bullets`, `keywords` (ATS line) |
-| `toolchains: {include, overrides}` | subset/reorder by id |
+| `toolchains: {include, overrides}` | subset/reorder by id (`include: []` hides the section) |
+| `software: {include, overrides}` | subset/reorder the web/AI/desktop products by id (`include: []` hides the section) |
 | `noindex` | defaults true |
+
+> Note: omitting `include` keeps all items (backbone order); an explicit `include: []`
+> means **show none** (hide that section).

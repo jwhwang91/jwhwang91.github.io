@@ -142,11 +142,16 @@ dist/experience/kaist-masters/index.html
 Main resume strategy:
 
 ```text
-Context/site.yaml
-Context/resume.yaml
+Context/site.yaml          # dual-track identity: title, headline, ATS keywords, summary
+Context/resume.yaml        # education + skills (ordered list of {label, items} groups)
 Context/narrative.yaml
 Context/experiences.yaml
 ```
+
+The backbone is **dual-track**: alongside the automotive `toolchain_projects.yaml`, a second
+project spine lives in `Context/software_projects.yaml` (web / AI / desktop products —
+DeckFlip, DecisionCanvas, Voiceprint, Pinterest Exporter, PathPilot). Both render on the public
+site; per-job variants pivot to whichever spine the JD wants (see `Context/variants/`).
 
 Experience detail pages:
 
@@ -155,13 +160,19 @@ Context/Experiences/*/context.yaml
 Context/Experiences/*/pictures/
 ```
 
-Toolchain projects:
+Toolchain projects (automotive / validation tooling, with generated detail pages):
 
 ```text
 Context/toolchain_projects.yaml
 Context/Projects/toolchains/*/context.yaml
 Context/Projects/toolchains/*/pictures/
 Context/Projects/toolchains/*/format/
+```
+
+Software / web / AI / desktop products (link out to live deployments + repos; no detail pages):
+
+```text
+Context/software_projects.yaml   # ids: deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot
 ```
 
 ## Hard-coded project HTML

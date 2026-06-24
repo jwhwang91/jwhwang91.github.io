@@ -48,43 +48,23 @@
   </section>
   {% endif %}
 
+  {% if resume.skills %}
   <section class="notion-block">
     <h3>Core Competencies</h3>
     <div class="skill-groups">
-      {% if resume.skills.control %}
+      {% for group in resume.skills %}
+      {% if group["items"] %}
       <div class="skill-group">
-        <span class="skill-label">Control &amp; Algorithms</span>
+        <span class="skill-label">{{ group.label }}</span>
         <div class="chip-row">
-          {% for skill in resume.skills.control %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
+          {% for skill in group["items"] %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
         </div>
       </div>
       {% endif %}
-      {% if resume.skills.validation %}
-      <div class="skill-group">
-        <span class="skill-label">Validation &amp; Test</span>
-        <div class="chip-row">
-          {% for skill in resume.skills.validation %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
-        </div>
-      </div>
-      {% endif %}
-      {% if resume.skills.software %}
-      <div class="skill-group">
-        <span class="skill-label">Software &amp; Tools</span>
-        <div class="chip-row">
-          {% for skill in resume.skills.software %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
-        </div>
-      </div>
-      {% endif %}
-      {% if resume.skills.qualifications %}
-      <div class="skill-group">
-        <span class="skill-label">Licenses &amp; Qualifications</span>
-        <div class="chip-row">
-          {% for skill in resume.skills.qualifications %}<span>{{ skill }}<span class="kw-sep">, </span></span>{% endfor %}
-        </div>
-      </div>
-      {% endif %}
+      {% endfor %}
     </div>
   </section>
+  {% endif %}
 
   <section class="notion-block" id="experience">
     <h3>Professional Experience</h3>
@@ -122,8 +102,52 @@
     </div>
   </section>
 
+  {% if software %}
+  <section class="narrative-block" id="software">
+    <h3>Software, Web &amp; AI Projects</h3>
+    <p class="section-note">Self-built, public products spanning full-stack web, AI/LLM, and cross-platform desktop. Each links to its live deployment and/or source.</p>
+    <div class="toolchain-list">
+      {% for project in software %}
+      <article class="toolchain-card">
+        <div class="entry-top">
+          <div>
+            <strong>{{ project.title }}</strong>
+            <span>{{ project.stack }}</span>
+          </div>
+          <div class="entry-actions no-print">
+            {% if project.live_url %}
+              <a class="detail-link" href="{{ project.live_url }}" target="_blank" rel="noopener noreferrer">Live</a>
+            {% endif %}
+            {% if project.repo_url %}
+              <a class="detail-link mock-link" href="{{ project.repo_url }}" target="_blank" rel="noopener noreferrer">GitHub</a>
+            {% endif %}
+          </div>
+        </div>
+        {% if project.hook %}<p class="hook">{{ project.hook }}</p>{% endif %}
+        <div class="objective-impact">
+          {% if project.objective %}<p><strong>Objective:</strong> {{ project.objective }}</p>{% endif %}
+          {% if project.impact %}<p><strong>Impact:</strong> {{ project.impact }}</p>{% endif %}
+        </div>
+        {% if project.tags %}
+        <div class="tag-row">
+          {% for tag in project.tags %}
+            <span>{{ tag }}<span class="kw-sep">, </span></span>
+          {% endfor %}
+        </div>
+        {% endif %}
+        <div class="print-only">
+          {% if project.live_url %}<p>Live: {{ project.live_url }}</p>{% endif %}
+          {% if project.repo_url %}<p>GitHub: {{ project.repo_url }}</p>{% endif %}
+        </div>
+      </article>
+      {% endfor %}
+    </div>
+  </section>
+  {% endif %}
+
+  {% if toolchains %}
   <section class="narrative-block" id="toolchains">
-    <h3>Selected Technical Projects</h3>
+    <h3>Vehicle Systems &amp; Validation Projects</h3>
     <p class="section-note">Public-safe technical case studies for validation tooling, AI-transition prototypes, and commercial-vehicle ADAS debugging workflows.</p>
     <div class="toolchain-list">
       {% for project in toolchains %}
@@ -162,6 +186,7 @@
       {% endfor %}
     </div>
   </section>
+  {% endif %}
 
   {% if resume.education %}
   <section class="notion-block">

@@ -1,0 +1,159 @@
+# Software / Web / AI / Desktop products — the second spine of the backbone.
+#
+# These are self-built, public products that prove app/web/AI/desktop ability,
+# independent of the automotive work. Each links to its real repo and/or live
+# deployment (the artifact a reviewer can open), so no generated detail page is
+# needed. Keep every claim TRUE and auditable: a reviewer who opens the repo or
+# the live site must find exactly what is described here.
+#
+# Used by the dual-track public site and by per-JD variants (software:{include,overrides}).
+# Order here is the default public order (software-forward, strongest first).
+
+projects:
+  - id: deckflip
+    title: "DeckFlip — AI Presentation Editor"
+    repo_name: DeckFlip
+    repo_url: https://github.com/jwhwang91/DeckFlip
+    live_url: https://deckflip.net
+    category: software
+    stack: TypeScript / React / Vite / Serverless / Supabase / Anthropic Claude + OpenAI
+    hook: >-
+      Full-stack web app that generates self-contained HTML/CSS/JS slide decks from a prompt,
+      then lets you refine them by clicking, dragging, and re-prompting — every AI edit forced
+      through a validation gate so the model never emits raw markup.
+    objective: >-
+      Make AI-generated presentations editable without touching code. A multi-pass LLM pipeline
+      (plan -> foundation -> parallel per-slide generation -> deterministic assembly -> lint-gated
+      QA repair) produces decks, and an in-browser editor lets users restyle them live while the
+      AI is constrained to a safe, validated JSON patch/action vocabulary.
+    impact: >-
+      Deployed at deckflip.net. ~224-file TypeScript codebase with a provider fallback chain
+      (Anthropic Opus -> OpenAI -> deterministic mock) so generation never hard-fails, a ~3,000-line
+      sandboxed in-iframe DOM editor that preserves each deck's own CSS/JS/3D animations, a
+      cross-device live audience layer over Supabase Realtime with row-level-security event replay,
+      a multilingual UI (KO/EN/JA/ZH), and Vitest + Playwright test suites.
+    tags:
+      - TypeScript
+      - React
+      - Vite
+      - LLM / AI
+      - Anthropic Claude API
+      - OpenAI API
+      - Serverless
+      - Supabase / Postgres
+      - Realtime
+      - Vitest / Playwright
+
+  - id: decisioncanvas
+    title: "DecisionCanvas Studio — Visual Multi-Agent AI Workflow Builder"
+    repo_name: decisioncanvas-studio
+    repo_url: https://github.com/jwhwang91/decisioncanvas-studio
+    category: software
+    stack: Next.js / React Flow / FastAPI / Python / Pydantic / Server-Sent Events / Docker
+    hook: >-
+      Full-stack studio for composing auditable multi-agent AI decision pipelines as typed node
+      graphs, with a live-streaming execution engine and deterministic safety gates that run after
+      the AI decision and cannot be bypassed by an agent.
+    objective: >-
+      Let non-trivial AI decision systems be built visually and audited. A React Flow canvas wires
+      typed input/output ports into a graph, a compiler validates port compatibility and detects
+      control cycles (Kahn topological sort), and an async engine executes the graph while streaming
+      node/edge state to the UI over Server-Sent Events.
+    impact: >-
+      Working prototype (v0.3.0). ~832-line async execution engine, a pluggable LLM router across
+      OpenAI / Gemini / Anthropic / Ollama with automatic offline mock fallback, an AI-independent
+      safety subsystem (gate chain + regime classifier) evaluated after the model decision, ~20
+      FastAPI REST endpoints plus SSE streaming, a YAML-manifest package system, and 80 pytest tests.
+    tags:
+      - Python
+      - FastAPI
+      - Next.js
+      - React Flow
+      - LLM / AI
+      - Multi-Provider LLM
+      - Server-Sent Events
+      - Graph Algorithms
+      - Pydantic
+      - Docker / pytest
+
+  - id: voiceprint
+    title: "Voiceprint — Voice-Learning Writing Assistant"
+    repo_name: voiceprint
+    repo_url: https://github.com/jwhwang91/voiceprint
+    category: software
+    stack: Python / Playwright / BeautifulSoup / ffmpeg / LLM orchestration
+    hook: >-
+      ~3,600-line Python assistant that learns a writer's voice and photo-layout style from past
+      posts, then drafts new ones — a clean split between deterministic Python (automation, scraping,
+      media) and an LLM that does the writing, coupled only through files.
+    objective: >-
+      Cut repetitive drafting by separating mechanical work (browser control, scraping, media
+      processing) from cognitive work (style learning, writing, photo layout), so each stage is
+      independently runnable, testable, and debuggable.
+    impact: >-
+      1,000+ lines of resilient Playwright automation of a rich-text editor (iframe/contenteditable
+      handling, defensive invariants derived from adversarial review), an ffmpeg pipeline doing
+      motion-based frame sampling and 2-pass GIF rendering under size budgets, externalized YAML
+      selectors for resilience to UI drift, and a safety-first design that always stops at
+      "save as draft" for human approval.
+    tags:
+      - Python
+      - Playwright
+      - Browser Automation
+      - Web Scraping
+      - LLM Orchestration
+      - ffmpeg / Media
+      - Software Architecture
+
+  - id: pinterest-exporter
+    title: "Pinterest Reference Exporter — Cross-Platform Desktop App"
+    repo_name: pinterest_reference_exporter
+    repo_url: https://github.com/jwhwang91/pinterest_reference_exporter
+    category: software
+    stack: Python / PySide6 (Qt 6) / OAuth 2.0 / Nuitka / PyInstaller
+    hook: >-
+      Cross-platform desktop app (Python/Qt, packaged for macOS and Windows via Nuitka/PyInstaller)
+      that authenticates to Pinterest via a hand-rolled OAuth 2.0 flow and batch-exports saved
+      reference images to a local folder.
+    objective: >-
+      Give designers a one-click way to pull their saved reference boards offline, with a responsive
+      Qt UI that never blocks during network or file IO.
+    impact: >-
+      OAuth 2.0 authorization-code flow built from scratch on the Python standard library (loopback
+      callback server, CSRF state validation, silent refresh-token reconnect), all network/IO
+      offloaded to dedicated QThread workers, a resilient downloader (highest-resolution variant
+      selection, atomic writes, idempotent skip-existing), a 17-test unittest suite, and native
+      packaging for macOS and Windows via Nuitka / PyInstaller.
+    tags:
+      - Python
+      - PySide6 / Qt
+      - Desktop App
+      - OAuth 2.0
+      - Multithreading
+      - REST API
+      - Cross-Platform Packaging
+
+  - id: pathpilot
+    title: "PathPilot — Keyboard-First macOS File Manager"
+    # The app source is in a private repo; we link the live product site (the
+    # auditable artifact), never an empty public repo. Mark it in-development.
+    live_url: https://jwhwang91.github.io/pathpilot-site/
+    category: software
+    stack: macOS native app (in development) / App Sandbox / StoreKit / HTML + CSS (product site)
+    hook: >-
+      A fast, keyboard-first file manager for macOS (in active development), with a shipped public
+      product site covering privacy and support.
+    objective: >-
+      Replace slow, mouse-driven file navigation on macOS with a keyboard-first Finder alternative.
+    impact: >-
+      Designed around macOS app-sandbox best practices — security-scoped bookmarks for user-approved
+      folder access, UserDefaults / Application Support storage, a no-telemetry / no-network privacy
+      posture, and a StoreKit in-app purchase — and backed by a hand-built, dependency-free responsive
+      product site (privacy + support) with automatic light/dark theming.
+    tags:
+      - macOS
+      - App Sandbox
+      - StoreKit
+      - Desktop App
+      - HTML / CSS
+      - Product

@@ -3,7 +3,7 @@
 # A variant is a thin "lens" over the backbone (Context/*.yaml). It ONLY lists overrides;
 # anything omitted here is inherited from the backbone. Build with:
 #     python main.py --variant adas-controls
-# Output: dist/adas-controls.html  (noindex; reuses the backbone's CSS, detail pages, assets)
+# Output: Applications/adas-controls/resume.html  (noindex; reuses the backbone's CSS + assets)
 
 id: adas-controls
 label: "ADAS Controls / Behavior-Logic focus"
@@ -48,3 +48,40 @@ experiences:
         - "Developed K2 tracked-vehicle TCU control software, close to drivetrain dynamics and actuator constraints."
         - "Validated across the full V-cycle: MIL, HIL, powerpack dynamometer, and field testing."
         - "Built plant models and shift control; supported calibration and reliability testing."
+
+# --- pure-controls skill set (replaces the dual-track backbone groups) ---
+resume:
+  skills:
+    - label: "Control & Algorithms"
+      items:
+        - "Vehicle dynamics"
+        - "Commercial-vehicle ADAS controls"
+        - "SCC / L2 / ACC behavior logic"
+        - "Target-selection robustness"
+        - "Road-curvature estimation"
+        - "Sensor fusion (EKF)"
+        - "Embedded control software"
+        - "Model-based design"
+    - label: "Validation & Test"
+      items:
+        - "MIL / HIL / SIL"
+        - "Dynamometer"
+        - "Real-vehicle validation"
+        - "Replay-based debugging"
+        - "Calibration / tuning"
+        - "Release-readiness support"
+    - label: "Software & Tools"
+      items:
+        - "MATLAB / Simulink"
+        - "Python"
+        - "C / C++"
+        - "CANape / VN1640"
+        - "XCP over CAN-FD"
+    - label: "Licenses"
+      items:
+        - "Korean Class 1 Large Vehicle Driver's License"
+        - "Korean Trailer Driver's License"
+
+# --- hide the software/web/AI section for a focused controls resume ---
+software:
+  include: []

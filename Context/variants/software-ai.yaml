@@ -1,0 +1,121 @@
+# Example variant: tailors the backbone toward software / web / AI / app roles.
+#
+# The mirror of adas-controls.yaml. A variant is a thin "lens" over the backbone
+# (Context/*.yaml); it ONLY lists overrides, anything omitted is inherited. Build:
+#     python main.py --variant software-ai
+# Output: Applications/software-ai/resume.html (noindex; reuses backbone CSS/assets).
+#
+# It keeps the real employment history but REFRAMES each role's bullets around the
+# software engineering done in it (honest, supported by the backbone), front-loads
+# the self-built software products, and trims the toolchains to the AI/Python ones.
+
+id: software-ai
+label: "Software / Web / AI focus"
+noindex: true
+
+# --- site overrides (software-forward identity + ATS strip) ---
+site:
+  title: "Software & AI Application Engineer"
+  headline: "Full-stack and AI/LLM engineer who ships end to end: deployed an AI presentation editor (TypeScript/React + serverless LLM pipeline) and a multi-agent workflow studio (Next.js + FastAPI), plus cross-platform desktop apps, on a systems-engineering foundation from 8+ years of safety-critical embedded/controls work."
+  keywords:
+    - "Full-Stack Development"
+    - "AI / LLM Application Engineering"
+    - "TypeScript / JavaScript"
+    - "React / Next.js"
+    - "Python"
+    - "FastAPI / REST APIs"
+    - "Anthropic Claude / OpenAI API"
+    - "Multi-Agent / Agentic Systems"
+    - "Serverless"
+    - "Supabase / Postgres"
+    - "macOS / Desktop Apps"
+    - "Software Architecture"
+    - "Testing (Vitest / Playwright / pytest)"
+    - "OAuth 2.0"
+    - "C / C++"
+    - "Docker"
+  main_focus:
+    - "Built and deployed DeckFlip, a TypeScript/React + serverless web app that generates editable HTML/CSS/JS presentations through a multi-pass LLM pipeline (Anthropic Claude -> OpenAI -> deterministic fallback), with an AI-edit safety gate constraining the model to validated JSON patches."
+    - "Built DecisionCanvas Studio, a Next.js + FastAPI platform for composing auditable multi-agent AI workflows as typed node graphs, with an async Server-Sent-Events execution engine, a 4-provider LLM router, deterministic safety gates, and 80 pytest tests."
+    - "Built cross-platform Python/Qt desktop software (hand-rolled OAuth 2.0, native macOS/Windows packaging via Nuitka/PyInstaller) and an in-development keyboard-first macOS file-manager app."
+    - "Systems-engineering foundation: 8+ years owning safety-critical embedded/control software and validation tooling end to end, the same problem-to-product discipline now applied to apps."
+
+# --- software-forward skill groups (replaces the dual-track backbone groups) ---
+resume:
+  skills:
+    - label: "AI / LLM Engineering"
+      items:
+        - "LLM application engineering"
+        - "Anthropic Claude API"
+        - "OpenAI API"
+        - "Multi-provider LLM routing"
+        - "Prompt engineering"
+        - "Multi-pass generation pipelines"
+        - "Agentic / multi-agent workflows"
+        - "AI output validation & safety"
+    - label: "Full-Stack & Web"
+      items:
+        - "TypeScript / JavaScript"
+        - "React / Next.js"
+        - "Vite"
+        - "FastAPI"
+        - "REST APIs"
+        - "Server-Sent Events"
+        - "Supabase / Postgres"
+        - "Serverless functions"
+    - label: "Apps & Desktop"
+      items:
+        - "macOS app development"
+        - "PySide6 / Qt"
+        - "Cross-platform packaging (Nuitka / PyInstaller)"
+        - "OAuth 2.0"
+        - "Multithreading"
+        - "Browser automation (Playwright)"
+    - label: "Languages, Test & Tooling"
+      items:
+        - "Python"
+        - "C / C++"
+        - "TypeScript"
+        - "pytest / Vitest / Playwright"
+        - "Git / GitHub Actions"
+        - "Docker"
+    - label: "Systems & Controls (foundation)"
+      items:
+        - "Embedded control software"
+        - "Modeling & simulation (MATLAB/Simulink)"
+        - "Full V-cycle validation (MIL/HIL/vehicle)"
+        - "Sensor fusion / estimation"
+
+# --- experiences: keep the real history, reframe bullets around the software ---
+experiences:
+  include: [hmc-adas, add-k2-tcu, kaist-masters]
+  overrides:
+    hmc-adas:
+      hook: "Built internal Python/C++ tooling and AI-transition platforms for a production ADAS team, turning messy real-vehicle data into reusable software."
+      bullets:
+        - "Designed and built resource-constrained AI-transition toolchains (Python/C++) that let engineers run learned models on real vehicle signals over XCP/CAN-FD, reusing existing equipment instead of waiting on new infrastructure."
+        - "Built replay-based validation tooling that analyzed real logs against production logic, reducing repeated field-test loops for rare scenarios."
+        - "Owned algorithm work end to end (e.g., EKF-based sensor fusion) including implementation, debugging, and validation."
+        - "Worked across the full delivery cycle, from requirements and implementation through regression testing and release readiness."
+      keywords: ["Python", "C++", "AI Integration", "Tooling / Platforms", "Data Pipelines", "XCP / CAN-FD"]
+    add-k2-tcu:
+      hook: "Full-cycle embedded software development: application software, plant modeling, and simulation for a tracked-vehicle control unit."
+      bullets:
+        - "Developed application software for a transmission control unit, from control logic through calibration and validation."
+        - "Built plant models and simulation (MATLAB/Simulink) and integrated them into MIL/HIL test environments."
+        - "Validated software across the full V-cycle: MIL, HIL, dynamometer, and field testing."
+      keywords: ["Embedded Software", "MATLAB / Simulink", "Modeling & Simulation", "V-cycle"]
+    kaist-masters:
+      hook: "Control, estimation, and simulation software foundation from real-hardware motion-control research."
+      bullets:
+        - "Implemented model-based control and estimation algorithms and validated them on real hardware."
+        - "Built the dynamics/estimation/simulation foundation later reused across vehicle and tooling work."
+      keywords: ["Algorithms", "Estimation", "Simulation", "MATLAB"]
+
+# --- toolchains: keep only the AI/Python-relevant ones ---
+toolchains:
+  include: [timeseries-ai-training, e2e-xcp-bypass]
+
+# --- software products: all of them, default (strongest-first) order ---
+software:
+  include: [deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot]

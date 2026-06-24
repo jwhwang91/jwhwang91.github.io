@@ -64,11 +64,20 @@ Paste this to Claude (Claude Code), editing the name:
 
 **Optional knobs** — add any of these to the prompt to steer it:
 
-- *Focus:* "Lead with controls, not the AI/tooling work."
+- *Track:* "This is a software/web/AI role — use the software spine" (reframe experience bullets
+  around the software, front-load the `software` projects, trim `toolchains`; start from
+  `software-ai.yaml`). Or "pure controls role — hide the software section" (start from
+  `adas-controls.yaml`, which sets `software: {include: []}`).
+- *Focus:* "Lead with controls, not the AI/tooling work" / "lead with the LLM/full-stack work."
 - *Length:* "Keep it to one page" / "two pages is fine."
 - *Tone:* "Plainer language, less jargon" / "more senior/leadership framing."
 - *Must-keep / must-drop:* "Always keep the K2 TCU role" / "drop the KAIST masters for this one."
-- *Projects:* "Only show the XCP validation project."
+- *Projects:* "Only show DeckFlip and DecisionCanvas" / "only the XCP validation project."
+
+**Two ready-made starting lenses** (copy + tweak instead of starting blank):
+`Context/variants/adas-controls.yaml` (controls/embedded) and
+`Context/variants/software-ai.yaml` (software/web/AI). Backbone software ids:
+`deckflip`, `decisioncanvas`, `voiceprint`, `pinterest-exporter`, `pathpilot`.
 
 ## Step 3 — review (your gate)
 

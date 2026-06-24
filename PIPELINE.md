@@ -25,8 +25,13 @@ Two truths that never bend:
 ## Stage A — The backbone (the live portfolio)
 
 1. **Edit** the source of truth in `Context/`: `site.yaml`, `resume.yaml`, `narrative.yaml`,
-   `experiences.yaml`, `toolchain_projects.yaml`, plus detail pages under
+   `experiences.yaml`, `toolchain_projects.yaml` (automotive / validation tooling),
+   `software_projects.yaml` (web / AI / desktop products), plus detail pages under
    `Context/Experiences/*/` and `Context/Projects/toolchains/*/`.
+
+   > **Dual-track backbone.** Two project spines coexist: the automotive `toolchains` and the
+   > `software` products (DeckFlip, DecisionCanvas, Voiceprint, Pinterest Exporter, PathPilot).
+   > The public site shows both; each per-job variant pivots to whichever the JD wants.
 2. **Build** → `python main.py` → renders `dist/` (`index.html` + `standalone.html`).
 3. **Review** `dist/index.html` in a browser; Export PDF if you want a copy.
 4. **Deploy** → commit + push `Context/`, `Format/`, `Style/` to `main`. CI
