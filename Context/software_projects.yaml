@@ -135,25 +135,31 @@ projects:
 
   - id: pathpilot
     title: "PathPilot — Keyboard-First macOS File Manager"
-    # The app source is in a private repo; we link the live product site (the
-    # auditable artifact), never an empty public repo. Mark it in-development.
+    # App source is in a PRIVATE repo (~70 Swift files, verified); link the live
+    # product site — never the private repo (404 for reviewers). App Store listing
+    # is finalized but NOT yet live, so do not claim a published App Store app.
     live_url: https://jwhwang91.github.io/pathpilot-site/
     category: software
-    stack: macOS native app (in development) / App Sandbox / StoreKit / HTML + CSS (product site)
+    stack: Swift / SwiftUI + AppKit / StoreKit / App Sandbox (security-scoped bookmarks)
     hook: >-
-      A fast, keyboard-first file manager for macOS (in active development), with a shipped public
-      product site covering privacy and support.
+      A feature-complete native macOS file manager built around a fast, keyboard-first, path-first
+      workflow — editable address bar, dense details table, and a run-any-action command palette —
+      now in preparation for Mac App Store release.
     objective: >-
-      Replace slow, mouse-driven file navigation on macOS with a keyboard-first Finder alternative.
+      Give people who prefer a keyboard-driven, path-first file workflow a fast native macOS app,
+      with no private APIs and no Full Disk Access — only the broad folders the user approves.
     impact: >-
-      Designed around macOS app-sandbox best practices — security-scoped bookmarks for user-approved
-      folder access, UserDefaults / Application Support storage, a no-telemetry / no-network privacy
-      posture, and a StoreKit in-app purchase — and backed by a hand-built, dependency-free responsive
-      product site (privacy + support) with automatic light/dark theming.
+      Built in SwiftUI for the app shell and AppKit where density matters (file table, address bar,
+      keyboard handling): tabbed browsing, dual-pane copy/move, command palette, recursive search,
+      zip/extract, folder compare and cleanup tools, and a user-approved-folder security model backed
+      by security-scoped bookmarks. Monetized with a StoreKit one-time Pro unlock (no subscription),
+      and safe-by-design — Trash-only deletes, always-available undo, and a no-telemetry, fully-offline
+      posture — with a hand-built responsive product site for privacy and support.
     tags:
+      - Swift
+      - SwiftUI
+      - AppKit
       - macOS
-      - App Sandbox
       - StoreKit
+      - App Sandbox
       - Desktop App
-      - HTML / CSS
-      - Product

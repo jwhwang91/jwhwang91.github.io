@@ -96,7 +96,7 @@ a{color:inherit}
 }
 
 @media print{
-  @page{size:A4;margin:12mm}
+  @page{size:A4;margin:10mm}
   body{background:#fff}
   .no-print,.top-nav{display:none!important}
   .print-only{display:block!important}
@@ -120,6 +120,51 @@ a{color:inherit}
   .objective-impact{grid-template-columns:1fr 1fr;gap:8px}
   .footer-cta{color:#111;background:#fff;border-color:var(--line)}
   .footer-cta span{color:#111}
+}
+
+/* Compact print density for tailored, one-page variant resumes (body gets
+   .variant-compact only in variant_mode). Tightens spacing/fonts so a lean
+   software/controls resume fits a single A4 page; never affects the public site. */
+@media print{
+  body.variant-compact{font-size:10px}
+  body.variant-compact .resume-header{padding-bottom:3px}
+  body.variant-compact .resume-header h1{font-size:24px}
+  body.variant-compact .resume-header h2{font-size:12px}
+  body.variant-compact .headline{font-size:10.5px}
+  body.variant-compact .keyword-strip{margin:3px 0;gap:3px}
+  /* Flatten the nested Notion-style boxes into a dense, ATS-clean resume layout:
+     drop section + card borders/backgrounds/padding, keep section separation via
+     an underlined heading. Reclaims the doubled box padding so a full software
+     resume fits one A4 page. */
+  body.variant-compact .notion-block,
+  body.variant-compact .narrative-block,
+  body.variant-compact .footer-cta{border:none;background:none;border-radius:0;padding:0;margin:3px 0 0}
+  /* keep links as compact clickable buttons in the PDF; drop the verbose
+     "Live:/GitHub:/Detail:" full-URL print lines that otherwise eat ~2 lines/card */
+  body.variant-compact .entry-actions.no-print{display:flex!important}
+  body.variant-compact .detail-link{padding:1px 6px;font-size:8px}
+  body.variant-compact .print-only{display:none!important}
+  body.variant-compact .resume-header h1{font-size:20px}
+  body.variant-compact .notion-block h3,
+  body.variant-compact .narrative-block h3{font-size:11.5px;margin-bottom:2px;border-bottom:1px solid var(--line);padding-bottom:1px}
+  body.variant-compact .section-note{display:none}
+  body.variant-compact .experience-list,
+  body.variant-compact .toolchain-list{gap:3px}
+  body.variant-compact .experience-card,
+  body.variant-compact .toolchain-card{border:none;background:none;border-radius:0;padding:0}
+  body.variant-compact .experience-card ul{margin-top:1px}
+  body.variant-compact .experience-card li,
+  body.variant-compact .toolchain-card p,
+  body.variant-compact .notion-block p{font-size:9.5px!important;margin-bottom:1px}
+  body.variant-compact .hook{font-size:9.5px!important;margin:1px 0}
+  body.variant-compact .objective-impact{gap:6px}
+  body.variant-compact .skill-group{gap:3px}
+  body.variant-compact .chip-row{gap:4px}
+  body.variant-compact .chip-row span,
+  body.variant-compact .keyword-strip span{font-size:8px;padding:2px 5px}
+  body.variant-compact .two-col{gap:8px;row-gap:4px}
+  body.variant-compact .mini-entry em{display:none}      /* drop thesis line on the one-pager */
+  body.variant-compact .footer-cta{margin-top:6px}
 }
 
 .image-evidence code{background:var(--chip);border:1px solid var(--line);border-radius:5px;padding:1px 5px;font-size:11px}
