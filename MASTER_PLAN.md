@@ -743,6 +743,7 @@ Argparse subcommands in `portfolio/cli.py`; `main.py` stays the entry point. **C
 ### 11.2 Later (explicitly deferred)
 
 - API mode: `portfolio/llm.py` runner over the same prompt files (Claude API first), with programmatic retry ≤3 feeding validator errors back.
+- Local UI over the pipeline (§14 Phase 11) — a localhost web app rendering the file artifacts and driving the CLI + headless Claude Code; starts only after the engine (Phases 0–10) is accepted.
 - Playwright headless PDF; DOCX renderer; Korean JD aliases + Korean resume output; composite ATS score calibrated against ledger outcomes; `?focus=` portfolio profiles; `refresh-metrics` auto re-measurement of repo-stat claims; spaced-repetition prep tracking.
 
 ### 11.3 What is deterministic vs LLM vs human (single reference table)
@@ -894,6 +895,26 @@ Small, safe phases. Each phase = one or a few commits, tests green before moving
 - **Create** `.github/workflows/validate.yml`: pytest + `lint-facts` + privacy guard on push/PR.
 - **Acceptance**: CI green; a PR adding a tracked file under `Applications/` fails CI.
 
+### Phase 11 — Local UI ("JobOps" app) — post-engine; starts only after the owner accepts Phases 0–10
+
+**Design stance: the UI is a viewer/orchestrator over the file artifacts and CLI — never a second brain.** Every write goes through `python main.py` subcommands; every screen renders the schema-validated YAML/HTML artifacts that already exist. No pipeline logic is reimplemented in the UI, so the CLI-driven and UI-driven flows produce byte-identical artifacts.
+
+- **Shell**: local web app first (FastAPI backend + browser frontend on `localhost`), because the resume artifacts are already HTML — preview is literally the artifact. An Electron wrapper around the same local app is an optional later add; do not start with Electron packaging.
+- **Location**: `ui/` directory in this repo with its own dependency manifest (the code is public like the rest of the repo; all data stays in gitignored `Applications/`).
+- **LLM steps**: the UI invokes headless Claude Code (`claude -p` / Claude Agent SDK) executing the same `Format/prompts/*.md` contracts, followed by the same `validate` commands — one runner interface so headless-CLI and future API mode are interchangeable.
+- **Modify** `portfolio/cli.py`: add `--json` output mode to `jd parse/confirm`, `match [confirm]`, `validate`, `gate`, `render`, `status`, `track`, `pdfcheck` — machine-readable results are the UI contract; `Format/schemas/` remains the single source of truth for the UI's types.
+- **Screens → artifact/command map**:
+  1. *New Application*: JD paste box → `new` + `jd.txt` + `jd parse`; keyword/quote confirm table (**G1**) → `jd confirm`
+  2. *Match*: classification review + confirm (**G2**); `gap_report.md` + `portfolio_plan.md` panels; pre-resume verdict banner
+  3. *Resume*: `resume.yaml` edit surface; live `resume_ats.html` preview; gate panel (coverage %, placement table, `missing_terms`, `risky_for_review`); regenerate button (headless `/resume-plan` with `gate_feedback`)
+  4. *Approve & Export*: `checklist.md` as interactive checkboxes → `status approved` (**G3**); `pdfcheck` result; submit button wired to the **G4** hard gate
+  5. *Prep*: rendered `interview_pack.md` + `coding_pack.md` with progress checkboxes
+  6. *Tracker*: all-applications table (`track --json`), status/event updates, outcome form → headless `/rejection`; ledger-draft view (`lessons compile`)
+- **ATS display honesty rule**: show verdict + coverage % + confidence tier (High/Med/Low). **No probability number** until a calibration module exists trained on ≥~20 recorded outcomes from the tracker — the UI reserves the slot, the engine earns the number.
+- **Privacy**: binds to localhost only; zero non-localhost network calls; never bundles, uploads, or copies `Applications/` data.
+- **Tests**: `--json` contract tests for every wired subcommand; optional Playwright smoke for the six screens.
+- **Acceptance**: the full loop (paste JD → submit → record outcome) is completable from the UI alone, and every produced artifact is byte-identical to the CLI-driven flow on the Tesla fixture.
+
 ---
 
 ## 15. Final Opus Execution Prompt
@@ -907,7 +928,8 @@ into a JD-specific resume / ATS-gate / interview-prep / application-tracking pip
 
 Ground rules:
 1. Execute the phases in §14 strictly in order (Phase 0 → 10). One phase at a time. Make small,
-   reviewable commits (one logical change each); never combine phases in a commit.
+   reviewable commits (one logical change each); never combine phases in a commit. Phase 11 (local UI)
+   is OUT OF SCOPE until the owner explicitly green-lights it after accepting Phases 0–10.
 2. Preserve existing site behavior exactly: `python main.py` must keep producing the same public site
    (dist/index.html, standalone.html, detail pages), and every legacy CLI flag (--variant,
    --new-variant, --list-variants, --all-variants, --insights) must keep working. Phase 1's regression
