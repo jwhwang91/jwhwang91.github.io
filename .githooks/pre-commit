@@ -1,0 +1,17 @@
+#!/bin/sh
+# Privacy guard pre-commit hook (Phase 0).
+# Blocks commits that would expose private/sensitive artifacts on this PUBLIC repo.
+#
+# Enable once per clone with:
+#   git config core.hooksPath .githooks
+#
+# The guard scans tracked + staged files for private paths and the owner's phone
+# number. See scripts/privacy_guard.py for what it checks.
+
+if command -v python3 >/dev/null 2>&1; then
+  PY=python3
+else
+  PY=python
+fi
+
+exec "$PY" scripts/privacy_guard.py --staged

@@ -1,12 +1,13 @@
 # Personal/private contact information.
-# Edit this file when you want to update email, phone, LinkedIn, GitHub, or website links.
+# Edit this file when you want to update email, LinkedIn, GitHub, or website links.
 # This file is intentionally separated from site.yaml so the public narrative and personal contact data are not mixed.
+# NOTE: the phone number lives in the gitignored Context/private/personal_private.yaml
+# (Phase 0 privacy) and is merged into resume renders only — never the public site.
 
 name: "Jae Woong Hwang"
 display_name: "Jae Woong Hwang"
 location: "South Korea"
 email: "jwhwang91@gmail.com"
-phone: "+82-10-XXXX-XXXX"
 
 linkedin:
   label: "LinkedIn"

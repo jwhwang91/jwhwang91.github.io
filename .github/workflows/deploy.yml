@@ -3,6 +3,20 @@ name: Deploy Portfolio to GitHub Pages
 on:
   push:
     branches: ["main"]
+    # Only rebuild/deploy the public site when an actual site input changes.
+    # Tracker/pipeline-adjacent commits (tests, docs, private data) must not
+    # trigger a deploy. Private paths are gitignored so they never appear in a
+    # commit; they are excluded here as defense-in-depth.
+    paths:
+      - "Context/**"
+      - "Format/**"
+      - "Style/**"
+      - "main.py"
+      - "requirements.txt"
+      - "portfolio/**"
+      - ".github/workflows/deploy.yml"
+      - "!Context/private/**"
+      - "!Context/candidate_profile.yaml"
   workflow_dispatch:
 
 permissions:

@@ -24,3 +24,28 @@ __pycache__/
 *.pyc
 .venv/
 venv/
+
+# --- Phase 0 privacy hardening (this repo is PUBLIC) ---
+# Raw source material for the portfolio (internal-looking decks, prior-employer
+# photos, past PDFs). Untracked from HEAD; must never be re-committed.
+/_source_references/
+
+# Generated site output. CI (deploy.yml) rebuilds dist/ from scratch, so it must
+# never be committed — committing it doubles the exposure surface and drifts from
+# what is actually served.
+/dist/
+
+# Private side of the truth layer: phone/contact data, keyword-support cache
+# (enumerates skill gaps), never-print redlines. Public repo — keep out.
+/Context/private/
+
+# JetBrains IDE project files — local tooling noise.
+.idea/
+
+# Tracker exports / ledger drafts that chart the job search. (The /Applications/
+# rule above already covers these, but they are named explicitly for clarity.)
+Applications/_track.csv
+Applications/_ledger_draft.md
+
+# macOS Finder noise.
+.DS_Store
