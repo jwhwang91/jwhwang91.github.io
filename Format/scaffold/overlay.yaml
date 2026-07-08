@@ -1,0 +1,58 @@
+# Lens for "{name}" — a thin overlay over the backbone (Context/*.yaml).
+# It ONLY lists overrides; anything omitted is inherited from the backbone.
+# Leaving a value blank would BLANK that field, so keep unused fields commented out.
+# This file never edits Context/*.yaml. Build with:
+#     python main.py --variant "{name}"
+# Output: Applications/{name}/resume.html  (lean, self-contained; case-study links
+# point to the live portfolio, so deep case studies are NOT bundled into the resume).
+#
+# TOP PRIORITY when filling this in: pass the ATS keyword filter. Mirror the JD's
+# exact wording (term + acronym) for every skill the backbone TRULY supports, and
+# front-load must-haves in keywords/main_focus/per-experience keyword lines. Never
+# invent a skill to win a keyword. See Context/variants/PLAYBOOK.md.
+#
+# DUAL-TRACK: the backbone now has two spines. Pick the framing the JD wants:
+#   - Automotive / controls / embedded role -> surface `experiences` + `toolchains`,
+#     and hide the software section with `software: {include: []}`. See
+#     Context/variants/adas-controls.yaml.
+#   - Software / web / AI / desktop role -> reframe the experience bullets around the
+#     software you built, front-load the `software` projects, and (optionally) trim
+#     `toolchains` to the AI-transition ones. See Context/variants/software-ai.yaml.
+
+label: ""   # private human note for you, e.g. "Tesla - Autopilot Controls"
+
+# --- site overrides (per key; uncomment only what you want to change) ---
+site:
+  # title: ""        # headline role line shown under your name
+  # headline: ""
+  # one_liner: ""
+  # keywords:         # Target Roles / ATS keyword strip (replaces the backbone list)
+  #   - ""
+  # main_focus:       # Professional Summary bullets (replaces the backbone list)
+  #   - ""
+
+# --- resume overrides (per key, e.g. reorder/replace a skill group) ---
+# resume:
+#   skills:
+#     software: ["Python", "C++", "..."]
+
+# --- experiences: subset/reorder by id, plus per-id field overrides ---
+# backbone ids: hmc-adas, add-k2-tcu, kaist-masters
+experiences:
+  include: [hmc-adas, add-k2-tcu, kaist-masters]
+  # overrides:
+  #   hmc-adas:
+  #     hook: "..."
+  #     bullets: ["...", "..."]              # honest, JD-front-loaded rewrites only
+  #     keywords: ["ISO 26262", "AUTOSAR"]   # ATS keyword line under the bullets
+
+# --- toolchains (automotive / validation tooling): subset/reorder by id ---
+# backbone ids: e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator
+toolchains:
+  include: [e2e-xcp-bypass, timeseries-ai-training, tos-odp-bev-simulator]
+
+# --- software / web / AI / desktop products: subset/reorder by id ---
+# backbone ids: deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot
+# For a pure controls/embedded role, hide this section with: software: {include: []}
+software:
+  include: [deckflip, decisioncanvas, voiceprint, pinterest-exporter, pathpilot]
