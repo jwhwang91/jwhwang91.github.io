@@ -4,7 +4,7 @@ import argparse
 from typing import Optional, Sequence
 
 from .applications import (gate, jd_confirm, jd_parse, match, match_confirm,
-                           new_application, pdfcheck, render_resume, validate_stage)
+                           new_application, pack_interview, pdfcheck, render_resume, validate_stage)
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
@@ -103,6 +103,10 @@ def build_parser() -> argparse.ArgumentParser:
     lessons_sub = p_lessons.add_subparsers(dest="lessons_command")
     lessons_sub.add_parser("compile", help="Aggregate closed-app lessons -> Applications/_ledger_draft.md.")
 
+    p_pack = sub.add_parser("pack", help="Validate + render an interview / coding prep pack.")
+    pack_sub = p_pack.add_subparsers(dest="pack_command")
+    pack_sub.add_parser("interview", help="Validate + render prep/interview_pack.yaml.").add_argument("slug")
+
     return parser
 
 
@@ -148,6 +152,11 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
         if getattr(args, "lessons_command", None) == "compile":
             return lessons_compile(paths)
         print("usage: python main.py lessons compile")
+        return 2
+    if command == "pack":
+        if getattr(args, "pack_command", None) == "interview":
+            return pack_interview(paths, args.slug)
+        print("usage: python main.py pack interview <slug>")
         return 2
     return None
 

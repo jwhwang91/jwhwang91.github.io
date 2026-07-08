@@ -1,0 +1,93 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "interview_pack.schema.json",
+  "title": "Technical interview prep pack (interview_pack.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "application", "positioning", "format_forecast", "likely_topics",
+               "danger_questions", "project_walkthroughs"],
+  "properties": {
+    "schema": { "const": "interview_pack/v1" },
+    "application": { "type": "string" },
+    "positioning": { "type": "string" },
+    "format_forecast": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["round", "basis"],
+        "properties": { "round": { "type": "string" }, "basis": { "type": "string" } }
+      }
+    },
+    "likely_topics": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["topic", "predicts", "depth"],
+        "properties": {
+          "topic": { "type": "string" }, "predicts": { "type": "string" },
+          "depth": { "enum": ["deep", "skim"] }
+        }
+      }
+    },
+    "resume_deep_dive": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["bullet", "questions", "answer_sketch"],
+        "properties": {
+          "bullet": { "type": "string" },
+          "questions": { "type": "array", "items": { "type": "string" } },
+          "answer_sketch": { "type": "string" },
+          "claims": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "danger_questions": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["keyword", "truthful_boundary"],
+        "properties": {
+          "keyword": { "type": "string" }, "truthful_boundary": { "type": "string" }
+        }
+      }
+    },
+    "project_walkthroughs": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["title", "result"],
+        "properties": {
+          "title": { "type": "string" },
+          "situation": { "type": "string" }, "task": { "type": "string" },
+          "action": { "type": "string" }, "result": { "type": "string" },
+          "claims": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "system_design": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["prompt"],
+        "properties": {
+          "prompt": { "type": "string" }, "skeleton": { "type": "string" },
+          "anchor": { "type": "string" }
+        }
+      }
+    },
+    "behavioral": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["prompt"],
+        "properties": {
+          "prompt": { "type": "string" }, "star": { "type": "string" },
+          "claims": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "questions_to_ask": { "type": "array", "items": { "type": "string" } },
+    "gaps_to_prep": { "type": "array", "items": { "type": "string" } },
+    "refreshers_plan": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["topic"],
+        "properties": { "topic": { "type": "string" }, "hours": { "type": "number" } }
+      }
+    }
+  }
+}

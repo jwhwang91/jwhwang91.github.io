@@ -1,0 +1,66 @@
+schema: interview_pack/v1
+application: tesla-adas-validation-2026-07
+positioning: adas-av-validation
+format_forecast:
+- round: phone screen
+  basis: Validate Smart Cruise Control (SCC) and Adaptive Cruise Control behavior
+- round: 'technical: HIL/validation deep-dive'
+  basis: Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test
+    benches
+likely_topics:
+- topic: EKF / Kalman sensor fusion for road-radius
+  predicts: scc
+  depth: deep
+- topic: HIL vs MIL bench architecture
+  predicts: hil
+  depth: deep
+- topic: false-positive/negative triage via log replay
+  predicts: log-replay
+  depth: deep
+- topic: ISO 26262 functional-safety vocabulary
+  predicts: scc
+  depth: skim
+resume_deep_dive:
+- bullet: Independently developed and validated SCC emergency-stop behavior.
+  questions:
+  - Walk through the safe-stop state machine.
+  - How did you validate driver-incapacitated handover?
+  answer_sketch: Grounded in the SCC emergency-stop behavior I independently developed;
+    describe the stop-state transitions without exposing internal thresholds.
+  claims:
+  - hmc-scc-emergency-stop
+- bullet: Reduced repeated real-bus road-test loops using log replay.
+  questions:
+  - How did the BEV replay workflow cut trips?
+  answer_sketch: Replayed production logs through TOS/ODP target-selection logic to
+    reproduce false detections offline before real-vehicle confirmation.
+  claims:
+  - hmc-bev-replay-metric
+danger_questions: []
+project_walkthroughs:
+- title: BEV replay validation studio
+  situation: Rare bus-only-lane false detections needed many long road tests.
+  task: Reproduce and debug them without repeated real-bus trips.
+  action: Built a BEV replay workflow through production TOS/ODP logic.
+  result: Cut repeated bus-only-lane road-test loops from about 10 trips to about
+    5, each roughly 4-5 hours.
+  claims:
+  - hmc-bev-replay-metric
+system_design:
+- prompt: Design a regression-validation pipeline for a commercial-vehicle ADAS stack.
+  skeleton: log ingest -> replay through target-selection -> scenario diff -> triage
+  anchor: tc-bev-simulator
+behavioral:
+- prompt: Tell me about a time you caught a production issue before release.
+  star: <HUMAN FILLS>
+  claims:
+  - hmc-validation-workflow
+questions_to_ask:
+- How is HIL coverage measured on the validation team?
+gaps_to_prep:
+- ISO 26262 is exposure-level for me — prepare the vocabulary honestly.
+refreshers_plan:
+- topic: EKF derivation + bicycle model
+  hours: 2
+- topic: CAN-FD / XCP recap
+  hours: 1

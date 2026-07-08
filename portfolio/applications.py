@@ -498,3 +498,42 @@ def pdfcheck(paths: Paths, slug: str) -> int:
     print(f"pdfcheck FAIL (similarity {ratio:.3f} < 0.98) — the PDF has no usable text layer. "
           "Re-export via browser 'Save as PDF'.")
     return 1
+
+
+def pack_interview(paths: Paths, slug: str) -> int:
+    """Validate the LLM-written prep/interview_pack.yaml (schema + claim refs +
+    partial->danger + digit checks + forbidden phrasing) and render it to markdown."""
+    from .prep import render_pack_md, validate_pack
+
+    folder = paths.applications / slug
+    pack_path = folder / "prep" / "interview_pack.yaml"
+    if not pack_path.exists():
+        raise FileNotFoundError(f"{pack_path} missing — run /interview-pack {slug} in Claude Code first")
+    pack = load_yaml(pack_path)
+
+    try:
+        jsonschema.validate(pack, _schema_json(paths, "interview_pack.schema.json"))
+    except jsonschema.ValidationError as e:
+        print(f"[error] schema:{'/'.join(map(str, e.absolute_path))}: {e.message}")
+        print("\npack interview FAILED: schema violation.")
+        return 1
+
+    reg = load_registry(paths)
+    match_path = folder / "match.yaml"
+    if not match_path.exists() or not load_yaml(match_path).get("confirmed"):
+        raise FileNotFoundError(
+            f"a confirmed match.yaml is required (else the partial->danger-question net is vacuous) — "
+            f"run: python main.py match confirm {slug}")
+    match = load_yaml(match_path)
+    policy = load_yaml(paths.context / "facts" / "phrasing_policy.yaml")
+    violations = validate_pack(pack, match, reg, policy)
+    for v in violations:
+        print(v)
+    if [v for v in violations if v.level == "error"]:
+        print(f"\npack interview FAILED: {len([v for v in violations if v.level == 'error'])} error(s).")
+        return 1
+
+    (folder / "prep").mkdir(parents=True, exist_ok=True)
+    (folder / "prep" / "interview_pack.md").write_text(render_pack_md(pack), encoding="utf-8")
+    print(f"Interview pack valid -> {rel_to_root(folder / 'prep' / 'interview_pack.md', paths.root)}")
+    return 0
