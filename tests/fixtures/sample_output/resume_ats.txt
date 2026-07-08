@@ -1,0 +1,22 @@
+Jae Woong Hwang
+ADAS/AV Validation Engineer
+jwhwang91@gmail.com | +82-10-XXXX-XXXX | South Korea | https://www.linkedin.com/in/jaewoong-hwang-a19b6a1ba/ | https://github.com/jwhwang91
+
+SUMMARY
+- Commercial-vehicle ADAS validation engineer with production Smart Cruise Control (SCC / Adaptive Cruise Control) behavior-logic experience.
+
+SKILLS
+- Validation & Test: Hardware-in-the-Loop (HIL/HILS), Model-in-the-Loop (MIL/MILS), Log Replay, Target Object Selection (TOS/ODP), dynamometer, real-vehicle testing
+
+EXPERIENCE
+Hyundai Motor Company | Commercial Vehicle ADAS Controls & Validation Engineer | 2021.03 - Present
+- Independently developed and validated SCC emergency-stop behavior for selected production commercial-vehicle workflows.
+- Reduced repeated real-bus road-test loops from about 10 trips to about 5 via replay of production logs for bus-only-lane false-detection cases.
+- Validated selected ADAS behavior across MIL and HIL benches with dynamometer and real-vehicle testing.
+
+EDUCATION
+University of California Los Angeles (UCLA) | B.S. Mechanical Engineering | 2010.09 - 2014.06
+Korea Advanced Institute of Science and Technology (KAIST) | M.S. Robotics | 2015.03 - 2017.08
+
+LICENSES
+- Korean Class 1 Large Vehicle Driver's License, Korean Trailer Driver's License

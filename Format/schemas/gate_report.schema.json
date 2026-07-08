@@ -1,0 +1,35 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "gate_report.schema.json",
+  "title": "ATS gate report (gate_report.yaml)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "verdict", "must_have_coverage", "missing_terms"],
+  "properties": {
+    "schema": { "const": "gate_report/v1" },
+    "application": { "type": "string" },
+    "verdict": { "enum": ["PASS", "FAIL", "HIGH_RISK"] },
+    "recommendation": { "enum": ["Apply", "Revise", "Do-Not-Apply-Yet"] },
+    "confidence": { "enum": ["High", "Medium", "Low"] },
+    "must_have_coverage": { "type": "string" },
+    "must_have_pct": { "type": "number" },
+    "nice_have_coverage": { "type": "string" },
+    "missing_terms": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "must": { "type": "array", "items": { "type": "string" } },
+        "nice": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "placement": { "type": "array" },
+    "risky_for_review": { "type": "array" },
+    "excluded_unsupported": { "type": "array", "items": { "type": "string" } },
+    "stuffing_flags": { "type": "array" },
+    "formatting": { "type": "array" },
+    "unsupported_ratio": { "type": "number" },
+    "pdf_verified": { "type": "boolean" },
+    "errors": { "type": "array" },
+    "warnings": { "type": "array" }
+  }
+}

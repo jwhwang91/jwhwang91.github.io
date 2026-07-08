@@ -1,0 +1,33 @@
+company: Tesla
+confirmed: true
+keywords:
+- block: responsibilities
+  quote: Validate Smart Cruise Control (SCC) and Adaptive Cruise Control behavior
+    across driving scenarios.
+  requirement: must
+  term: scc
+- block: responsibilities
+  quote: Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test
+    benches.
+  requirement: must
+  term: hil
+- block: responsibilities
+  quote: Analyze target selection robustness using BEV log replay through production
+    logic.
+  requirement: must
+  term: log-replay
+- block: responsibilities
+  quote: Analyze target selection robustness using BEV log replay through production
+    logic.
+  requirement: must
+  term: target-selection
+- block: responsibilities
+  quote: Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test
+    benches.
+  requirement: nice
+  term: mil
+knockouts: []
+role_title: ADAS Validation Engineer
+role_type: adas-validation
+schema: jd_parsed/v1
+seniority: senior

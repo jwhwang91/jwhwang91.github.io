@@ -3,8 +3,8 @@ from __future__ import annotations
 import argparse
 from typing import Optional, Sequence
 
-from .applications import (jd_confirm, jd_parse, match, match_confirm,
-                           new_application, validate_stage)
+from .applications import (gate, jd_confirm, jd_parse, match, match_confirm,
+                           new_application, pdfcheck, render_resume, validate_stage)
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
@@ -70,7 +70,18 @@ def build_parser() -> argparse.ArgumentParser:
 
     p_validate = sub.add_parser("validate", help="Validate a stage artifact (schema + registry refs).")
     p_validate.add_argument("slug")
-    p_validate.add_argument("--stage", default="all", choices=["jd", "match", "all"])
+    p_validate.add_argument("--stage", default="all", choices=["jd", "match", "resume", "all"])
+
+    p_render = sub.add_parser("render", help="Render resume.yaml -> out/resume_ats.* and auto-run the gate.")
+    p_render.add_argument("slug")
+    p_render.add_argument("--style", default="ats", choices=["ats", "pretty", "both"])
+
+    p_gate = sub.add_parser("gate", help="Re-run the ATS gate on the rendered resume.")
+    p_gate.add_argument("slug")
+    p_gate.add_argument("--verify-only", action="store_true")
+
+    p_pdfcheck = sub.add_parser("pdfcheck", help="Verify the exported PDF text layer vs resume_ats.txt.")
+    p_pdfcheck.add_argument("slug")
 
     return parser
 
@@ -101,6 +112,12 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
         return 2
     if command == "validate":
         return validate_stage(paths, args.slug, args.stage)
+    if command == "render":
+        return render_resume(paths, args.slug, args.style)
+    if command == "gate":
+        return gate(paths, args.slug, args.verify_only)
+    if command == "pdfcheck":
+        return pdfcheck(paths, args.slug)
     return None
 
 

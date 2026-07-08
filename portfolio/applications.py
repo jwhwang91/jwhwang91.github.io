@@ -352,8 +352,134 @@ def validate_stage(paths: Paths, slug: str, stage: str) -> int:
                 for cid in c.get("claim_ids", []) or []:
                     if cid not in cids:
                         errors.append(f"match.yaml: unknown/unconfirmed claim '{cid}'")
+    if stage in ("resume", "all"):
+        errors += check_schema(folder / "resume.yaml", "resume.schema.json")
+        if (folder / "resume.yaml").exists():
+            reg = load_registry(paths)
+            cids = {c["id"] for c in reg.citable()}
+            titles = reg.approved_titles()
+            resume = load_yaml(folder / "resume.yaml")
+            if resume.get("role_title") and resume["role_title"] not in titles:
+                errors.append(f"resume.yaml: role_title '{resume['role_title']}' not in positioning_titles.yaml (Q19)")
+            for sec in ("summary",):
+                for b in resume.get(sec, []) or []:
+                    for cid in b.get("claims", []) or []:
+                        if cid not in cids:
+                            errors.append(f"resume.yaml: bullet cites non-confirmed claim '{cid}'")
+            for grp in ("experience", "projects"):
+                for e in resume.get(grp, []) or []:
+                    for b in e.get("bullets", []) or []:
+                        for cid in b.get("claims", []) or []:
+                            if cid not in cids:
+                                errors.append(f"resume.yaml: bullet cites non-confirmed claim '{cid}'")
 
     for e in errors:
         print(f"[error] {e}")
     print(f"\nvalidate --stage {stage}: {len(errors)} error(s).")
     return 1 if errors else 0
+
+
+# ---------------------------------------------------------------------------
+# render / gate / pdfcheck (Phase 5)
+# ---------------------------------------------------------------------------
+
+def render_resume(paths: Paths, slug: str, style: str = "ats") -> int:
+    """Render resume.yaml -> out/resume_ats.{txt,html,md}, then auto-run the gate."""
+    from .resume_render import build_context, render_html, render_md, render_txt
+    from .site import make_env
+
+    folder = paths.applications / slug
+    resume_path = folder / "resume.yaml"
+    if not resume_path.exists():
+        raise FileNotFoundError(f"{resume_path} missing — run /resume-plan {slug} to draft it")
+    resume = load_yaml(resume_path)
+    try:
+        jsonschema.validate(resume, _schema_json(paths, "resume.schema.json"))
+    except jsonschema.ValidationError as e:
+        raise ValueError(f"resume.yaml schema error at {'/'.join(map(str, e.absolute_path))}: {e.message}")
+
+    reg = load_registry(paths)
+    ctx = build_context(paths, resume, reg)
+    out = folder / "out"
+    out.mkdir(parents=True, exist_ok=True)
+    resume_txt = render_txt(ctx)
+    (out / "resume_ats.txt").write_text(resume_txt, encoding="utf-8")
+    (out / "resume_ats.md").write_text(render_md(ctx), encoding="utf-8")
+    (out / "resume_ats.html").write_text(render_html(make_env(paths), ctx), encoding="utf-8")
+    print(f"Rendered {rel_to_root(out, paths.root)}/resume_ats.{{txt,html,md}}")
+    return _run_gate(paths, slug, resume, resume_txt)
+
+
+def _run_gate(paths: Paths, slug: str, resume: dict, resume_txt: str) -> int:
+    from .gate import (build_audit, build_gate_feedback, evaluate,
+                       render_changes_md, render_checklist_md, render_gate_md)
+
+    folder = paths.applications / slug
+    reg = load_registry(paths)
+    tax = Taxonomy.load(paths)
+    policy = load_yaml(paths.context / "facts" / "phrasing_policy.yaml")
+    match = load_yaml(folder / "match.yaml") if (folder / "match.yaml").exists() else {}
+    classifications = match.get("classifications", []) or []
+
+    report, errors = evaluate(resume, resume_txt, classifications, reg, tax, policy, reg.approved_titles())
+    out = folder / "out"
+    out.mkdir(parents=True, exist_ok=True)
+    _dump(folder / "gate_report.yaml", report)
+    (folder / "gate_report.md").write_text(render_gate_md(report), encoding="utf-8")
+    (folder / "checklist.md").write_text(render_checklist_md(report), encoding="utf-8")
+    (folder / "changes.md").write_text(render_changes_md(resume, reg), encoding="utf-8")
+    (folder / "audit.json").write_text(json.dumps(build_audit(resume, reg, policy), indent=2), encoding="utf-8")
+
+    if report["verdict"] == "FAIL":
+        _dump(folder / "gate_feedback.yaml", build_gate_feedback(report, tax))
+        for f in ("resume_ats.txt", "resume_ats.html", "resume_ats.md"):
+            (out / f).unlink(missing_ok=True)
+        print(f"Gate FAILED ({len(errors)} error(s)). See gate_report.md; wrote gate_feedback.yaml.")
+        print(f"Run /resume-plan {slug} (it reads gate_feedback), then: python main.py render {slug}")
+        return 2
+
+    _advance_status(folder, "gated")
+    print(f"Gate {report['verdict']}: coverage {report['must_have_coverage']}, U={report['unsupported_ratio']}, "
+          f"recommendation={report['recommendation']}. Status -> gated.")
+    return 0
+
+
+def gate(paths: Paths, slug: str, verify_only: bool = False) -> int:
+    """Re-run the gate on the already-rendered out/resume_ats.txt."""
+    folder = paths.applications / slug
+    txt_path = folder / "out" / "resume_ats.txt"
+    if not txt_path.exists():
+        raise FileNotFoundError(f"{txt_path} missing — run: python main.py render {slug}")
+    resume = load_yaml(folder / "resume.yaml")
+    return _run_gate(paths, slug, resume, txt_path.read_text(encoding="utf-8"))
+
+
+def pdfcheck(paths: Paths, slug: str) -> int:
+    """Hard block a PDF whose text layer does not match resume_ats.txt (>=0.98)."""
+    import difflib
+
+    folder = paths.applications / slug
+    pdf = folder / "out" / "resume_final.pdf"
+    txt_path = folder / "out" / "resume_ats.txt"
+    if not txt_path.exists():
+        raise FileNotFoundError(f"{txt_path} missing — run: python main.py render {slug}")
+    if not pdf.exists():
+        raise FileNotFoundError(f"{pdf} missing — open resume_ats.html and Save-as-PDF (never 'Microsoft Print to PDF')")
+    try:
+        from pypdf import PdfReader
+    except Exception:
+        print("pypdf not installed — cannot verify PDF text layer.")
+        return 1
+
+    try:
+        extracted = "".join((p.extract_text() or "") for p in PdfReader(str(pdf)).pages)
+    except Exception:
+        extracted = ""  # unparseable / image-only PDF -> no text layer -> will FAIL below
+    norm = lambda s: re.sub(r"\s+", " ", s).strip()
+    ratio = difflib.SequenceMatcher(None, norm(extracted), norm(txt_path.read_text(encoding="utf-8"))).ratio()
+    if ratio >= 0.98:
+        print(f"pdfcheck PASS (text-layer similarity {ratio:.3f}).")
+        return 0
+    print(f"pdfcheck FAIL (similarity {ratio:.3f} < 0.98) — the PDF has no usable text layer. "
+          "Re-export via browser 'Save as PDF'.")
+    return 1

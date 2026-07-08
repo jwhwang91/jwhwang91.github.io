@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>{{ contact.name }} — Resume</title>
+<style>
+  @page { size: A4; margin: 12mm; }
+  * { box-sizing: border-box; }
+  body { font-family: Georgia, "Times New Roman", serif; color: #111; line-height: 1.35;
+         font-size: 10.5pt; max-width: 190mm; margin: 0 auto; padding: 8mm; }
+  main { display: block; }
+  h1 { font-size: 18pt; margin: 0 0 2px; }
+  h2 { font-size: 11pt; text-transform: uppercase; letter-spacing: 0.05em;
+       border-bottom: 1px solid #888; padding-bottom: 2px; margin: 14px 0 6px; }
+  h3 { font-size: 10.5pt; margin: 8px 0 2px; }
+  p { margin: 2px 0; }
+  ul { margin: 2px 0 6px; padding-left: 18px; }
+  li { margin: 1px 0; break-inside: avoid; }
+  .role { font-size: 12pt; color: #333; margin: 0 0 2px; }
+  .contact { font-size: 9.5pt; color: #333; margin: 0 0 6px; }
+  .entry-head { font-weight: bold; }
+</style>
+</head>
+<body>
+<main>
+  <h1>{{ contact.name }}</h1>
+  {% if role_title %}<p class="role">{{ role_title }}</p>{% endif %}
+  <p class="contact">
+    {{ [contact.email, contact.phone, contact.location, contact.linkedin, contact.github] | select | join(" | ") }}
+  </p>
+
+  {% if summary %}
+  <h2>Summary</h2>
+  <ul>{% for t in summary %}<li>{{ t }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if skills %}
+  <h2>Skills</h2>
+  <ul>{% for s in skills %}<li><strong>{{ s.label }}:</strong> {{ s['items'] | join(", ") }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if experience %}
+  <h2>Experience</h2>
+  {% for e in experience %}
+    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") }}</h3>
+    <ul>{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endfor %}
+  {% endif %}
+
+  {% if projects %}
+  <h2>Projects</h2>
+  {% for e in projects %}
+    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") }}</h3>
+    <ul>{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+  {% endfor %}
+  {% endif %}
+
+  {% if education %}
+  <h2>Education</h2>
+  <ul>{% for ed in education %}<li>{{ [ed.institute, ed.degree, ed.period] | select | join(" | ") }}</li>{% endfor %}</ul>
+  {% endif %}
+
+  {% if licenses %}
+  <h2>Licenses</h2>
+  <ul><li>{{ licenses | join(", ") }}</li></ul>
+  {% endif %}
+</main>
+</body>
+</html>

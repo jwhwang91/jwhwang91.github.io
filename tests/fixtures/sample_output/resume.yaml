@@ -1,0 +1,54 @@
+schema: resume/v1
+application: tesla-adas-validation-2026-07
+positioning: adas-av-validation
+role_title: ADAS/AV Validation Engineer
+summary:
+- text: Commercial-vehicle ADAS validation engineer with production Smart Cruise Control
+    (SCC / Adaptive Cruise Control) behavior-logic experience.
+  claims:
+  - hmc-scc-emergency-stop
+  keywords:
+  - scc
+skills:
+- label: Validation & Test
+  items:
+  - Hardware-in-the-Loop (HIL/HILS)
+  - Model-in-the-Loop (MIL/MILS)
+  - Log Replay
+  - Target Object Selection (TOS/ODP)
+  - dynamometer
+  - real-vehicle testing
+  keywords:
+  - hil
+  - mil
+  - log-replay
+  - target-selection
+experience:
+- source: hmc-adas
+  bullets:
+  - text: Independently developed and validated SCC emergency-stop behavior for selected
+      production commercial-vehicle workflows.
+    claims:
+    - hmc-scc-emergency-stop
+    keywords:
+    - scc
+  - text: Reduced repeated real-bus road-test loops from about 10 trips to about 5
+      via replay of production logs for bus-only-lane false-detection cases.
+    claims:
+    - hmc-bev-replay-metric
+    keywords:
+    - log-replay
+    - target-selection
+  - text: Validated selected ADAS behavior across MIL and HIL benches with dynamometer
+      and real-vehicle testing.
+    claims:
+    - hmc-validation-workflow
+    keywords:
+    - mil
+    - hil
+projects: []
+education: from_registry
+extras:
+  licenses:
+  - cert-class1-license
+  - cert-trailer-license

@@ -1,0 +1,62 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "resume.schema.json",
+  "title": "Canonical resume (resume.yaml) — the only file humans edit",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "application", "positioning", "role_title"],
+  "properties": {
+    "schema": { "const": "resume/v1" },
+    "application": { "type": "string" },
+    "positioning": { "type": "string" },
+    "role_title": { "type": "string" },
+    "summary": { "type": "array", "items": { "$ref": "#/definitions/bullet" } },
+    "skills": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["label", "items"],
+        "properties": {
+          "label": { "type": "string" },
+          "items": { "type": "array", "items": { "type": "string" } },
+          "keywords": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "experience": { "type": "array", "items": { "$ref": "#/definitions/section" } },
+    "projects": { "type": "array", "items": { "$ref": "#/definitions/section" } },
+    "education": {
+      "oneOf": [
+        { "const": "from_registry" },
+        { "type": "array", "items": { "type": "string" } }
+      ]
+    },
+    "extras": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": { "licenses": { "type": "array", "items": { "type": "string" } } }
+    }
+  },
+  "definitions": {
+    "bullet": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["text", "claims"],
+      "properties": {
+        "text": { "type": "string", "minLength": 1 },
+        "claims": { "type": "array", "items": { "type": "string" } },
+        "keywords": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "section": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["source", "bullets"],
+      "properties": {
+        "source": { "type": "string" },
+        "bullets": { "type": "array", "items": { "$ref": "#/definitions/bullet" } }
+      }
+    }
+  }
+}

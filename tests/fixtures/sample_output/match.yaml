@@ -1,0 +1,61 @@
+schema: match/v1
+application: tesla-adas-validation-2026-07
+jd_sha256: 851a776063ab2f05a1dad9943fe00789cc0d52d35e2073f2ca75454925dff772
+classifications:
+- support: direct
+  claim_ids:
+  - hmc-scc-emergency-stop
+  - hmc-foc-brake-distribution
+  source: cache
+  term: scc
+  requirement: must
+  matched_tier: exact
+  quote: Validate Smart Cruise Control (SCC) and Adaptive Cruise Control behavior across driving scenarios.
+- support: direct
+  claim_ids:
+  - add-plant-modeling
+  - add-hils-validation
+  - hmc-validation-workflow
+  - kaist-hardware-verification
+  source: cache
+  term: hil
+  requirement: must
+  matched_tier: exact
+  quote: Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test benches.
+- support: direct
+  claim_ids:
+  - hmc-bev-replay-metric
+  - hmc-target-selection
+  source: cache
+  term: log-replay
+  requirement: must
+  matched_tier: exact
+  quote: Analyze target selection robustness using BEV log replay through production logic.
+- support: direct
+  claim_ids:
+  - hmc-bev-replay-metric
+  - hmc-target-selection
+  - tc-bev-simulator
+  source: cache
+  term: target-selection
+  requirement: must
+  matched_tier: exact
+  quote: Analyze target selection robustness using BEV log replay through production logic.
+- support: direct
+  claim_ids:
+  - add-plant-modeling
+  - hmc-validation-workflow
+  source: cache
+  term: mil
+  requirement: nice
+  matched_tier: exact
+  quote: Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test benches.
+queue: []
+knockouts: []
+confirmed: true
+pre_resume:
+  U: 0.0
+  verdict: Proceed
+  missing_must_haves: []
+  knockout_hits: []
+  profile_checked: false

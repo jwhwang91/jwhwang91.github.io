@@ -1,0 +1,65 @@
+{
+  "application": "tesla-adas-validation-2026-07",
+  "bullets": [
+    {
+      "section": "Summary",
+      "text": "Commercial-vehicle ADAS validation engineer with production Smart Cruise Control (SCC / Adaptive Cruise Control) behavior-logic experience.",
+      "claims": [
+        "hmc-scc-emergency-stop"
+      ],
+      "ownership": [
+        "independent"
+      ],
+      "strength_class_detected": "contribution",
+      "evidence": [
+        "Context/Experiences/hmc_adas/context.yaml",
+        "Context/experiences.yaml"
+      ]
+    },
+    {
+      "section": "Experience:hmc-adas",
+      "text": "Independently developed and validated SCC emergency-stop behavior for selected production commercial-vehicle workflows.",
+      "claims": [
+        "hmc-scc-emergency-stop"
+      ],
+      "ownership": [
+        "independent"
+      ],
+      "strength_class_detected": "ownership",
+      "evidence": [
+        "Context/Experiences/hmc_adas/context.yaml",
+        "Context/experiences.yaml"
+      ]
+    },
+    {
+      "section": "Experience:hmc-adas",
+      "text": "Reduced repeated real-bus road-test loops from about 10 trips to about 5 via replay of production logs for bus-only-lane false-detection cases.",
+      "claims": [
+        "hmc-bev-replay-metric"
+      ],
+      "ownership": [
+        "independent"
+      ],
+      "strength_class_detected": "contribution",
+      "evidence": [
+        "Context/Experiences/hmc_adas/context.yaml",
+        "Context/experiences.yaml"
+      ]
+    },
+    {
+      "section": "Experience:hmc-adas",
+      "text": "Validated selected ADAS behavior across MIL and HIL benches with dynamometer and real-vehicle testing.",
+      "claims": [
+        "hmc-validation-workflow"
+      ],
+      "ownership": [
+        "shared"
+      ],
+      "strength_class_detected": "contribution",
+      "evidence": [
+        "Context/Experiences/hmc_adas/context.yaml",
+        "Context/experiences.yaml"
+      ]
+    }
+  ]
+}

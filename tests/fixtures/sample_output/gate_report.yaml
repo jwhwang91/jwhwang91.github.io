@@ -1,0 +1,19 @@
+schema: gate_report/v1
+application: tesla-adas-validation-2026-07
+verdict: PASS
+recommendation: Apply
+must_have_coverage: 4/4
+must_have_pct: 100.0
+missing_terms:
+  must: []
+  nice: []
+unsupported_ratio: 0.0
+excluded_unsupported: []
+risky_for_review: []
+errors: []
+warnings:
+- '[warning] Summary bullet: no strength lexeme found — defaulting to contribution class (Q2)'
+- '[warning] Experience bullet: no strength lexeme found — defaulting to contribution class (Q2)'
+- '[warning] Experience bullet: cited metric ''hmc-bev-trip-reduction'' has no confirmed as_of date (Q4)'
+- '[warning] Experience bullet: cited metric ''hmc-bev-trip-duration'' has no confirmed as_of date (Q4)'
+pdf_verified: false
