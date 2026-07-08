@@ -1,12 +1,7 @@
 # Drift anchors — one canonical org / title / date per employer. Every rendering
 # anywhere (backbone site YAML, resume renders) must match one of these forms.
 # Validated by Format/schemas/employers.schema.json. Committed, public-safe.
-#
-# G0 REVIEW NOTES (owner to confirm at Gate G0):
-#   - kaist-masters.official_title: source uses "Researcher - KAIST Master's
-#     Research" (Context/experiences.yaml:27); MASTER_PLAN §3.3 proposed the
-#     cleaner "Graduate Researcher". Default here is the SOURCE value; the
-#     proposed alt is listed under title_renderings, unconfirmed.
+# KAIST title confirmed at Gate G0 (2026-07): "Researcher - KAIST Master's Research".
 
 employers:
   hmc-adas:
@@ -29,10 +24,9 @@ employers:
   kaist-masters:
     organization: "Korea Advanced Institute of Science and Technology (KAIST)"
     org_renderings: ["Korea Advanced Institute of Science and Technology (KAIST)", "KAIST"]
-    official_title: "Researcher - KAIST Master's Research"   # G0: source value; see header note
+    official_title: "Researcher - KAIST Master's Research"   # G0-confirmed
     title_renderings:
       - "Researcher - KAIST Master's Research"
-      - "Graduate Researcher"    # proposed alt (MASTER_PLAN §3.3) — UNCONFIRMED, do not cite until G0
     period: {start: "2015-03", end: "2017-08"}
 
 education:

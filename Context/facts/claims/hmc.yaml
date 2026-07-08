@@ -1,11 +1,11 @@
-# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
-# until the owner confirms/corrects them at Gate G0. Every source_quote is a
-# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Claim registry — Gate G0 CONFIRMED (owner-reviewed 2026-07). Claims with
+# status: confirmed are citable by the resume pipeline; retired ones are not.
+# Every source_quote is a verbatim substring of its cited file (portfolio/facts.py).
 # Validated by Format/schemas/claim.schema.json.
 
 claims:
 - id: hmc-scc-emergency-stop
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Independently developed and validated SCC emergency-stop behavior for selected production-facing commercial-vehicle ADAS workflows, structured around safe handover and stop-state behavior.
   ownership: independent
@@ -36,7 +36,7 @@ claims:
     - calibration values
   notes: 'Ownership ''independent'' is directly supported by the verb ''Independently developed and validated''. Respect the context.yaml Ownership Boundary section: this is one contribution area, not the entire SCC/L2 stack.'
 - id: hmc-ekf-roadradius
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Independently developed production-applied road-radius fusion logic that blends steering-angle-based and yaw-rate-based road-radius estimates through an Extended Kalman Filter, with conditional lane/camera-validity blending, for more stable ego-path prediction under long-wheelbase commercial-vehicle dynamics.
   ownership: independent
@@ -71,7 +71,7 @@ claims:
     - Simulink block structures
   notes: The EKF-fusion detail is further supported by the context.yaml contribution line 'Fused steering-based and yaw-rate-based radius estimates through an Extended Kalman Filter...' and by experiences.yaml 'EKF-based RoadRadius fusion using steering-angle and yaw-rate information'.
 - id: hmc-foc-brake-distribution
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Participated in SCC and front-object-control tuning, contributing to rule-based front-target brake-distribution concepts that balance auxiliary and foundation brake usage against ADAS-requested deceleration, brake durability, fuel efficiency, and driver acceptance for heavy-duty vehicles.
   ownership: shared
@@ -110,7 +110,7 @@ claims:
     - platform-specific control parameters
   notes: 'Ownership is SHARED, not independent: the source verb is ''Participated in ... tuning work within the SCC part'' and ''Worked on rule-based brake distribution concepts''. Must not be rendered as sole design/ownership of brake distribution.'
 - id: hmc-scc-tuning-state-transition
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows.
   ownership: support
@@ -147,7 +147,7 @@ claims:
     - internal signal names
   notes: 'Ownership is SUPPORT: source verb is ''Supported''. Also corroborated by context.yaml responsibilities bullet ''SCC/FOC tuning, state-transition updates, calibration, regression testing, and release-readiness support.'''
 - id: hmc-bev-replay-metric
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Built and used BEV replay-based validation tooling that reduced repeated bus-only-lane road-test loops from about 10 trips to about 5 for similar false-detection issues, cutting scenario-debugging test time by about half (each trip roughly 4-5 hours) before final real-vehicle confirmation.
   ownership: independent
@@ -199,7 +199,7 @@ claims:
     - internal ECU signal names
   notes: This is the ONLY quantified claim. Digits 10, 5, 4, 5 are verbatim in the quoted sentence. All figures are approximate ('about'/'roughly') and self-reported; owner must supply an as_of date at G0. Ownership 'independent' reflects experiences.yaml 'Built and used replay-based validation tooling'.
 - id: hmc-target-selection
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Improved target-selection robustness by replaying real logs through the same production TOS/ODP logic in a BEV target-selection validation studio, investigating false target selection, comparing logic/parameter changes, and preparing fixes before final real-vehicle confirmation.
   ownership: shared
@@ -236,7 +236,7 @@ claims:
     - internal signal names
   notes: 'Ownership SHARED: source verb is ''Used'' the studio and replayed logs through existing production TOS/ODP logic; the TOS/ODP logic itself was not owned by the candidate.'
 - id: hmc-validation-workflow
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows and supported calibration, regression testing, vehicle-level debugging, and production release-readiness across multiple commercial-vehicle platforms.
   ownership: shared
@@ -268,7 +268,7 @@ claims:
     - internal test data
   notes: 'Ownership SHARED/support: verbs are ''Participated in'' and ''Supported''. Release-support corroborated by context.yaml line ''Supported calibration, regression testing, vehicle-level debugging, and production release-readiness workflows across multiple commercial-vehicle platforms.'''
 - id: hmc-platforms
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Worked across commercial-vehicle platforms spanning truck, tractor, and bus variants with ICE and FCEV powertrains.
   ownership: support
@@ -302,7 +302,7 @@ claims:
     omitted: []
   notes: Platform breadth is contextual exposure/support, not sole ownership. Corroborated by context.yaml Platforms section 'Worked across commercial vehicle variants including truck, tractor, and bus platforms with ICE and FCEV powertrains.' and the public vehicle_programs references.
 - id: hmc-patents
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Inventor / co-inventor on approximately seven ADAS and vehicle-control-related patent filings, including Korean patent filings and selected US filings in progress.
   ownership: shared
@@ -330,7 +330,7 @@ claims:
     - filing/application numbers
   notes: 'Ownership SHARED (''Inventor / co-inventor''). Deliberately NO metrics[] entry: ''approximately seven'' is a soft/hedged count, not a hard verifiable metric. Filing details are employer-verifiable only; unpublished/pending details remain omitted.'
 - id: hmc-ai-toolchains
-  status: proposed
+  status: confirmed
   anchor: hmc-adas
   statement: Independently designed resource-constrained AI-transition validation toolchains that reused existing CANape/VN1640/MF4 workflows to help ADAS module owners experiment with learned models on real vehicle signals; these were prototypes, not presented as already deployed team-wide production tools.
   ownership: independent
@@ -367,9 +367,9 @@ claims:
     - internal implementation details
   notes: 'Deployment MUST be prototype: the source explicitly states these first two toolchains are ''not presented as already deployed team-wide production tools''. Ownership ''independent'' reflects experiences.yaml ''Designed resource-constrained AI-transition toolchains''. Note: the separate BEV target-selection studio (covered by hmc-bev-replay-metric) WAS actively used in production development and is a distinct item from these prototype toolchains.'
 - id: hmc-lfa-validation
-  status: proposed
+  status: retired
   anchor: hmc-adas
-  statement: <placeholder>
+  statement: "Retired at Gate G0 (2026-07): no LFA / lane-following / lane-keeping / lane-centering work is documented in any source file, so it is not claimed. Tombstone kept to prevent re-proposal; revive via a new claim if real LFA scope is later documented."
   ownership: support
   deployment: production
   confidence: low
@@ -388,6 +388,5 @@ claims:
   evidence: []
   disclosure:
     public_safe: true
-    omitted:
-    - <to be confirmed at G0>
-  notes: PLACEHOLDER — no source support. Verified zero matches for LFA/LKA/lane-keeping/lane-centering in Context/Experiences/hmc_adas/context.yaml and Context/experiences.yaml. Owner must confirm at G0 whether any LFA/LKA/lane-keeping scope actually applies and supply a verbatim source sentence before this claim becomes citable; do not surface on the resume/site until then.
+    omitted: []
+  notes: "Retired at Gate G0. Zero source matches for LFA/LKA/lane-keeping/lane-centering across Context/Experiences/hmc_adas/context.yaml and Context/experiences.yaml; owner elected to retire rather than claim."

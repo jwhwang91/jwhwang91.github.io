@@ -1,11 +1,11 @@
-# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
-# until the owner confirms/corrects them at Gate G0. Every source_quote is a
-# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Claim registry — Gate G0 CONFIRMED (owner-reviewed 2026-07). Claims with
+# status: confirmed are citable by the resume pipeline; retired ones are not.
+# Every source_quote is a verbatim substring of its cited file (portfolio/facts.py).
 # Validated by Format/schemas/claim.schema.json.
 
 claims:
 - id: tc-xcp-bypass
-  status: proposed
+  status: confirmed
   anchor: e2e-xcp-bypass
   statement: Built a minimum-viable real-vehicle ADAS AI validation loop that reused an existing CANape/VN1640 calibration setup to connect learned ONNX models to real vehicle signals over XCP-over-CAN-FD, positioned as a proactive AI-transition prototype rather than a deployed production tool.
   ownership: independent
@@ -27,7 +27,7 @@ claims:
     ref: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio
     verifiable_by: public
 - id: tc-timeseries-ai
-  status: proposed
+  status: confirmed
   anchor: timeseries-ai-training
   statement: Built an ADAS log-to-AI workbench that turns real CANape/MF4 vehicle measurement logs into AI-ready datasets, PyTorch training runs, and exportable ONNX/MATLAB model artifacts, positioned as an AI-transition support prototype.
   ownership: independent
@@ -48,7 +48,7 @@ claims:
     ref: https://github.com/jwhwang91/adas-log-to-ai-workbench
     verifiable_by: public
 - id: tc-bev-simulator
-  status: proposed
+  status: confirmed
   anchor: tos-odp-bev-simulator
   statement: Built a BEV target-selection validation studio in MATLAB/Simulink that replays real logs through production TOS/ODP logic to investigate false target selection, actively used during commercial-vehicle mass-production development and reducing repeated real-bus validation trips for rare bus-only-lane scenarios from about 10 to around 5 (4-5 hours each).
   ownership: independent

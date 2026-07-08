@@ -1,11 +1,11 @@
-# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
-# until the owner confirms/corrects them at Gate G0. Every source_quote is a
-# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Claim registry — Gate G0 CONFIRMED (owner-reviewed 2026-07). Claims with
+# status: confirmed are citable by the resume pipeline; retired ones are not.
+# Every source_quote is a verbatim substring of its cited file (portfolio/facts.py).
 # Validated by Format/schemas/claim.schema.json.
 
 claims:
 - id: sw-deckflip-pipeline
-  status: proposed
+  status: confirmed
   anchor: deckflip
   statement: 'Self-built full-stack web app (DeckFlip) that turns a prompt into editable slide decks via a multi-pass LLM pipeline: plan, foundation, parallel per-slide generation, deterministic assembly, and lint-gated QA repair, with AI edits constrained to a validated JSON patch/action vocabulary.'
   ownership: independent
@@ -29,7 +29,7 @@ claims:
   - validation-gate
   confidence: high
 - id: sw-deckflip-editor
-  status: proposed
+  status: confirmed
   anchor: deckflip
   statement: Built a ~3,000-line sandboxed in-iframe DOM editor for DeckFlip that lets users restyle generated decks live while preserving each deck's own CSS/JS/3D animations.
   ownership: independent
@@ -62,7 +62,7 @@ claims:
   - typescript-react
   confidence: high
 - id: sw-decisioncanvas-engine
-  status: proposed
+  status: confirmed
   anchor: decisioncanvas
   statement: Self-built working prototype (DecisionCanvas Studio, v0.3.0) with a ~832-line async execution engine that streams graph state over Server-Sent Events, a compiler that detects control cycles via Kahn topological sort, a multi-provider LLM router, and an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision.
   ownership: independent
@@ -94,7 +94,7 @@ claims:
   confidence: high
   notes: Source frames this explicitly as a 'Working prototype (v0.3.0)', so deployment is prototype (not production). Kahn topological sort is described in the objective line; the ~832-line async engine and safety gates are quoted from the impact line.
 - id: sw-voiceprint
-  status: proposed
+  status: confirmed
   anchor: voiceprint
   statement: Self-built ~3,600-line Python writing assistant (Voiceprint) that learns a writer's voice and photo-layout style from past posts, with 1,000+ lines of resilient Playwright browser automation and an ffmpeg media pipeline, and a safety-first design that always stops at 'save as draft' for human approval.
   ownership: independent
@@ -133,7 +133,7 @@ claims:
   - python
   confidence: high
 - id: sw-pinterest-oauth
-  status: proposed
+  status: confirmed
   anchor: pinterest-exporter
   statement: Built a cross-platform Python/Qt desktop app (Pinterest Reference Exporter) with an OAuth 2.0 authorization-code flow implemented from scratch on the Python standard library (loopback callback server, CSRF state validation, silent refresh-token reconnect), threaded network/IO, and native macOS/Windows packaging.
   ownership: independent
@@ -163,7 +163,7 @@ claims:
   - rest-api
   confidence: high
 - id: sw-pathpilot-app
-  status: proposed
+  status: confirmed
   anchor: pathpilot
   statement: Self-built feature-complete native macOS file manager (PathPilot) with a keyboard-first, path-first workflow — editable address bar, dense details table, and a run-any-action command palette — now in preparation for Mac App Store release (listing finalized, not yet live).
   ownership: independent

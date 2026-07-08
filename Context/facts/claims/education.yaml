@@ -1,11 +1,11 @@
-# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
-# until the owner confirms/corrects them at Gate G0. Every source_quote is a
-# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Claim registry — Gate G0 CONFIRMED (owner-reviewed 2026-07). Claims with
+# status: confirmed are citable by the resume pipeline; retired ones are not.
+# Every source_quote is a verbatim substring of its cited file (portfolio/facts.py).
 # Validated by Format/schemas/claim.schema.json.
 
 claims:
 - id: edu-ucla-bs
-  status: proposed
+  status: confirmed
   anchor: ucla
   statement: BS in Mechanical Engineering, UCLA, 2010.09-2014.06.
   ownership: independent
@@ -23,7 +23,7 @@ claims:
     ref: Context/resume.yaml (education block)
     verifiable_by: public
 - id: edu-kaist-ms
-  status: proposed
+  status: confirmed
   anchor: kaist
   statement: 'MS in Robotics, KAIST, 2015.03-2017.08; thesis: Controller Design for Motion Stabilization of a Turret on a Moving Platform.'
   ownership: independent
@@ -43,7 +43,7 @@ claims:
     ref: Context/resume.yaml (education block)
     verifiable_by: public
 - id: cert-class1-license
-  status: proposed
+  status: confirmed
   anchor: kr-driving-licenses
   statement: Holds a Korean Class 1 Large Vehicle Driver's License.
   ownership: independent
@@ -60,7 +60,7 @@ claims:
     ref: 'Context/resume.yaml (skills: Licenses group)'
     verifiable_by: public
 - id: cert-trailer-license
-  status: proposed
+  status: confirmed
   anchor: kr-driving-licenses
   statement: Holds a Korean Trailer Driver's License.
   ownership: independent
