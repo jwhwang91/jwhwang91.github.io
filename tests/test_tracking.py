@@ -204,3 +204,58 @@ def test_log_event_appends(tmp_path):
     assert main(["log", "a", "--note", "recruiter emailed"], paths=paths) == 0
     app = yaml.safe_load((paths.applications / "a" / "application.yaml").read_text())
     assert app["events"][-1]["note"] == "recruiter emailed"
+
+
+# --- review-finding regressions ---
+
+def test_submit_blocked_when_resume_txt_absent(tmp_path):
+    paths = _scoped(tmp_path)
+    folder = _approved(paths, "s", pdf_text="RESUME TEXT")
+    (folder / "out" / "resume_ats.txt").unlink()      # pdf present, txt gone
+    with pytest.raises(ValueError, match="resume_ats.txt missing"):
+        main(["status", "s", "submitted"], paths=paths)
+
+
+def test_submit_blocked_when_resume_edited_after_gate(tmp_path):
+    paths = _scoped(tmp_path)
+    folder = _approved(paths, "s", pdf_text="RESUME TEXT")
+    gr = yaml.safe_load((folder / "gate_report.yaml").read_text())
+    gr["resume_ats_sha256"] = "0" * 64               # gate graded different content
+    (folder / "gate_report.yaml").write_text(yaml.safe_dump(gr))
+    with pytest.raises(ValueError, match="changed since the gate"):
+        main(["status", "s", "submitted"], paths=paths)
+
+
+def test_submit_blocked_on_missing_verdict(tmp_path):
+    paths = _scoped(tmp_path)
+    folder = _approved(paths, "s", pdf_text="RESUME TEXT")
+    (folder / "gate_report.yaml").write_text(yaml.safe_dump({"schema": "gate_report/v1"}))  # no verdict
+    with pytest.raises(ValueError, match="verdict must be PASS"):
+        main(["status", "s", "submitted"], paths=paths)
+
+
+def test_terminal_status_is_absorbing(tmp_path):
+    paths = _scoped(tmp_path)
+    _app(paths, "a", status="rejected")
+    with pytest.raises(ValueError):
+        main(["status", "a", "withdrawn"], paths=paths)   # closed record cannot be mutated
+
+
+def test_track_skips_malformed_application_yaml(tmp_path, capsys):
+    paths = _scoped(tmp_path)
+    _app(paths, "good", status="gated", company="AcmeCorp")
+    bad = paths.applications / "bad"
+    bad.mkdir()
+    (bad / "application.yaml").write_text("just a bare string, not a mapping\n")
+    assert main(["track"], paths=paths) == 0             # does not crash
+    out = capsys.readouterr().out
+    assert "good" in out and "skipped malformed" in out
+
+
+def test_backbone_gap_lesson_is_anonymization_linted(tmp_path):
+    paths = dataclasses.replace(_scoped(tmp_path), context=Path(tmp_path) / "Context")
+    (paths.context / "variants").mkdir(parents=True)
+    _closed_app(paths, "a", "AcmeCorp",
+                [{"id": "L1", "scope": "backbone-gap", "text": "saw this at https://acme.example.com/jobs"}])
+    assert main(["lessons", "compile"], paths=paths) == 1  # URL in backbone-gap -> FAIL, nothing written
+    assert not (paths.context / "variants" / "BACKLOG.md").exists()

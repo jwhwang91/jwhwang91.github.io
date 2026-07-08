@@ -13,7 +13,11 @@ def load_yaml(path: Path) -> dict[str, Any]:
         raise FileNotFoundError(f"Missing context file: {path}")
     with path.open("r", encoding="utf-8") as f:
         data = yaml.safe_load(f)
-    return data or {}
+    if data is None:
+        return {}
+    if not isinstance(data, dict):
+        raise ValueError(f"{path}: expected a YAML mapping, got {type(data).__name__}")
+    return data
 
 
 def load_index_context(paths: Paths) -> dict[str, Any]:

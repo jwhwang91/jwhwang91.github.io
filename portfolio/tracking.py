@@ -185,9 +185,10 @@ def _dump(path, doc) -> None:
 
 def legal_transitions(current: str) -> set[str]:
     nxt = set(STATUS_FLOW.get(current, set()))
-    nxt.add("withdrawn")                            # any -> withdrawn
-    if current in _PRE_SUBMIT:
-        nxt.add("abandoned")                        # any pre-submit -> abandoned
+    if current not in _TERMINAL:                    # terminal statuses are absorbing
+        nxt.add("withdrawn")                        # any non-terminal -> withdrawn
+        if current in _PRE_SUBMIT:
+            nxt.add("abandoned")                    # any pre-submit -> abandoned
     return nxt
 
 
@@ -215,20 +216,31 @@ def _check_submit_gate(paths: Paths, slug: str, app: dict, acknowledge_risk: boo
         errs.append(f"status must be 'approved' (is '{app.get('status')}')")
 
     gate_report = folder / "gate_report.yaml"
-    if not gate_report.exists():
+    gr = load_yaml(gate_report) if gate_report.exists() else None
+    if gr is None:
         errs.append(f"no gate_report.yaml — run: python main.py render {slug}")
     else:
-        verdict = load_yaml(gate_report).get("verdict")
-        if verdict == "FAIL":
-            errs.append("gate verdict is FAIL")
-        elif verdict == "HIGH_RISK" and not acknowledge_risk:
+        verdict = gr.get("verdict")
+        if verdict == "PASS":
+            pass
+        elif verdict == "HIGH_RISK" and acknowledge_risk:
+            pass
+        elif verdict == "HIGH_RISK":
             errs.append("gate verdict is HIGH_RISK — re-run with --acknowledge-risk to submit anyway")
+        else:
+            errs.append(f"gate verdict must be PASS to submit (is '{verdict}')")
 
     pdf, txt = folder / "out" / "resume_final.pdf", folder / "out" / "resume_ats.txt"
     if not pdf.exists():
         errs.append("out/resume_final.pdf missing (export resume_ats.html to PDF first)")
-    elif txt.exists() and _pdf_text_ratio(pdf, txt) < 0.98:
+    elif not txt.exists():
+        errs.append(f"out/resume_ats.txt missing — run: python main.py render {slug}")
+    elif _pdf_text_ratio(pdf, txt) < 0.98:
         errs.append("PDF text-layer check FAILED (run: python main.py pdfcheck " + slug + ")")
+    # bind the submitted resume to the exact text the gate graded
+    if gr and txt.exists() and gr.get("resume_ats_sha256") \
+            and _sha256_text(txt.read_text(encoding="utf-8")) != gr["resume_ats_sha256"]:
+        errs.append("resume_ats.txt changed since the gate ran — re-render/re-gate before submitting")
 
     jd = folder / "jd.txt"
     if jd.exists() and app.get("jd_sha256") and _sha256_text(jd.read_text(encoding="utf-8")) != app["jd_sha256"]:
@@ -290,7 +302,11 @@ def track(paths: Paths, open_only: bool = False, closed_only: bool = False, csv:
                 continue
             ap = folder / "application.yaml"
             if ap.exists():
-                a = load_yaml(ap)
+                try:
+                    a = load_yaml(ap)
+                except Exception as e:                  # one bad file must not abort the listing
+                    print(f"  skipped malformed {folder.name}/application.yaml: {e}")
+                    continue
                 rows.append({"id": a.get("id", folder.name), "company": a.get("company", ""),
                              "status": a.get("status", "?"), "verdict": (a.get("gate") or {}).get("verdict", ""),
                              "outcome": (a.get("outcome") or {}).get("result", "") or ""})
@@ -324,15 +340,47 @@ def _is_post_ats(app: dict) -> bool:
     return app.get("status") in {"screen", "interview", "offer", "hired"} or any(s in stage for s in _POST_ATS)
 
 
-def lessons_compile(paths: Paths) -> int:
-    """Aggregate lessons from CLOSED applications into an anonymized ledger draft.
-    Enforces the EVOLUTION rule (scope:ats from a post-ATS app is rejected) and an
-    anonymization lint (no company names or URLs may reach the public ledger)."""
+_CORP = re.compile(r"\b(inc|corp|corporation|llc|ltd|limited|co|gmbh|plc|ag|sa|kk|pvt)\.?\b", re.IGNORECASE)
+_URL = re.compile(r"https?://|\bwww\.\S+|\b[\w.-]+\.(?:com|org|net|io|co|ai|gov|edu|dev|app)\b/?", re.IGNORECASE)
+_ANON_STOP = {"the", "and", "for", "inc", "our", "you", "with"}
+
+
+def _company_tokens(company: str) -> set[str]:
+    name = re.sub(r"[^\w\s]", " ", _CORP.sub(" ", company))
+    return {t for t in name.split() if len(t) >= 3 and t.lower() not in _ANON_STOP}
+
+
+def _anon_violations(text: str, companies: set[str]) -> list[str]:
+    """PII lint for the PUBLIC ledger/backlog: company tokens (suffix-stripped) and URLs."""
+    out = []
+    for comp in companies:
+        for tok in _company_tokens(comp):
+            if re.search(r"\b" + re.escape(tok) + r"\b", text, re.IGNORECASE):
+                out.append(f"company token '{tok}' (from '{comp}') present")
+                break
+    if _URL.search(text):
+        out.append("a URL / bare domain is present")
+    return out
+
+
+def _load_apps(paths: Paths) -> list[dict]:
     apps = []
     if paths.applications.exists():
         for f in sorted(paths.applications.iterdir()):
-            if (f / "application.yaml").exists():
-                apps.append(load_yaml(f / "application.yaml"))
+            ap = f / "application.yaml"
+            if ap.exists():
+                try:
+                    apps.append(load_yaml(ap))
+                except Exception as e:                  # one malformed file must not abort the run
+                    print(f"  skipped malformed {f.name}/application.yaml: {e}")
+    return apps
+
+
+def lessons_compile(paths: Paths) -> int:
+    """Aggregate lessons from CLOSED applications into an anonymized ledger draft.
+    Enforces the EVOLUTION rule (scope:ats from a post-ATS app is rejected) and an
+    anonymization lint over BOTH the ledger draft and the public BACKLOG additions."""
+    apps = _load_apps(paths)
     companies = {a.get("company", "") for a in apps if a.get("company") and a.get("company") != "(legacy)"}
 
     lines, backlog_adds, rule_rejects = [], [], []
@@ -340,7 +388,8 @@ def lessons_compile(paths: Paths) -> int:
         if a.get("status") not in _TERMINAL:
             continue
         for L in a.get("lessons", []) or []:
-            scope, text = L.get("scope"), L.get("text", "")
+            scope = (L.get("scope") or "").strip().lower()   # canonicalize (ATS -> ats)
+            text = L.get("text", "")
             if scope == "ats" and _is_post_ats(a):
                 rule_rejects.append(f"L[{L.get('id')}] '{text[:50]}' — reached a human (post-ATS); the resume PASSED. "
                                     "This is an INTERVIEW lesson, not an ATS one (EVOLUTION rule).")
@@ -351,20 +400,15 @@ def lessons_compile(paths: Paths) -> int:
             lines.append(f"- ({scope}) {text}")
 
     draft = "# Ledger draft (anonymized) — review before promoting to ATS_LEDGER.md\n\n" + "\n".join(lines) + "\n"
-
-    anon = []
-    for comp in companies:
-        if comp.lower() in draft.lower():
-            anon.append(f"company name '{comp}' present")
-    if re.search(r"https?://", draft):
-        anon.append("a URL is present")
+    # lint the ledger draft AND the public backlog additions before writing either
+    anon = _anon_violations(draft + "\n" + "\n".join(backlog_adds), companies)
 
     for r in rule_rejects:
         print(f"[rule] {r}")
     if anon:
         for a in anon:
             print(f"[anonymization] {a}")
-        print(f"\nlessons compile FAILED: {len(anon)} anonymization violation(s) — the ledger is public.")
+        print(f"\nlessons compile FAILED: {len(anon)} anonymization violation(s) — nothing written (the ledger/backlog are public).")
         return 1
 
     (paths.applications / "_ledger_draft.md").write_text(draft, encoding="utf-8")

@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import hashlib
 import json
 from typing import Any
 
@@ -67,6 +68,8 @@ def evaluate(resume: dict, resume_txt: str, classifications: list[dict], registr
         "errors": [str(e) for e in errors],
         "warnings": [str(w) for w in warnings],
         "pdf_verified": False,
+        # binds the submit gate to the exact text that was graded (anti-silent-edit)
+        "resume_ats_sha256": hashlib.sha256(resume_txt.encode("utf-8")).hexdigest(),
     }
     return report, errors
 
