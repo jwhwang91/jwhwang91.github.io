@@ -3,7 +3,8 @@ from __future__ import annotations
 import argparse
 from typing import Optional, Sequence
 
-from .applications import jd_confirm, jd_parse, new_application
+from .applications import (jd_confirm, jd_parse, match, match_confirm,
+                           new_application, validate_stage)
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
@@ -64,6 +65,13 @@ def build_parser() -> argparse.ArgumentParser:
     jd_sub.add_parser("parse", help="Deterministic scan + assemble the LLM prompt.").add_argument("slug")
     jd_sub.add_parser("confirm", help="Gate G1: validate + stamp jd.parsed.yaml, advance status.").add_argument("slug")
 
+    p_match = sub.add_parser("match", help="Classify JD keywords vs the registry. Usage: match <slug> | match confirm <slug>")
+    p_match.add_argument("args", nargs="+")
+
+    p_validate = sub.add_parser("validate", help="Validate a stage artifact (schema + registry refs).")
+    p_validate.add_argument("slug")
+    p_validate.add_argument("--stage", default="all", choices=["jd", "match", "all"])
+
     return parser
 
 
@@ -83,6 +91,16 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
             return jd_confirm(paths, args.slug)
         print("usage: python main.py jd {parse|confirm} <slug>")
         return 2
+    if command == "match":
+        a = args.args
+        if a[0] == "confirm":
+            if len(a) < 2:
+                print("usage: python main.py match confirm <slug>")
+                return 2
+            return match_confirm(paths, a[1])
+        return match(paths, a[0])
+    if command == "validate":
+        return validate_stage(paths, args.slug, args.stage)
     return None
 
 

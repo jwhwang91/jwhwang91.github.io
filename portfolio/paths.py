@@ -23,6 +23,7 @@ class Paths:
     variants: Path
     applications: Path
     scaffold: Path
+    private: Path
 
     @classmethod
     def from_root(cls, root: Path) -> "Paths":
@@ -39,6 +40,7 @@ class Paths:
             variants=context / "variants",
             applications=root / "Applications",
             scaffold=format_dir / "scaffold",
+            private=context / "private",
         )
 
 

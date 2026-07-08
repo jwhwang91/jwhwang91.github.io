@@ -1,0 +1,40 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "match.schema.json",
+  "title": "Support classification (match.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "application", "classifications"],
+  "properties": {
+    "schema": { "const": "match/v1" },
+    "application": { "type": "string" },
+    "jd_sha256": { "type": ["string", "null"] },
+    "classifications": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/classification" }
+    },
+    "queue": { "type": "array" },
+    "knockouts": { "type": "array" },
+    "pre_resume": { "type": "object" },
+    "confirmed": { "type": "boolean" }
+  },
+  "definitions": {
+    "classification": {
+      "type": "object",
+      "additionalProperties": true,
+      "required": ["term", "support"],
+      "properties": {
+        "term": { "type": "string" },
+        "support": { "enum": ["direct", "partial", "adjacent", "unsupported"] },
+        "requirement": { "enum": ["must", "nice", "contextual"] },
+        "matched_tier": { "enum": ["exact", "equivalent", "related"] },
+        "claim_ids": { "type": "array", "items": { "type": "string" } },
+        "quote": { "type": "string" },
+        "source": { "enum": ["registry", "cache", "llm"] },
+        "hedge_required": { "type": "boolean" },
+        "hedge": { "type": "string" },
+        "domain": { "type": "string" }
+      }
+    }
+  }
+}
