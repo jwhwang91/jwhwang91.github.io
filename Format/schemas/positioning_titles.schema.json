@@ -1,0 +1,19 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "positioning_titles.schema.json",
+  "title": "Approved positioning headline titles per track",
+  "description": "Context/facts/positioning_titles.yaml — resume headline titles must come from this list (validator-enforced in Phase 5).",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["tracks"],
+  "properties": {
+    "tracks": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "array",
+        "items": { "type": "string" },
+        "minItems": 1
+      }
+    }
+  }
+}

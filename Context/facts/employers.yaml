@@ -1,0 +1,58 @@
+# Drift anchors — one canonical org / title / date per employer. Every rendering
+# anywhere (backbone site YAML, resume renders) must match one of these forms.
+# Validated by Format/schemas/employers.schema.json. Committed, public-safe.
+#
+# G0 REVIEW NOTES (owner to confirm at Gate G0):
+#   - kaist-masters.official_title: source uses "Researcher - KAIST Master's
+#     Research" (Context/experiences.yaml:27); MASTER_PLAN §3.3 proposed the
+#     cleaner "Graduate Researcher". Default here is the SOURCE value; the
+#     proposed alt is listed under title_renderings, unconfirmed.
+
+employers:
+  hmc-adas:
+    organization: "Hyundai Motor Company"
+    org_renderings: ["Hyundai Motor Company (HMC)", "Hyundai Motor Company", "HMC"]
+    official_title: "Commercial Vehicle ADAS Controls & Validation Engineer"
+    title_renderings:
+      - "Commercial Vehicle ADAS Controls & Validation Engineer"
+      - "ADAS Controls & Validation Engineer (Commercial Vehicles)"
+    period: {start: "2021-03", end: null}
+    forbidden_phrases: ["(Senior|Staff|Lead|Principal) .* Engineer, Hyundai"]  # never claim unheld rank
+
+  add-k2-tcu:
+    organization: "Agency for Defense Development (ADD), Ground Technology Research Institute"
+    org_renderings: ["Agency for Defense Development (ADD), Ground Technology Research Institute", "Agency for Defense Development (ADD)"]
+    official_title: "Researcher - TCU Application Software"
+    title_renderings: ["Researcher - TCU Application Software"]
+    period: {start: "2017-09", end: "2021-03"}
+
+  kaist-masters:
+    organization: "Korea Advanced Institute of Science and Technology (KAIST)"
+    org_renderings: ["Korea Advanced Institute of Science and Technology (KAIST)", "KAIST"]
+    official_title: "Researcher - KAIST Master's Research"   # G0: source value; see header note
+    title_renderings:
+      - "Researcher - KAIST Master's Research"
+      - "Graduate Researcher"    # proposed alt (MASTER_PLAN §3.3) — UNCONFIRMED, do not cite until G0
+    period: {start: "2015-03", end: "2017-08"}
+
+education:
+  ucla:
+    institute: "University of California Los Angeles (UCLA)"
+    degree: "B.S. Mechanical Engineering"
+    period: {start: "2010-09", end: "2014-06"}
+  kaist:
+    institute: "Korea Advanced Institute of Science and Technology (KAIST)"
+    degree: "M.S. Robotics"
+    period: {start: "2015-03", end: "2017-08"}
+    thesis: "Controller Design for Motion Stabilization of a Turret on a Moving Platform"
+
+credentials:
+  kr-driving-licenses:
+    issuer: "Republic of Korea"
+    items:
+      - "Korean Class 1 Large Vehicle Driver's License"
+      - "Korean Trailer Driver's License"
+
+derived:
+  # "N+ years" claims must satisfy N <= floor(months since add-k2-tcu.period.start / 12).
+  years_of_experience: {from: "add-k2-tcu.period.start", rule: floor}

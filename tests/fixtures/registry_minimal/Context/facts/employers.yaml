@@ -1,0 +1,12 @@
+employers:
+  acme-adas:
+    organization: "Acme Motors"
+    org_renderings: ["Acme Motors (ACME)", "Acme Motors", "ACME"]
+    official_title: "ADAS Engineer"
+    title_renderings: ["ADAS Engineer"]
+    period: {start: "2020-01", end: null}
+education:
+  demo-university:
+    institute: "Demo University"
+    degree: "B.S. Testing"
+    period: {start: "2010-09", end: "2014-06"}

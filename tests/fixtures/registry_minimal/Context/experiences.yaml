@@ -1,0 +1,8 @@
+experiences:
+  - id: "acme-adas"
+    role: "ADAS Engineer"
+    organization: "Acme Motors (ACME)"
+    period: "2020.01 - Present"
+    bullets:
+      - "Independently developed the widget stabilizer for production vehicles."
+      - "Supported calibration and regression testing across the validation workflow."

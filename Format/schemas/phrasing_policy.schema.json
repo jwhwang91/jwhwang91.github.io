@@ -1,0 +1,39 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "phrasing_policy.schema.json",
+  "title": "Phrasing policy — verb-strength lexicons and numeric rules",
+  "description": "Context/facts/phrasing_policy.yaml — the mechanical hedging engine consumed by truthlint.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["strength_classes", "numeric_whitelist", "vague_claim_lexicon"],
+  "properties": {
+    "strength_classes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["ownership", "contribution", "exposure"],
+      "properties": {
+        "ownership": { "$ref": "#/definitions/lexemes" },
+        "contribution": { "$ref": "#/definitions/lexemes" },
+        "exposure": { "$ref": "#/definitions/lexemes" }
+      }
+    },
+    "detection": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": { "rule": { "type": "string" } }
+    },
+    "numeric_whitelist": { "type": "array", "items": { "type": "string" } },
+    "vague_claim_lexicon": { "type": "array", "items": { "type": "string" } },
+    "global_forbidden_phrases": { "type": "array", "items": { "type": "string" } }
+  },
+  "definitions": {
+    "lexemes": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["lexemes"],
+      "properties": {
+        "lexemes": { "type": "array", "items": { "type": "string" }, "minItems": 1 }
+      }
+    }
+  }
+}

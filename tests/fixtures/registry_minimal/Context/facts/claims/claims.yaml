@@ -1,0 +1,37 @@
+claims:
+  - id: acme-widget
+    status: confirmed
+    confidence: high
+    anchor: acme-adas
+    statement: "Independently developed the widget stabilizer for production vehicles."
+    ownership: independent
+    deployment: production
+    terms: [widget, stabilizer]
+    evidence:
+      - {type: repo, ref: "Context/experiences.yaml", verifiable_by: public}
+    source_quote:
+      file: "Context/experiences.yaml"
+      quote: "Independently developed the widget stabilizer for production vehicles."
+
+  - id: acme-calibration
+    status: proposed
+    anchor: acme-adas
+    statement: "Supported calibration and regression testing across the validation workflow."
+    ownership: support
+    deployment: production
+    terms: [calibration, regression-testing]
+    source_quote:
+      file: "Context/experiences.yaml"
+      quote: "Supported calibration and regression testing across the validation workflow."
+
+  - id: acme-degree
+    status: confirmed
+    anchor: demo-university
+    statement: "B.S. in Testing from Demo University."
+    ownership: independent
+    deployment: research
+    evidence:
+      - {type: publication, ref: "Context/experiences.yaml", verifiable_by: public}
+    source_quote:
+      file: "Context/facts/employers.yaml"
+      quote: "B.S. Testing"

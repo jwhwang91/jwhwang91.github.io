@@ -1,0 +1,393 @@
+# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
+# until the owner confirms/corrects them at Gate G0. Every source_quote is a
+# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Validated by Format/schemas/claim.schema.json.
+
+claims:
+- id: hmc-scc-emergency-stop
+  status: proposed
+  anchor: hmc-adas
+  statement: Independently developed and validated SCC emergency-stop behavior for selected production-facing commercial-vehicle ADAS workflows, structured around safe handover and stop-state behavior.
+  ownership: independent
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Independently developed and validated SCC emergency-stop behavior for selected production-facing commercial-vehicle ADAS workflows.
+  terms:
+  - adas
+  - scc
+  - emergency-stop
+  - l2-adas
+  - commercial-vehicle
+  - control-logic
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - internal state names
+    - thresholds
+    - calibration values
+  notes: 'Ownership ''independent'' is directly supported by the verb ''Independently developed and validated''. Respect the context.yaml Ownership Boundary section: this is one contribution area, not the entire SCC/L2 stack.'
+- id: hmc-ekf-roadradius
+  status: proposed
+  anchor: hmc-adas
+  statement: Independently developed production-applied road-radius fusion logic that blends steering-angle-based and yaw-rate-based road-radius estimates through an Extended Kalman Filter, with conditional lane/camera-validity blending, for more stable ego-path prediction under long-wheelbase commercial-vehicle dynamics.
+  ownership: independent
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Independently developed production-applied road-radius fusion logic using steering-wheel/tire-angle-based RoadRadius and EBS yaw-rate-based RoadRadius.
+  terms:
+  - ekf
+  - sensor-fusion
+  - road-curvature
+  - road-radius
+  - yaw-rate
+  - steering-angle
+  - bicycle-model
+  - ego-path-prediction
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - internal signal names
+    - EKF matrices
+    - thresholds
+    - calibration values
+    - Simulink block structures
+  notes: The EKF-fusion detail is further supported by the context.yaml contribution line 'Fused steering-based and yaw-rate-based radius estimates through an Extended Kalman Filter...' and by experiences.yaml 'EKF-based RoadRadius fusion using steering-angle and yaw-rate information'.
+- id: hmc-foc-brake-distribution
+  status: proposed
+  anchor: hmc-adas
+  statement: Participated in SCC and front-object-control tuning, contributing to rule-based front-target brake-distribution concepts that balance auxiliary and foundation brake usage against ADAS-requested deceleration, brake durability, fuel efficiency, and driver acceptance for heavy-duty vehicles.
+  ownership: shared
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Participated in SCC tuning and front-object-control-related tuning work within the SCC part.
+  terms:
+  - scc
+  - front-object-control
+  - brake-distribution
+  - deceleration-control
+  - heavy-duty-vehicle
+  - calibration
+  term_caps:
+    brake-distribution: partial
+    front-object-control: partial
+  forbidden_phrases:
+  - designed the brake distribution
+  - owned the brake distribution
+  - led the brake distribution
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - internal thresholds
+    - brake maps
+    - calibration values
+    - platform-specific control parameters
+  notes: 'Ownership is SHARED, not independent: the source verb is ''Participated in ... tuning work within the SCC part'' and ''Worked on rule-based brake distribution concepts''. Must not be rendered as sole design/ownership of brake distribution.'
+- id: hmc-scc-tuning-state-transition
+  status: proposed
+  anchor: hmc-adas
+  statement: Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows.
+  ownership: support
+  deployment: production
+  confidence: medium
+  source_quote:
+    file: Context/experiences.yaml
+    quote: Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows.
+  terms:
+  - scc-tuning
+  - foc-tuning
+  - state-transition
+  - regression-testing
+  - calibration
+  - release-readiness
+  term_caps:
+    state-transition: partial
+    scc-tuning: partial
+    foc-tuning: partial
+  forbidden_phrases:
+  - led SCC tuning
+  - owned state-transition logic
+  evidence:
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - calibration values
+    - internal signal names
+  notes: 'Ownership is SUPPORT: source verb is ''Supported''. Also corroborated by context.yaml responsibilities bullet ''SCC/FOC tuning, state-transition updates, calibration, regression testing, and release-readiness support.'''
+- id: hmc-bev-replay-metric
+  status: proposed
+  anchor: hmc-adas
+  statement: Built and used BEV replay-based validation tooling that reduced repeated bus-only-lane road-test loops from about 10 trips to about 5 for similar false-detection issues, cutting scenario-debugging test time by about half (each trip roughly 4-5 hours) before final real-vehicle confirmation.
+  ownership: independent
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Reduced repeated bus-only-lane road-test loops from about 10 trips to about 5 for similar false-detection issues. Since each trip could take roughly 4-5 hours, the tool helped cut scenario-debugging test time by about half before final real-vehicle confirmation.
+  metrics:
+  - id: hmc-bev-trip-reduction
+    numbers:
+    - 10
+    - 5
+    value: Reduced repeated bus-only-lane road-test loops from about 10 trips to about 5
+    as_of: <OWNER TO DATE>
+    method: Approximate field observation of repeated bus-only-lane road-test loops for similar false-detection issues; self-reported, framed as 'about'.
+    allowed_renderings:
+    - from about 10 trips to about 5
+    - about half
+    - roughly halved the loops
+  - id: hmc-bev-trip-duration
+    numbers:
+    - 4
+    - 5
+    value: each trip could take roughly 4-5 hours
+    as_of: <OWNER TO DATE>
+    method: Approximate per-trip duration, self-reported, framed as 'roughly'.
+    allowed_renderings:
+    - roughly 4-5 hours
+    - about 4 to 5 hours per trip
+  terms:
+  - bev-replay
+  - validation-tooling
+  - false-detection
+  - log-replay
+  - target-selection
+  - test-time-reduction
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - proprietary vehicle logs
+    - internal ECU signal names
+  notes: This is the ONLY quantified claim. Digits 10, 5, 4, 5 are verbatim in the quoted sentence. All figures are approximate ('about'/'roughly') and self-reported; owner must supply an as_of date at G0. Ownership 'independent' reflects experiences.yaml 'Built and used replay-based validation tooling'.
+- id: hmc-target-selection
+  status: proposed
+  anchor: hmc-adas
+  statement: Improved target-selection robustness by replaying real logs through the same production TOS/ODP logic in a BEV target-selection validation studio, investigating false target selection, comparing logic/parameter changes, and preparing fixes before final real-vehicle confirmation.
+  ownership: shared
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Used a BEV target-selection validation studio to replay real logs through the same TOS/ODP logic used for production ECU behavior analysis.
+  terms:
+  - target-selection
+  - bev-replay
+  - tos
+  - odp
+  - false-detection
+  - log-replay
+  term_caps:
+    tos: partial
+    odp: partial
+  forbidden_phrases:
+  - owned the target-selection logic
+  - designed TOS/ODP
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - TOS/ODP internal implementation details
+    - proprietary vehicle logs
+    - internal signal names
+  notes: 'Ownership SHARED: source verb is ''Used'' the studio and replayed logs through existing production TOS/ODP logic; the TOS/ODP logic itself was not owned by the candidate.'
+- id: hmc-validation-workflow
+  status: proposed
+  anchor: hmc-adas
+  statement: Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows and supported calibration, regression testing, vehicle-level debugging, and production release-readiness across multiple commercial-vehicle platforms.
+  ownership: shared
+  deployment: production
+  confidence: medium
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows.
+  terms:
+  - mils
+  - hils
+  - dynamometer
+  - real-vehicle-validation
+  - release-support
+  - validation-workflow
+  term_caps:
+    validation-workflow: partial
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - calibration values
+    - internal test data
+  notes: 'Ownership SHARED/support: verbs are ''Participated in'' and ''Supported''. Release-support corroborated by context.yaml line ''Supported calibration, regression testing, vehicle-level debugging, and production release-readiness workflows across multiple commercial-vehicle platforms.'''
+- id: hmc-platforms
+  status: proposed
+  anchor: hmc-adas
+  statement: Worked across commercial-vehicle platforms spanning truck, tractor, and bus variants with ICE and FCEV powertrains.
+  ownership: support
+  deployment: production
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Truck, tractor, and bus variants with ICE and FCEV powertrains
+  terms:
+  - commercial-vehicle
+  - truck
+  - tractor
+  - bus
+  - ice
+  - fcev
+  - platform-breadth
+  term_caps:
+    platform-breadth: partial
+  forbidden_phrases:
+  - led all platform programs
+  - owned every platform
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted: []
+  notes: Platform breadth is contextual exposure/support, not sole ownership. Corroborated by context.yaml Platforms section 'Worked across commercial vehicle variants including truck, tractor, and bus platforms with ICE and FCEV powertrains.' and the public vehicle_programs references.
+- id: hmc-patents
+  status: proposed
+  anchor: hmc-adas
+  statement: Inventor / co-inventor on approximately seven ADAS and vehicle-control-related patent filings, including Korean patent filings and selected US filings in progress.
+  ownership: shared
+  deployment: production
+  confidence: medium
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: Inventor / co-inventor on approximately seven ADAS and vehicle-control-related patent filings, including Korean patent filings and selected US filings in progress.
+  terms:
+  - patents
+  - adas
+  - vehicle-control
+  - intellectual-property
+  evidence:
+  - type: internal
+    ref: HMC patent filing records (Korean filings + selected US filings in progress)
+    verifiable_by: employer
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - unpublished or pending filing details
+    - filing/application numbers
+  notes: 'Ownership SHARED (''Inventor / co-inventor''). Deliberately NO metrics[] entry: ''approximately seven'' is a soft/hedged count, not a hard verifiable metric. Filing details are employer-verifiable only; unpublished/pending details remain omitted.'
+- id: hmc-ai-toolchains
+  status: proposed
+  anchor: hmc-adas
+  statement: Independently designed resource-constrained AI-transition validation toolchains that reused existing CANape/VN1640/MF4 workflows to help ADAS module owners experiment with learned models on real vehicle signals; these were prototypes, not presented as already deployed team-wide production tools.
+  ownership: independent
+  deployment: prototype
+  confidence: high
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: The first two toolchains are proactive AI-transition platforms built under commercial-vehicle resource constraints; they are not presented as already deployed team-wide production tools.
+  terms:
+  - ai-validation
+  - toolchain
+  - canape
+  - vn1640
+  - mf4
+  - machine-learning
+  - prototype
+  term_caps:
+    ai-validation: partial
+  forbidden_phrases:
+  - deployed team-wide
+  - already deployed production tool
+  - production-deployed AI validation platform
+  evidence:
+  - type: repo
+    ref: Context/Experiences/hmc_adas/context.yaml
+    verifiable_by: public
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: public
+  disclosure:
+    public_safe: true
+    omitted:
+    - proprietary vehicle signals
+    - internal implementation details
+  notes: 'Deployment MUST be prototype: the source explicitly states these first two toolchains are ''not presented as already deployed team-wide production tools''. Ownership ''independent'' reflects experiences.yaml ''Designed resource-constrained AI-transition toolchains''. Note: the separate BEV target-selection studio (covered by hmc-bev-replay-metric) WAS actively used in production development and is a distinct item from these prototype toolchains.'
+- id: hmc-lfa-validation
+  status: proposed
+  anchor: hmc-adas
+  statement: <placeholder>
+  ownership: support
+  deployment: production
+  confidence: low
+  source_quote:
+    file: Context/Experiences/hmc_adas/context.yaml
+    quote: <placeholder>
+  terms:
+  - lfa
+  - lka
+  - lane-keeping
+  - lane-centering
+  term_caps:
+    lfa: partial
+    lka: partial
+    lane-keeping: partial
+  evidence: []
+  disclosure:
+    public_safe: true
+    omitted:
+    - <to be confirmed at G0>
+  notes: PLACEHOLDER — no source support. Verified zero matches for LFA/LKA/lane-keeping/lane-centering in Context/Experiences/hmc_adas/context.yaml and Context/experiences.yaml. Owner must confirm at G0 whether any LFA/LKA/lane-keeping scope actually applies and supply a verbatim source sentence before this claim becomes citable; do not surface on the resume/site until then.

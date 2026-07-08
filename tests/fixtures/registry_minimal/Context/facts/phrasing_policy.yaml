@@ -1,0 +1,15 @@
+strength_classes:
+  ownership:
+    lexemes: [developed, designed, built, owned, led, "independently developed"]
+  contribution:
+    lexemes: ["participated in", supported, "worked on", improved, tuned, validated]
+  exposure:
+    lexemes: ["exposure to", "familiar with", "working knowledge of"]
+detection:
+  rule: "Strongest lexeme class present wins; none => contribution + warn."
+numeric_whitelist: ["L2", "CAN-FD"]
+vague_claim_lexicon:
+  - "expert in"
+  - "world-class"
+global_forbidden_phrases:
+  - "\\b(9|10|11)\\+? years"

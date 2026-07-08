@@ -1,0 +1,70 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "employers.schema.json",
+  "title": "Employer / education / credential drift anchors",
+  "description": "Context/facts/employers.yaml — one canonical org/title/date per employer. Every rendering anywhere must match one of these.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["employers"],
+  "properties": {
+    "employers": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/employer" }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": { "$ref": "#/definitions/education" }
+    },
+    "credentials": {
+      "type": "object",
+      "additionalProperties": {
+        "type": "object",
+        "additionalProperties": false,
+        "properties": {
+          "issuer": { "type": "string" },
+          "items": { "type": "array", "items": { "type": "string" } }
+        }
+      }
+    },
+    "derived": { "type": "object" }
+  },
+  "definitions": {
+    "period": {
+      "type": "object",
+      "additionalProperties": false,
+      "properties": {
+        "start": { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+        "end": {
+          "oneOf": [
+            { "type": "string", "pattern": "^[0-9]{4}-[0-9]{2}$" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "employer": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["organization", "official_title", "period"],
+      "properties": {
+        "organization": { "type": "string" },
+        "org_renderings": { "type": "array", "items": { "type": "string" } },
+        "official_title": { "type": "string" },
+        "title_renderings": { "type": "array", "items": { "type": "string" } },
+        "period": { "$ref": "#/definitions/period" },
+        "forbidden_phrases": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "education": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["institute", "degree", "period"],
+      "properties": {
+        "institute": { "type": "string" },
+        "degree": { "type": "string" },
+        "period": { "$ref": "#/definitions/period" },
+        "thesis": { "type": "string" }
+      }
+    }
+  }
+}

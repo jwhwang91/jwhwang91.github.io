@@ -1,0 +1,202 @@
+# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
+# until the owner confirms/corrects them at Gate G0. Every source_quote is a
+# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Validated by Format/schemas/claim.schema.json.
+
+claims:
+- id: sw-deckflip-pipeline
+  status: proposed
+  anchor: deckflip
+  statement: 'Self-built full-stack web app (DeckFlip) that turns a prompt into editable slide decks via a multi-pass LLM pipeline: plan, foundation, parallel per-slide generation, deterministic assembly, and lint-gated QA repair, with AI edits constrained to a validated JSON patch/action vocabulary.'
+  ownership: independent
+  deployment: personal
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: A multi-pass LLM pipeline (plan -> foundation -> parallel per-slide generation -> deterministic assembly -> lint-gated QA repair) produces decks
+  evidence:
+  - type: repo
+    ref: https://github.com/jwhwang91/DeckFlip
+    verifiable_by: public
+  - type: live
+    ref: https://deckflip.net
+    verifiable_by: public
+  terms:
+  - llm-pipeline
+  - multi-pass-generation
+  - ai-presentation-generation
+  - full-stack-web
+  - typescript-react
+  - validation-gate
+  confidence: high
+- id: sw-deckflip-editor
+  status: proposed
+  anchor: deckflip
+  statement: Built a ~3,000-line sandboxed in-iframe DOM editor for DeckFlip that lets users restyle generated decks live while preserving each deck's own CSS/JS/3D animations.
+  ownership: independent
+  deployment: personal
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: a ~3,000-line sandboxed in-iframe DOM editor that preserves each deck's own CSS/JS/3D animations
+  evidence:
+  - type: repo
+    ref: https://github.com/jwhwang91/DeckFlip
+    verifiable_by: public
+  - type: live
+    ref: https://deckflip.net
+    verifiable_by: public
+  metrics:
+  - id: sw-deckflip-editor-loc
+    numbers:
+    - 3000
+    value: ~3,000-line sandboxed in-iframe DOM editor
+    method: approximate line count of the editor module
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - ~3,000-line in-iframe DOM editor
+    - roughly 3,000 lines
+  terms:
+  - in-browser-editor
+  - iframe-sandbox
+  - dom-manipulation
+  - live-styling
+  - typescript-react
+  confidence: high
+- id: sw-decisioncanvas-engine
+  status: proposed
+  anchor: decisioncanvas
+  statement: Self-built working prototype (DecisionCanvas Studio, v0.3.0) with a ~832-line async execution engine that streams graph state over Server-Sent Events, a compiler that detects control cycles via Kahn topological sort, a multi-provider LLM router, and an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision.
+  ownership: independent
+  deployment: prototype
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: Working prototype (v0.3.0). ~832-line async execution engine, a pluggable LLM router across OpenAI / Gemini / Anthropic / Ollama with automatic offline mock fallback, an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision
+  evidence:
+  - type: repo
+    ref: https://github.com/jwhwang91/decisioncanvas-studio
+    verifiable_by: public
+  metrics:
+  - id: sw-decisioncanvas-engine-loc
+    numbers:
+    - 832
+    value: ~832-line async execution engine
+    method: approximate line count of the execution engine
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - ~832-line async execution engine
+    - roughly 832 lines
+  terms:
+  - multi-agent-workflow
+  - topological-sort
+  - async-execution-engine
+  - safety-gates
+  - fastapi
+  - server-sent-events
+  confidence: high
+  notes: Source frames this explicitly as a 'Working prototype (v0.3.0)', so deployment is prototype (not production). Kahn topological sort is described in the objective line; the ~832-line async engine and safety gates are quoted from the impact line.
+- id: sw-voiceprint
+  status: proposed
+  anchor: voiceprint
+  statement: Self-built ~3,600-line Python writing assistant (Voiceprint) that learns a writer's voice and photo-layout style from past posts, with 1,000+ lines of resilient Playwright browser automation and an ffmpeg media pipeline, and a safety-first design that always stops at 'save as draft' for human approval.
+  ownership: independent
+  deployment: personal
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: ~3,600-line Python assistant that learns a writer's voice and photo-layout style from past posts, then drafts new ones
+  evidence:
+  - type: repo
+    ref: https://github.com/jwhwang91/voiceprint
+    verifiable_by: public
+  metrics:
+  - id: sw-voiceprint-total-loc
+    numbers:
+    - 3600
+    value: ~3,600-line Python assistant
+    method: approximate total line count
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - ~3,600-line Python assistant
+    - roughly 3,600 lines
+  - id: sw-voiceprint-playwright-loc
+    numbers:
+    - 1000
+    value: 1,000+ lines of resilient Playwright automation
+    method: approximate line count of the automation layer
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - 1,000+ lines of Playwright automation
+  terms:
+  - playwright-automation
+  - browser-automation
+  - web-scraping
+  - llm-orchestration
+  - ffmpeg-media-pipeline
+  - python
+  confidence: high
+- id: sw-pinterest-oauth
+  status: proposed
+  anchor: pinterest-exporter
+  statement: Built a cross-platform Python/Qt desktop app (Pinterest Reference Exporter) with an OAuth 2.0 authorization-code flow implemented from scratch on the Python standard library (loopback callback server, CSRF state validation, silent refresh-token reconnect), threaded network/IO, and native macOS/Windows packaging.
+  ownership: independent
+  deployment: personal
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: OAuth 2.0 authorization-code flow built from scratch on the Python standard library (loopback callback server, CSRF state validation, silent refresh-token reconnect)
+  evidence:
+  - type: repo
+    ref: https://github.com/jwhwang91/pinterest_reference_exporter
+    verifiable_by: public
+  metrics:
+  - id: sw-pinterest-test-count
+    numbers:
+    - 17
+    value: 17-test unittest suite
+    method: count of unittest cases stated in source
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - 17-test unittest suite
+  terms:
+  - oauth2-authorization-code
+  - desktop-app
+  - pyside6-qt
+  - multithreading
+  - cross-platform-packaging
+  - rest-api
+  confidence: high
+- id: sw-pathpilot-app
+  status: proposed
+  anchor: pathpilot
+  statement: Self-built feature-complete native macOS file manager (PathPilot) with a keyboard-first, path-first workflow — editable address bar, dense details table, and a run-any-action command palette — now in preparation for Mac App Store release (listing finalized, not yet live).
+  ownership: independent
+  deployment: prototype
+  source_quote:
+    file: Context/software_projects.yaml
+    quote: A feature-complete native macOS file manager built around a fast, keyboard-first, path-first workflow — editable address bar, dense details table, and a run-any-action command palette — now in preparation for Mac App Store release.
+  evidence:
+  - type: live
+    ref: https://jwhwang91.github.io/pathpilot-site/
+    verifiable_by: public
+  - type: repo_private
+    ref: PathPilot native macOS app source — private repo, ~70 Swift files (owner-only access)
+    verifiable_by: self
+  metrics:
+  - id: sw-pathpilot-swift-files
+    numbers:
+    - 70
+    value: ~70 Swift files
+    method: file count, owner-verified in the private repo (per source comment)
+    as_of: <OWNER TO DATE>
+    allowed_renderings:
+    - ~70 Swift files
+  terms:
+  - macos-app
+  - swiftui
+  - appkit
+  - keyboard-first-ui
+  - storekit
+  - app-sandbox
+  forbidden_phrases:
+  - published (App Store|Mac App Store) app
+  - available on the App Store
+  - github\.com/jwhwang91/pathpilot
+  confidence: high
+  notes: 'Per source comment: App Store listing is finalized but NOT yet live, and the app source is in a PRIVATE repo (~70 Swift files, owner-verified). Deployment MUST NOT be production and MUST NOT claim a published/available App Store app. Public rendering must cite the live product site (pathpilot-site), never the private repo URL. G0: owner to confirm current App Store status and any updated file/line counts.'

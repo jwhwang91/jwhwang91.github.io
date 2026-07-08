@@ -1,0 +1,184 @@
+# Claim registry (Phase 2 bootstrap). ALL claims status: proposed — NOT citable
+# until the owner confirms/corrects them at Gate G0. Every source_quote is a
+# verbatim substring of its cited file (validated by portfolio/facts.py).
+# Validated by Format/schemas/claim.schema.json.
+
+claims:
+- id: add-clutch-adaptation
+  status: proposed
+  anchor: add-k2-tcu
+  statement: Worked on sensorless clutch adaptation, end-of-line (EOL) gap learning, and kiss-point pressure learning logic within the K2 tracked-vehicle TCU control algorithms.
+  ownership: shared
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: Sensorless clutch adaptation, EOL gap learning, and kiss-point pressure learning.
+  terms:
+  - sensorless-control
+  - clutch-adaptation
+  - eol-learning
+  - kiss-point-pressure
+  - tcu
+  - shift-control
+  confidence: high
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: employer
+  interview:
+    topics:
+    - sensorless clutch control
+    - clutch adaptation and learning strategies
+    - EOL / kiss-point learning
+    - TCU shift-state logic
+    coding_relevance:
+    - embedded control algorithm implementation
+    - C code for TCU
+  disclosure:
+    public_safe: true
+    omitted:
+    - classified/defense-sensitive numeric performance specifications withheld
+  notes: OWNERSHIP AMBIGUOUS - flag for G0. The source gives no explicit ownership-boundary statement. Ownership was judged from the 'Developed core TCU control algorithms and shift-state logic' framing (My Role, line 15) plus the 'Control Logic Highlights' listing, both independent-implying. However this is ADD team/research defense work with no ownership boundary, so 'independent' may be inflated. Owner must confirm at G0 whether the sensorless adaptation / EOL / kiss-point learning logic was independently developed or shared with the team.
+- id: add-plant-modeling
+  status: proposed
+  anchor: add-k2-tcu
+  statement: Built MILS/HILS transmission plant models capturing hydraulic and mechanical drivetrain behavior for model-based TCU development and validation.
+  ownership: independent
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: Built MILS/HILS transmission plant models for hydraulic and mechanical behavior.
+  terms:
+  - plant-modeling
+  - mils
+  - hils
+  - hydraulic-clutch
+  - transmission-modeling
+  - model-based-development
+  confidence: high
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: employer
+  interview:
+    topics:
+    - hydraulic clutch modeling
+    - mechanical automatic-transmission modeling
+    - MILS vs HILS plant models
+    - model-based development
+    coding_relevance:
+    - plant model implementation
+    - MATLAB/Simulink model-based development
+  disclosure:
+    public_safe: true
+    omitted:
+    - classified/defense-sensitive model parameters withheld
+  notes: OWNERSHIP AMBIGUOUS - flag for G0. The source verb 'Built' (My Role, line 16) is independent-implying, so ownership was assigned per source verb. But there is no explicit ownership-boundary statement and this is ADD team/research work, so 'independent' may be inflated. Owner must confirm at G0 whether these plant models were built solo or shared.
+- id: add-hils-validation
+  status: proposed
+  anchor: add-k2-tcu
+  statement: Contributed to verifying TCU software using an RCP/MABx HILS environment with dSPACE tooling.
+  ownership: shared
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: Verified TCU software using RCP/MABx HILS environment.
+  terms:
+  - hils
+  - rcp
+  - mabx
+  - dspace
+  - software-verification
+  - tcu
+  confidence: high
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: employer
+  interview:
+    topics:
+    - HILS setup with RCP/MicroAutoBox
+    - dSPACE MotionDesk/ModelDesk/ControlDesk
+    - software verification in V-cycle
+    coding_relevance:
+    - C code mounted to RCP/development TCU
+  disclosure:
+    public_safe: true
+    omitted: []
+  notes: 'Ownership set to shared per instruction: ''Verified'' is a neutral verb in team/research defense context with no explicit ownership boundary. Owner to confirm the level of individual contribution at G0.'
+- id: add-dyno-field-test
+  status: proposed
+  anchor: add-k2-tcu
+  statement: Supported powerpack dynamometer and actual-vehicle field tests using development TCU hardware.
+  ownership: support
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: Supported powerpack dynamometer and actual vehicle tests using development TCU hardware.
+  terms:
+  - dynamometer
+  - powerpack
+  - vehicle-testing
+  - field-validation
+  - v-cycle
+  confidence: high
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: employer
+  interview:
+    topics:
+    - powerpack dynamometer testing
+    - actual vehicle field validation
+    - development TCU hardware
+    - V-cycle test stages
+    coding_relevance: []
+  disclosure:
+    public_safe: true
+    omitted:
+    - classified/defense-sensitive test-route and performance details withheld
+  notes: 'Ownership is SUPPORT: the source literally says ''Supported powerpack dynamometer and actual vehicle tests using development TCU hardware'' (My Role, line 18). Do not inflate to independent.'
+- id: add-can-tooling
+  status: proposed
+  anchor: add-k2-tcu
+  statement: Worked with CAN communication, Vector CANape calibration, vFlash, UDS, and J1939-related workflows in the TCU development and calibration toolchain.
+  ownership: exposure
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: CAN communication, Vector CANape calibration, vFlash, UDS, and J1939-related workflows.
+  terms:
+  - can
+  - canape
+  - uds
+  - j1939
+  confidence: medium
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  interview:
+    topics:
+    - CAN communication
+    - Vector CANape calibration
+    - vFlash flashing
+    - UDS diagnostics
+    - J1939 protocol
+    coding_relevance:
+    - calibration and diagnostic workflow configuration
+  disclosure:
+    public_safe: true
+    omitted: []
+  notes: 'Ownership set to exposure: the source lists these as tools/protocols within a ''Control Logic Highlights'' bullet (line 31) with no verb indicating individual ownership, i.e. tool/protocol familiarity rather than an owned deliverable. Confidence medium - single summary line (partially corroborated by image caption 05). Owner to confirm actual hands-on depth at G0.'

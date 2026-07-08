@@ -1,0 +1,103 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "claim.schema.json",
+  "title": "Claim registry file",
+  "description": "Context/facts/claims/*.yaml — the source-of-truth claim registry. Only status:confirmed claims are citable by resumes. Every claim carries a verbatim source_quote for bootstrap review.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["claims"],
+  "properties": {
+    "claims": {
+      "type": "array",
+      "items": { "$ref": "#/definitions/claim" }
+    }
+  },
+  "definitions": {
+    "claim": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "status", "anchor", "statement", "ownership", "deployment", "source_quote"],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^[a-z0-9]+(-[a-z0-9]+)*$",
+          "description": "kebab-case, immutable. Evolve via superseded_by, never rename."
+        },
+        "status": { "enum": ["proposed", "confirmed", "retired"] },
+        "confidence": { "enum": ["high", "medium", "low"] },
+        "anchor": {
+          "type": "string",
+          "description": "key into employers.yaml (employers/education/credentials) or a software/toolchain project id"
+        },
+        "statement": { "type": "string", "minLength": 1 },
+        "ownership": { "enum": ["independent", "shared", "support", "exposure"] },
+        "deployment": { "enum": ["production", "prototype", "research", "personal"] },
+        "terms": { "type": "array", "items": { "type": "string" } },
+        "term_caps": {
+          "type": "object",
+          "additionalProperties": { "enum": ["partial"] }
+        },
+        "metrics": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/metric" }
+        },
+        "forbidden_phrases": { "type": "array", "items": { "type": "string" } },
+        "disclosure": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "public_safe": { "type": "boolean" },
+            "omitted": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "evidence": {
+          "type": "array",
+          "items": { "$ref": "#/definitions/evidence" }
+        },
+        "interview": {
+          "type": "object",
+          "additionalProperties": false,
+          "properties": {
+            "topics": { "type": "array", "items": { "type": "string" } },
+            "coding_relevance": { "type": "array", "items": { "type": "string" } }
+          }
+        },
+        "source_quote": { "$ref": "#/definitions/source_quote" },
+        "superseded_by": { "type": "string" },
+        "notes": { "type": "string" }
+      }
+    },
+    "metric": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["id", "numbers", "value"],
+      "properties": {
+        "id": { "type": "string" },
+        "numbers": { "type": "array", "items": { "type": "number" } },
+        "value": { "type": "string" },
+        "method": { "type": "string" },
+        "as_of": { "type": "string" },
+        "allowed_renderings": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "evidence": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["type", "ref"],
+      "properties": {
+        "type": { "enum": ["internal", "site", "repo", "repo_private", "live", "publication"] },
+        "ref": { "type": "string" },
+        "verifiable_by": { "enum": ["public", "employer", "self"] }
+      }
+    },
+    "source_quote": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["file", "quote"],
+      "properties": {
+        "file": { "type": "string", "description": "repo-relative path the quote is copied from" },
+        "quote": { "type": "string", "description": "verbatim (whitespace-normalized) substring of file, or the sentinel <placeholder>" }
+      }
+    }
+  }
+}
