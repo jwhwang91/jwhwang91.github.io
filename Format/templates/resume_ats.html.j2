@@ -24,46 +24,46 @@
 </head>
 <body>
 <main>
-  <h1>{{ contact.name }}</h1>
-  {% if role_title %}<p class="role">{{ role_title }}</p>{% endif %}
+  <h1>{{ contact.name | e }}</h1>
+  {% if role_title %}<p class="role">{{ role_title | e }}</p>{% endif %}
   <p class="contact">
-    {{ [contact.email, contact.phone, contact.location, contact.linkedin, contact.github] | select | join(" | ") }}
+    {{ [contact.email, contact.phone, contact.location, contact.linkedin, contact.github] | select | join(" | ") | e }}
   </p>
 
   {% if summary %}
   <h2>Summary</h2>
-  <ul>{% for t in summary %}<li>{{ t }}</li>{% endfor %}</ul>
+  <ul>{% for t in summary %}<li>{{ t | e }}</li>{% endfor %}</ul>
   {% endif %}
 
   {% if skills %}
   <h2>Skills</h2>
-  <ul>{% for s in skills %}<li><strong>{{ s.label }}:</strong> {{ s['items'] | join(", ") }}</li>{% endfor %}</ul>
+  <ul>{% for s in skills %}<li><strong>{{ s.label | e }}:</strong> {{ s['items'] | join(", ") | e }}</li>{% endfor %}</ul>
   {% endif %}
 
   {% if experience %}
   <h2>Experience</h2>
   {% for e in experience %}
-    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") }}</h3>
-    <ul>{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") | e }}</h3>
+    <ul>{% for b in e.bullets %}<li>{{ b | e }}</li>{% endfor %}</ul>
   {% endfor %}
   {% endif %}
 
   {% if projects %}
   <h2>Projects</h2>
   {% for e in projects %}
-    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") }}</h3>
-    <ul>{% for b in e.bullets %}<li>{{ b }}</li>{% endfor %}</ul>
+    <h3 class="entry-head">{{ [e.organization, e.title, e.period] | select | join(" | ") | e }}</h3>
+    <ul>{% for b in e.bullets %}<li>{{ b | e }}</li>{% endfor %}</ul>
   {% endfor %}
   {% endif %}
 
   {% if education %}
   <h2>Education</h2>
-  <ul>{% for ed in education %}<li>{{ [ed.institute, ed.degree, ed.period] | select | join(" | ") }}</li>{% endfor %}</ul>
+  <ul>{% for ed in education %}<li>{{ [ed.institute, ed.degree, ed.period] | select | join(" | ") | e }}</li>{% endfor %}</ul>
   {% endif %}
 
   {% if licenses %}
   <h2>Licenses</h2>
-  <ul><li>{{ licenses | join(", ") }}</li></ul>
+  <ul><li>{{ licenses | join(", ") | e }}</li></ul>
   {% endif %}
 </main>
 </body>

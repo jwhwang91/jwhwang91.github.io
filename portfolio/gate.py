@@ -3,10 +3,33 @@ from __future__ import annotations
 import json
 from typing import Any
 
-from .facts import Registry
+from .classify import claim_taxonomy_terms
+from .facts import Registry, Violation
 from .score import score_resume
 from .taxonomy import Taxonomy
 from .truthlint import detect_class, lint_resume
+
+
+def _skills_check(resume: dict, classifications: list[dict], registry: Registry,
+                  taxonomy: Taxonomy) -> list[Violation]:
+    """Q1 for the SKILLS section: a chip must not assert a taxonomy skill that no
+    confirmed claim and no supported JD term backs (else a resume could fabricate
+    skills the gate never inspects)."""
+    supported: set[str] = set()
+    for c in registry.citable():
+        supported |= claim_taxonomy_terms(c, taxonomy)
+    supported |= {cl["term"] for cl in classifications if cl.get("support") in ("direct", "partial")}
+
+    out: list[Violation] = []
+    for grp in resume.get("skills", []) or []:
+        for item in grp.get("items", []) or []:
+            hits = {h.term_id for h in taxonomy.scan(item)}
+            unsupported = sorted(h for h in hits if h not in supported)
+            if unsupported:
+                out.append(Violation("error", "skills",
+                                     f"skills chip '{item}' asserts unsupported skill(s) {unsupported} — "
+                                     "not backed by any confirmed claim or JD match (Q1)"))
+    return out
 
 
 def evaluate(resume: dict, resume_txt: str, classifications: list[dict], registry: Registry,
@@ -14,6 +37,7 @@ def evaluate(resume: dict, resume_txt: str, classifications: list[dict], registr
     """Run the full gate (truthlint Q1-Q14 + score Q8/Q10/Q15-Q20) and return
     (gate_report dict, error list)."""
     violations = list(lint_resume(resume, registry))
+    violations += _skills_check(resume, classifications, registry, taxonomy)
     s = score_resume(resume_txt, classifications, taxonomy, policy, resume.get("role_title", ""), approved_titles)
     violations += s["violations"]
 

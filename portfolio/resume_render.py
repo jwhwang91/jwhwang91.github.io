@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import unicodedata
 from typing import Any
 
 from .content import load_yaml
@@ -18,8 +19,12 @@ SECTION_ORDER = ["Summary", "Skills", "Experience", "Projects", "Education"]
 
 
 def to_ascii(text: str) -> str:
+    """Faithful transliteration for the scored text — never silently mask an unknown
+    glyph, or an excluded term with a non-ASCII char would be invisible to the gate."""
     for uni, asc in _ASCII.items():
         text = text.replace(uni, asc)
+    # accented latin (é->e, Bézier->Bezier) + compatibility forms via NFKD, drop marks
+    text = "".join(ch for ch in unicodedata.normalize("NFKD", text) if not unicodedata.combining(ch))
     return "".join(ch if ord(ch) < 128 else "?" for ch in text)
 
 
@@ -76,9 +81,13 @@ def build_context(paths: Paths, resume: dict, registry: Registry) -> dict[str, A
 
     licenses = []
     for lic_id in (resume.get("extras") or {}).get("licenses", []) or []:
-        for cred in registry.credentials.values():
-            licenses.extend(cred.get("items", []))
-    licenses = sorted(set(licenses))
+        # extras.licenses holds cert- claim ids; use each claim's verbatim source_quote
+        # (the exact license name) so the selection is honored and nothing leaks.
+        claim = registry.claims_by_id.get(lic_id)
+        if claim:
+            name = (claim.get("source_quote") or {}).get("quote") or claim.get("statement", "")
+            if name and name != "<placeholder>":
+                licenses.append(name)
 
     return {
         "role_title": resume.get("role_title", ""),

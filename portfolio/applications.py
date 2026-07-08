@@ -418,8 +418,12 @@ def _run_gate(paths: Paths, slug: str, resume: dict, resume_txt: str) -> int:
     reg = load_registry(paths)
     tax = Taxonomy.load(paths)
     policy = load_yaml(paths.context / "facts" / "phrasing_policy.yaml")
-    match = load_yaml(folder / "match.yaml") if (folder / "match.yaml").exists() else {}
-    classifications = match.get("classifications", []) or []
+    match_path = folder / "match.yaml"
+    if not match_path.exists() or not load_yaml(match_path).get("confirmed"):
+        raise FileNotFoundError(
+            f"a confirmed match.yaml is required before gating (else coverage is vacuously 100%) — "
+            f"run: python main.py match confirm {slug}")
+    classifications = load_yaml(match_path).get("classifications", []) or []
 
     report, errors = evaluate(resume, resume_txt, classifications, reg, tax, policy, reg.approved_titles())
     out = folder / "out"
@@ -439,8 +443,12 @@ def _run_gate(paths: Paths, slug: str, resume: dict, resume_txt: str) -> int:
         return 2
 
     _advance_status(folder, "gated")
-    print(f"Gate {report['verdict']}: coverage {report['must_have_coverage']}, U={report['unsupported_ratio']}, "
-          f"recommendation={report['recommendation']}. Status -> gated.")
+    if report["verdict"] == "HIGH_RISK":
+        print(f"Gate HIGH_RISK (coverage {report['must_have_coverage']}, U={report['unsupported_ratio']}): "
+              f"recommendation={report['recommendation']} — DO NOT apply without acknowledging the risk. Status -> gated.")
+    else:
+        print(f"Gate PASS: coverage {report['must_have_coverage']}, U={report['unsupported_ratio']}, "
+              f"recommendation={report['recommendation']}. Status -> gated.")
     return 0
 
 

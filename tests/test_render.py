@@ -69,3 +69,19 @@ def test_md_renders():
     md = render_md(_ctx())
     assert md.startswith("# Jae Woong Hwang")
     assert "## Experience" in md
+
+
+def test_non_ascii_transliterated_not_masked():
+    from portfolio.resume_render import to_ascii
+    assert to_ascii("Bezier cafe resume") == "Bezier cafe resume"
+    assert to_ascii("naïve résumé") == "naive resume"   # naïve résumé
+    assert "?" not in to_ascii("Développé")                  # accents -> ascii, not '?'
+
+
+def test_licenses_resolve_by_claim_id_no_leak():
+    reg = load_registry(default_paths())
+    resume = {"schema": "resume/v1", "application": "x", "positioning": "p", "role_title": "r",
+              "extras": {"licenses": ["cert-class1-license"]}}
+    ctx = build_context(default_paths(), resume, reg)
+    assert any("Class 1" in lic for lic in ctx["licenses"])
+    assert not any("Trailer" in lic for lic in ctx["licenses"])   # only the requested id

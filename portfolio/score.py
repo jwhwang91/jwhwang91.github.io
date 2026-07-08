@@ -4,6 +4,7 @@ import re
 from typing import Any
 
 from .facts import Violation
+from .resume_render import to_ascii
 from .taxonomy import Taxonomy
 
 # JD-dependent ATS checks (MASTER_PLAN §4.4 + §12: Q8, Q10, Q15-Q17, Q20). All run on
@@ -55,7 +56,7 @@ def score_resume(resume_txt: str, classifications: list[dict], taxonomy: Taxonom
     must_pct = round(100 * len(present) / len(supported_must), 1) if supported_must else 100.0
 
     # --- Q16: an adjacent/unsupported term must NOT appear (truthfulness back-check) ---
-    for c in weak_must + [c for c in classifications if c.get("support") in ("adjacent", "unsupported")]:
+    for c in [c for c in classifications if c.get("support") in ("adjacent", "unsupported")]:
         if _term_present(resume_txt, taxonomy, c["term"]):
             v.append(Violation("error", "truthfulness", f"unsupported/adjacent term '{c['term']}' appears in the resume (Q16)"))
 
@@ -63,7 +64,7 @@ def score_resume(resume_txt: str, classifications: list[dict], taxonomy: Taxonom
     for c in supported_must:
         if _term_present(resume_txt, taxonomy, c["term"]):
             form = _ats_form(taxonomy, c["term"])
-            if form and form not in resume_txt:
+            if form and to_ascii(form).lower() not in resume_txt.lower():
                 v.append(Violation("error", "formatting", f"'{c['term']}' first use must expand to \"{form}\" (Q10)"))
 
     # --- Q8: keyword stuffing ---
@@ -76,12 +77,14 @@ def score_resume(resume_txt: str, classifications: list[dict], taxonomy: Taxonom
 
     # --- Q17: hedge integrity — a partial keyword must co-occur with an allowlisted hedge ---
     hedges = policy.get("strength_classes", {}).get("exposure", {}).get("lexemes", []) or []
-    sentences = re.split(r"(?<=[.!?])\s+|\n", resume_txt)
+    # clause-scoped: a hedge must sit in the SAME clause as the partial term, not merely
+    # somewhere in the sentence (a hedge for a co-mentioned term must not count).
+    clauses = re.split(r"(?<=[.!?,;])\s+|\band\b|\n", resume_txt)
     for c in [c for c in classifications if c.get("support") == "partial"]:
         if _term_present(resume_txt, taxonomy, c["term"]):
-            hit_sentences = [s for s in sentences if _term_present(s, taxonomy, c["term"])]
-            if not any(any(h.lower() in s.lower() for h in hedges) for s in hit_sentences):
-                v.append(Violation("error", "hedge", f"partial term '{c['term']}' used without a hedge phrase (Q17)"))
+            hit_clauses = [s for s in clauses if _term_present(s, taxonomy, c["term"])]
+            if not any(any(h.lower() in s.lower() for h in hedges) for s in hit_clauses):
+                v.append(Violation("error", "hedge", f"partial term '{c['term']}' used without a hedge in its own clause (Q17)"))
 
     # --- Q19: role_title must be an approved positioning title ---
     if role_title and role_title not in approved_titles:

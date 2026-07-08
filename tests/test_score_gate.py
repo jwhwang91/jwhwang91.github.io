@@ -95,3 +95,39 @@ def test_pdfcheck_blocks_textless_pdf(tmp_path):
     main(["render", "tesla"], paths=paths)
     (app / "out" / "resume_final.pdf").write_bytes(b"%PDF-1.4\n%image-only, no text layer\n%%EOF\n")
     assert main(["pdfcheck", "tesla"], paths=paths) == 1
+
+
+# --- review-finding regressions ---
+
+def test_fabricated_skill_chip_fails(tmp_path):
+    paths = _scoped(tmp_path)
+    app = _setup(paths)
+    r = yaml.safe_load((app / "resume.yaml").read_text())
+    r["skills"].append({"label": "Platforms", "items": ["AUTOSAR", "Kubernetes"], "keywords": []})
+    (app / "resume.yaml").write_text(yaml.safe_dump(r))
+    assert main(["render", "tesla"], paths=paths) == 2
+    assert any("skills chip" in e and "Q1" in e for e in _report(app)["errors"])
+
+
+def test_render_requires_confirmed_match(tmp_path):
+    import pytest
+    paths = _scoped(tmp_path)
+    app = _setup(paths)
+    (app / "match.yaml").unlink()  # no match -> gating would be vacuously 100%
+    with pytest.raises(FileNotFoundError):
+        main(["render", "tesla"], paths=paths)
+
+
+def test_hedge_must_sit_in_the_terms_own_clause():
+    from portfolio.score import score_resume
+    from portfolio.taxonomy import Taxonomy
+    tax = Taxonomy.load(default_paths())
+    policy = yaml.safe_load((default_paths().context / "facts" / "phrasing_policy.yaml").read_text())
+    cls = [{"term": "hil", "requirement": "must", "support": "partial", "claim_ids": ["c1"]}]
+    # HIL asserted with an ownership verb; the hedge qualifies a DIFFERENT co-mentioned term
+    bypass = "- Independently developed Hardware-in-the-Loop (HIL/HILS) benches, with hands-on experience with dynamometer rigs."
+    errs = [v.message for v in score_resume(bypass, cls, tax, policy, "", set())["violations"] if "Q17" in v.message]
+    assert errs
+    # control: hedge in HIL's own clause -> OK
+    ok = "- Familiar with Hardware-in-the-Loop (HIL/HILS) benches."
+    assert not [v for v in score_resume(ok, cls, tax, policy, "", set())["violations"] if "Q17" in v.message]

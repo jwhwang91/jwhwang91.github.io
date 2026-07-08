@@ -6,7 +6,7 @@ classifications:
   claim_ids:
   - hmc-scc-emergency-stop
   - hmc-foc-brake-distribution
-  source: cache
+  source: registry
   term: scc
   requirement: must
   matched_tier: exact
@@ -17,7 +17,7 @@ classifications:
   - add-hils-validation
   - hmc-validation-workflow
   - kaist-hardware-verification
-  source: cache
+  source: registry
   term: hil
   requirement: must
   matched_tier: exact
@@ -26,7 +26,7 @@ classifications:
   claim_ids:
   - hmc-bev-replay-metric
   - hmc-target-selection
-  source: cache
+  source: registry
   term: log-replay
   requirement: must
   matched_tier: exact
@@ -36,7 +36,7 @@ classifications:
   - hmc-bev-replay-metric
   - hmc-target-selection
   - tc-bev-simulator
-  source: cache
+  source: registry
   term: target-selection
   requirement: must
   matched_tier: exact
@@ -45,7 +45,7 @@ classifications:
   claim_ids:
   - add-plant-modeling
   - hmc-validation-workflow
-  source: cache
+  source: registry
   term: mil
   requirement: nice
   matched_tier: exact
