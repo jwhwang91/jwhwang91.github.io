@@ -16,8 +16,12 @@ from .taxonomy import Taxonomy
 # ---------------------------------------------------------------------------
 
 OWN_RANK = {"independent": 3, "shared": 2, "support": 1, "exposure": 0}
+SUPPORT_RANK = {"unsupported": 0, "adjacent": 1, "partial": 2, "direct": 3}
 # Domains where a production-implying JD term should hedge against a prototype-only claim.
 PRODUCTION_DOMAINS = {"adas", "controls", "embedded", "validation", "tooling"}
+# Claim-term suffixes that name a credential, not a skill — never resolve to a skill
+# keyword (e.g. "commercial-vehicle-license" must not count as commercial-vehicle ADAS work).
+_CREDENTIAL_SUFFIXES = ("-license", "-degree", "-certification", "-cert")
 
 # §6 portfolio emphasis map: positioning track -> ordered emphasis anchors.
 EMPHASIS = {
@@ -34,6 +38,8 @@ def resolve_term_to_taxonomy(term_str: str, taxonomy: Taxonomy) -> set[str]:
     space-normalized form so 'hardware-in-the-loop'/'hils' both resolve to 'hil'."""
     if term_str in taxonomy.by_id:
         return {term_str}
+    if term_str.endswith(_CREDENTIAL_SUFFIXES):
+        return set()
     return {h.term_id for h in taxonomy.scan(term_str.replace("-", " "))}
 
 
@@ -93,7 +99,9 @@ def classify_keywords(keywords: list[dict], tiers: dict[str, str], index: JoinIn
         term = kw.get("term")
         if not term:
             continue
-        tier = tiers.get(term, "equivalent")
+        # a keyword the deterministic scan never hit has no exact/equivalent alias
+        # evidence -> default to 'related' so it caps at partial, never a free 'direct'.
+        tier = tiers.get(term, "related")
         cached = cache.get(term)
         if cached:
             entry = _reclassify_cached(term, cached, tier, index)
@@ -107,13 +115,18 @@ def classify_keywords(keywords: list[dict], tiers: dict[str, str], index: JoinIn
 
 
 def _reclassify_cached(term: str, cached: dict, tier: str, index: JoinIndex) -> dict:
-    """Use a cached classification, but re-verify its claim_ids are still confirmed;
-    if the join is now weaker, downgrade automatically (upgrades require re-gating)."""
+    """Re-gate a cached classification for the CURRENT application. A registry-
+    derivable term (a taxonomy id) is ALWAYS re-joined, so a weaker current JD tier,
+    a demoted claim ownership, a new prototype/term_cap, or a vanished claim all
+    downgrade automatically and no stale-too-strong support leaks across applications
+    (upgrades therefore require a fresh confirm, which is correct). The cache only
+    preserves LLM classifications the registry cannot derive (new_terms)."""
+    if term in index.taxonomy.by_id:
+        return index.classify(term, tier)
     live_ids = {c["id"] for c in index.by_term.get(term, [])}
     cached_ids = [cid for cid in (cached.get("claim_ids") or []) if cid in live_ids]
     if cached.get("support") in ("direct", "partial") and not cached_ids:
-        # every cited claim vanished -> re-run the join fresh
-        return index.classify(term, tier)
+        return {"support": "unsupported", "claim_ids": []}
     return {"support": cached.get("support"), "claim_ids": cached_ids}
 
 
@@ -130,8 +143,10 @@ def _knockout_matches(knockout: dict, profile: dict) -> bool:
 
 def pre_resume_verdict(classifications: list[dict], knockouts: list[dict],
                        candidate_profile: dict | None) -> dict:
-    must = [c for c in classifications if c.get("requirement") == "must" and c.get("support")]
-    weak = [c for c in must if c["support"] in ("adjacent", "unsupported")]
+    # every must-have counts; anything not solidly supported (adjacent/unsupported/
+    # missing/invalid) is weak so an unclassified must-have can't deflate U.
+    must = [c for c in classifications if c.get("requirement") == "must"]
+    weak = [c for c in must if c.get("support") not in ("direct", "partial")]
     U = round(len(weak) / len(must), 3) if must else 0.0
 
     profile_checked = candidate_profile is not None

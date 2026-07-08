@@ -1,12 +1,14 @@
 """Support-classification truth table, cache/downgrade, pre-resume verdict, reports."""
 import dataclasses
-import tempfile
+import json
 from pathlib import Path
 
+import jsonschema
+import pytest
 import yaml
 
 from portfolio.classify import (JoinIndex, classify_keywords, pre_resume_verdict,
-                                 render_portfolio_plan, EMPHASIS)
+                                 render_portfolio_plan, resolve_term_to_taxonomy, EMPHASIS)
 from portfolio.facts import Registry
 from portfolio.paths import default_paths
 from portfolio.taxonomy import Alias, Taxonomy, Term
@@ -214,3 +216,62 @@ def test_match_is_reproducible(tmp_path):
     main(["match", slug], paths=paths)
     second = [(c["term"], c["support"], tuple(c.get("claim_ids", []))) for c in yaml.safe_load((app / "match.yaml").read_text())["classifications"]]
     assert first == second
+
+
+# --- review-finding regressions ---
+
+def test_credential_terms_are_not_resolved_to_skills():
+    from portfolio.taxonomy import Taxonomy
+    tax = Taxonomy.load(default_paths())
+    assert resolve_term_to_taxonomy("commercial-vehicle-license", tax) == set()  # was wrongly -> commercial-vehicle
+    assert resolve_term_to_taxonomy("bachelors-degree", tax) == set()
+    assert "typescript" in resolve_term_to_taxonomy("typescript-react", tax)     # legit compound still resolves
+
+
+def test_unscanned_keyword_defaults_to_related_not_direct():
+    idx = JoinIndex(_reg([_claim("c1", ["hil"], ownership="independent")]), _tax())
+    resolved, _ = classify_keywords([{"term": "hil", "requirement": "must"}], {}, idx, {})
+    assert resolved[0]["support"] == "partial"  # no scan tier -> related -> not free direct
+
+
+def test_cache_does_not_leak_stale_direct_at_weaker_tier():
+    tax = _tax()
+    idx = JoinIndex(_reg([_claim("c1", ["hil"], ownership="independent")]), tax)
+    cache = {"hil": {"support": "direct", "claim_ids": ["c1"]}}  # confirmed direct in another app
+    resolved, _ = classify_keywords([{"term": "hil", "requirement": "must"}], {"hil": "related"}, idx, cache)
+    assert resolved[0]["support"] == "partial"  # re-gated to this app's weaker tier
+
+
+def test_match_confirm_rejects_overclaimed_direct(tmp_path):
+    paths = _scoped(tmp_path)
+    slug = "overclaim"
+    main(["new", slug], paths=paths)
+    app = paths.applications / slug
+    m = {"schema": "match/v1", "application": slug, "classifications": [
+        {"term": "functional-safety", "support": "direct", "requirement": "must",
+         "matched_tier": "exact", "claim_ids": ["hmc-scc-emergency-stop"], "source": "llm"}]}
+    (app / "match.yaml").write_text(yaml.safe_dump(m), encoding="utf-8")
+    # functional-safety has no supporting claim (adjacent); a declared 'direct' must be rejected
+    assert main(["match", "confirm", slug], paths=paths) == 1
+
+
+def test_second_match_uses_the_cache(tmp_path):
+    paths = _scoped(tmp_path)
+    slug = "cache-e2e"
+    main(["new", slug], paths=paths)
+    app = paths.applications / slug
+    (app / "jd.txt").write_text((Path(__file__).parent / "fixtures" / "jds" / "tesla-adas-validation.txt").read_text(), encoding="utf-8")
+    (app / "jd.parsed.yaml").write_text(yaml.safe_dump(_confirmed_parse()), encoding="utf-8")
+    main(["match", slug], paths=paths)
+    main(["match", "confirm", slug], paths=paths)
+    assert (paths.private / "keyword_map.yaml").exists()
+    main(["match", slug], paths=paths)  # second run: everything served from cache
+    cls = yaml.safe_load((app / "match.yaml").read_text())["classifications"]
+    assert cls and all(c["source"] == "cache" for c in cls)
+
+
+def test_candidate_profile_schema_rejects_malformed_us():
+    schema = json.loads((default_paths().format_dir / "schemas" / "candidate_profile.schema.json").read_text())
+    with pytest.raises(jsonschema.ValidationError):
+        jsonschema.validate({"work_authorization": {"us": "requires-sponsorship"}}, schema)  # bare string
+    jsonschema.validate({"work_authorization": {"us": {"status": "requires-sponsorship"}}}, schema)  # ok

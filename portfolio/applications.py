@@ -7,7 +7,7 @@ import re
 import jsonschema
 import yaml
 
-from .classify import (JoinIndex, classify_keywords, pre_resume_verdict,
+from .classify import (SUPPORT_RANK, JoinIndex, classify_keywords, pre_resume_verdict,
                        render_gap_report, render_portfolio_plan)
 from .content import load_yaml
 from .facts import Violation, load_registry
@@ -202,7 +202,9 @@ def _load_candidate_profile(paths: Paths):
     try:
         jsonschema.validate(prof, _schema_json(paths, "candidate_profile.schema.json"))
     except jsonschema.ValidationError:
-        pass
+        # fail-closed: a malformed profile must NOT silently disable knockout checks
+        print("  WARNING: Context/candidate_profile.yaml is malformed — knockout checks skipped.")
+        return None
     return prof
 
 
@@ -270,12 +272,24 @@ def match_confirm(paths: Paths, slug: str) -> int:
     classifications = doc.get("classifications", []) or []
 
     errors = []
+    try:
+        jsonschema.validate(doc, _schema_json(paths, "match.schema.json"))
+    except jsonschema.ValidationError as e:
+        errors.append(f"schema:{'/'.join(map(str, e.absolute_path))}: {e.message}")
+    tax = index.taxonomy
     for c in classifications:
         for cid in c.get("claim_ids", []) or []:
             if cid not in confirmed_ids:
                 errors.append(f"'{c.get('term')}' cites non-confirmed claim '{cid}'")
         if c.get("support") == "direct" and not c.get("claim_ids"):
             errors.append(f"direct classification '{c.get('term')}' has no claim_ids")
+        # re-gate an LLM/edited classification: declared support may not EXCEED what
+        # the registry join actually supports (anti-overclaim, MASTER_PLAN §4.3).
+        if c.get("term") in tax.by_id:
+            derived = index.classify(c["term"], c.get("matched_tier", "related"))
+            if SUPPORT_RANK.get(c.get("support"), 0) > SUPPORT_RANK.get(derived["support"], 0):
+                errors.append(f"'{c.get('term')}' declares {c.get('support')} but the registry "
+                              f"join supports only {derived['support']}")
     if doc.get("queue"):
         errors.append(f"{len(doc['queue'])} unresolved new_term(s) still in queue — classify + move into classifications first")
     if errors:

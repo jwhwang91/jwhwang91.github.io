@@ -93,12 +93,12 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
         return 2
     if command == "match":
         a = args.args
-        if a[0] == "confirm":
-            if len(a) < 2:
-                print("usage: python main.py match confirm <slug>")
-                return 2
+        if len(a) == 2 and a[0] == "confirm":
             return match_confirm(paths, a[1])
-        return match(paths, a[0])
+        if len(a) == 1 and a[0] != "confirm":
+            return match(paths, a[0])
+        print("usage: python main.py match <slug> | match confirm <slug>")
+        return 2
     if command == "validate":
         return validate_stage(paths, args.slug, args.stage)
     return None

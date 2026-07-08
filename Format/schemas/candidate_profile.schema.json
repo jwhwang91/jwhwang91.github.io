@@ -2,7 +2,7 @@
   "$schema": "http://json-schema.org/draft-07/schema#",
   "$id": "candidate_profile.schema.json",
   "title": "Private candidate profile (gitignored)",
-  "description": "Context/candidate_profile.yaml — feeds knockout logic + the rejection pipeline. Never rendered onto the resume.",
+  "description": "Context/candidate_profile.yaml \u2014 feeds knockout logic + the rejection pipeline. Never rendered onto the resume.",
   "type": "object",
   "additionalProperties": true,
   "properties": {
@@ -11,12 +11,29 @@
       "additionalProperties": true,
       "properties": {
         "kr": {},
-        "us": {},
+        "us": {
+          "type": "object",
+          "required": [
+            "status"
+          ],
+          "additionalProperties": true,
+          "properties": {
+            "status": {
+              "type": "string"
+            }
+          }
+        },
         "eu": {}
       }
     },
-    "locations": { "type": "object" },
-    "target_employers": { "type": "array" },
-    "constraints": { "type": "array" }
+    "locations": {
+      "type": "object"
+    },
+    "target_employers": {
+      "type": "array"
+    },
+    "constraints": {
+      "type": "array"
+    }
   }
 }
