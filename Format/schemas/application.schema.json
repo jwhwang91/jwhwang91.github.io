@@ -1,0 +1,31 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "application.schema.json",
+  "title": "Application tracking record (application.yaml)",
+  "type": "object",
+  "additionalProperties": true,
+  "required": ["schema", "id", "status"],
+  "properties": {
+    "schema": { "const": "application/v1" },
+    "id": { "type": "string" },
+    "company": { "type": "string" },
+    "role_title": { "type": "string" },
+    "req_url": { "type": "string" },
+    "positioning": { "type": "string" },
+    "channel": { "type": "string" },
+    "location": { "type": "string" },
+    "visa_sponsorship": { "type": "string" },
+    "created": { "type": "string" },
+    "jd_sha256": { "type": ["string", "null"] },
+    "status": {
+      "enum": ["draft", "parsed", "matched", "drafted", "gated", "approved", "submitted",
+               "screen", "interview", "offer", "hired", "rejected", "ghosted", "abandoned", "withdrawn"]
+    },
+    "status_history": { "type": "array" },
+    "gate": { "type": "object" },
+    "submission": { "type": "object" },
+    "events": { "type": "array" },
+    "outcome": { "type": "object" },
+    "lessons": { "type": "array" }
+  }
+}

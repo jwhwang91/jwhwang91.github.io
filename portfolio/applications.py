@@ -434,6 +434,13 @@ def _run_gate(paths: Paths, slug: str, resume: dict, resume_txt: str) -> int:
     (folder / "changes.md").write_text(render_changes_md(resume, reg), encoding="utf-8")
     (folder / "audit.json").write_text(json.dumps(build_audit(resume, reg, policy), indent=2), encoding="utf-8")
 
+    app_path = folder / "application.yaml"
+    if app_path.exists():
+        app = load_yaml(app_path)
+        app["gate"] = {"verdict": report["verdict"], "recommendation": report["recommendation"],
+                       "must_have_coverage": report["must_have_coverage"], "risk_acknowledged": (app.get("gate") or {}).get("risk_acknowledged", False)}
+        _dump(app_path, app)
+
     if report["verdict"] == "FAIL":
         _dump(folder / "gate_feedback.yaml", build_gate_feedback(report, tax))
         for f in ("resume_ats.txt", "resume_ats.html", "resume_ats.md"):

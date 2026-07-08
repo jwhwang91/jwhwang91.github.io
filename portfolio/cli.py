@@ -8,7 +8,7 @@ from .applications import (gate, jd_confirm, jd_parse, match, match_confirm,
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
-from .tracking import print_insights
+from .tracking import lessons_compile, log_event, print_insights, set_status, track
 from .variants import build_all_variants, build_variant, list_variants, scaffold_variant
 
 
@@ -83,6 +83,26 @@ def build_parser() -> argparse.ArgumentParser:
     p_pdfcheck = sub.add_parser("pdfcheck", help="Verify the exported PDF text layer vs resume_ats.txt.")
     p_pdfcheck.add_argument("slug")
 
+    p_status = sub.add_parser("status", help="Set application status (state machine + submit hard gate G4).")
+    p_status.add_argument("slug")
+    p_status.add_argument("new_status")
+    p_status.add_argument("--note", default=None)
+    p_status.add_argument("--acknowledge-risk", action="store_true", dest="acknowledge_risk")
+
+    p_log = sub.add_parser("log", help="Append a freeform event to an application.")
+    p_log.add_argument("slug")
+    p_log.add_argument("--note", required=True)
+    p_log.add_argument("--date", default=None)
+
+    p_track = sub.add_parser("track", help="Table of all applications (+ legacy result.md folders).")
+    p_track.add_argument("--open", action="store_true", dest="open_only")
+    p_track.add_argument("--closed", action="store_true", dest="closed_only")
+    p_track.add_argument("--csv", action="store_true")
+
+    p_lessons = sub.add_parser("lessons", help="Compile lessons into an anonymized ledger draft.")
+    lessons_sub = p_lessons.add_subparsers(dest="lessons_command")
+    lessons_sub.add_parser("compile", help="Aggregate closed-app lessons -> Applications/_ledger_draft.md.")
+
     return parser
 
 
@@ -118,6 +138,17 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
         return gate(paths, args.slug, args.verify_only)
     if command == "pdfcheck":
         return pdfcheck(paths, args.slug)
+    if command == "status":
+        return set_status(paths, args.slug, args.new_status, args.note, args.acknowledge_risk)
+    if command == "log":
+        return log_event(paths, args.slug, args.note, args.date)
+    if command == "track":
+        return track(paths, args.open_only, args.closed_only, args.csv)
+    if command == "lessons":
+        if getattr(args, "lessons_command", None) == "compile":
+            return lessons_compile(paths)
+        print("usage: python main.py lessons compile")
+        return 2
     return None
 
 
