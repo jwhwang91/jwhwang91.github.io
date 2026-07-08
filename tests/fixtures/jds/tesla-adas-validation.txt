@@ -1,0 +1,25 @@
+https://www.tesla.com/careers/adas-validation-12345
+
+ADAS Validation Engineer
+Palo Alto, CA (on-site)
+
+About the role:
+Join the Autopilot validation team to verify Level 2 ADAS behavior across our
+commercial and passenger platforms.
+
+Responsibilities:
+- Validate Smart Cruise Control (SCC) and Adaptive Cruise Control behavior across driving scenarios.
+- Build and run Hardware-in-the-Loop (HIL) and Model-in-the-Loop (MIL) test benches.
+- Analyze target selection robustness using BEV log replay through production logic.
+- Debug false detections during on-vehicle testing at our proving grounds.
+
+Requirements:
+- 5+ years in ADAS or autonomous driving validation.
+- Strong Python and C++ scripting for log analysis.
+- Hands-on experience with CANape and CAN-FD.
+- Working knowledge of ISO 26262 functional safety.
+- Must be authorized to work in the US without sponsorship.
+
+Preferred Qualifications:
+- Familiarity with scenario-based testing and CARLA simulation.
+- Experience with dynamometer and real-vehicle validation.

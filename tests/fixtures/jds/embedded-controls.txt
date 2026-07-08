@@ -1,0 +1,21 @@
+Embedded Controls Software Engineer
+Detroit, MI (on-site)
+
+The role:
+Develop embedded control software for heavy-duty powertrain control units.
+
+Responsibilities:
+- Develop Transmission Control Unit (TCU) application software.
+- Implement shift control and real-time control logic in C/C++.
+- Build MATLAB/Simulink models and validate on Hardware-in-the-Loop benches.
+- Support dynamometer and vehicle testing campaigns.
+
+Requirements:
+- Strong C++ and embedded control experience.
+- MISRA C and AUTOSAR familiarity.
+- Hands-on with CAN, CAN-FD, and UDS diagnostics.
+- Model-based development in MATLAB/Simulink.
+
+Preferred Qualifications:
+- Experience with control systems and plant modeling.
+- Exposure to functional safety (ISO 26262).

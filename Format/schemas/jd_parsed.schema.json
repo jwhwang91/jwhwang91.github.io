@@ -1,0 +1,224 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "jd_parsed.schema.json",
+  "title": "Parsed job description (jd.parsed.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema",
+    "keywords"
+  ],
+  "properties": {
+    "schema": {
+      "const": "jd_parsed/v1"
+    },
+    "source_url": {
+      "type": [
+        "string",
+        "null"
+      ]
+    },
+    "company": {
+      "type": "string"
+    },
+    "role_title": {
+      "type": "string"
+    },
+    "seniority": {
+      "enum": [
+        "intern",
+        "junior",
+        "mid",
+        "senior",
+        "staff",
+        "lead",
+        "unspecified"
+      ]
+    },
+    "role_type": {
+      "enum": [
+        "adas-validation",
+        "av-infra",
+        "controls-software",
+        "embedded",
+        "ai-tooling",
+        "fullstack-saas",
+        "data-simulation-validation"
+      ]
+    },
+    "location_policy": {
+      "type": "object",
+      "additionalProperties": true,
+      "properties": {
+        "onsite": {
+          "type": "boolean"
+        },
+        "city": {
+          "type": [
+            "string",
+            "null"
+          ]
+        },
+        "remote": {
+          "type": "boolean"
+        }
+      }
+    },
+    "knockouts": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "type",
+          "quote"
+        ],
+        "properties": {
+          "type": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          }
+        }
+      }
+    },
+    "keywords": {
+      "type": "array",
+      "items": {
+        "$ref": "#/definitions/keyword"
+      }
+    },
+    "title_terms": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      }
+    },
+    "implicit_expectations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": [
+          "expectation",
+          "quote"
+        ],
+        "properties": {
+          "expectation": {
+            "type": "string"
+          },
+          "quote": {
+            "type": "string",
+            "minLength": 1
+          },
+          "block": {
+            "$ref": "#/definitions/block"
+          }
+        }
+      }
+    },
+    "confirmed": {
+      "type": "boolean"
+    }
+  },
+  "definitions": {
+    "block": {
+      "enum": [
+        "responsibilities",
+        "requirements",
+        "preferred",
+        "benefits",
+        "about",
+        "other"
+      ]
+    },
+    "keyword": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "requirement",
+        "quote",
+        "block"
+      ],
+      "properties": {
+        "term": {
+          "type": "string"
+        },
+        "new_term": {
+          "type": "object",
+          "additionalProperties": false,
+          "required": [
+            "canonical"
+          ],
+          "properties": {
+            "canonical": {
+              "type": "string"
+            },
+            "suggested_ats_form": {
+              "type": "string"
+            },
+            "suggested_aliases": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "additionalProperties": false,
+                "required": [
+                  "text"
+                ],
+                "properties": {
+                  "text": {
+                    "type": "string"
+                  },
+                  "tier": {
+                    "enum": [
+                      "exact",
+                      "equivalent",
+                      "related"
+                    ]
+                  }
+                }
+              }
+            },
+            "domain": {
+              "type": "string"
+            }
+          }
+        },
+        "requirement": {
+          "enum": [
+            "must",
+            "nice",
+            "contextual"
+          ]
+        },
+        "quote": {
+          "type": "string",
+          "minLength": 1
+        },
+        "block": {
+          "$ref": "#/definitions/block"
+        },
+        "false_positive": {
+          "type": "string"
+        },
+        "needs_review": {
+          "type": "boolean"
+        }
+      },
+      "oneOf": [
+        {
+          "required": [
+            "term"
+          ]
+        },
+        {
+          "required": [
+            "new_term"
+          ]
+        }
+      ]
+    }
+  }
+}

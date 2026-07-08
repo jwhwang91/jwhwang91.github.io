@@ -3,6 +3,7 @@ from __future__ import annotations
 import argparse
 from typing import Optional, Sequence
 
+from .applications import jd_confirm, jd_parse, new_application
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
@@ -11,7 +12,9 @@ from .variants import build_all_variants, build_variant, list_variants, scaffold
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(description="Build the resume/portfolio site.")
+    # allow_abbrev=False: with --lint-facts alongside --list-variants, prefix
+    # abbreviations like --li would be ambiguous — require full flag names.
+    parser = argparse.ArgumentParser(description="Build the resume/portfolio site.", allow_abbrev=False)
     parser.add_argument(
         "--variant",
         metavar="NAME",
@@ -45,7 +48,42 @@ def build_parser() -> argparse.ArgumentParser:
         help="Validate Context/facts/** (schema + verbatim source quotes + references) and "
              "sweep Context/*.yaml for drift against employers.yaml (warn-level). Exits 1 on errors.",
     )
+
+    # New JD-pipeline subcommands (legacy flags above stay working unchanged).
+    sub = parser.add_subparsers(dest="command")
+
+    p_new = sub.add_parser("new", help="Scaffold a new application (application.yaml + jd.txt + notes.md).")
+    p_new.add_argument("slug")
+    p_new.add_argument("--company", default="")
+    p_new.add_argument("--role", default="")
+    p_new.add_argument("--url", default="")
+    p_new.add_argument("--positioning", default="")
+
+    p_jd = sub.add_parser("jd", help="JD parsing (deterministic scan + LLM parse confirmation).")
+    jd_sub = p_jd.add_subparsers(dest="jd_command")
+    jd_sub.add_parser("parse", help="Deterministic scan + assemble the LLM prompt.").add_argument("slug")
+    jd_sub.add_parser("confirm", help="Gate G1: validate + stamp jd.parsed.yaml, advance status.").add_argument("slug")
+
     return parser
+
+
+def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
+    """Dispatch the argparse subcommands; returns None if no subcommand was given."""
+    command = getattr(args, "command", None)
+    if command == "new":
+        folder = new_application(paths, args.slug, args.company, args.role, args.url, args.positioning)
+        print(f"Scaffolded application: {rel_to_root(folder, paths.root)}")
+        print(f"  1. Paste the JD into {rel_to_root(folder / 'jd.txt', paths.root)}")
+        print(f"  2. python main.py jd parse {args.slug}")
+        return 0
+    if command == "jd":
+        if getattr(args, "jd_command", None) == "parse":
+            return jd_parse(paths, args.slug)
+        if getattr(args, "jd_command", None) == "confirm":
+            return jd_confirm(paths, args.slug)
+        print("usage: python main.py jd {parse|confirm} <slug>")
+        return 2
+    return None
 
 
 def _lint_facts(paths: Paths) -> int:
@@ -70,6 +108,10 @@ def main(argv: Optional[Sequence[str]] = None, paths: Optional[Paths] = None) ->
     Returns an int exit code for gating commands (lint-facts), else None."""
     paths = paths or default_paths()
     args = build_parser().parse_args(argv)
+
+    sub_result = _run_subcommand(paths, args)
+    if sub_result is not None or getattr(args, "command", None):
+        return sub_result
 
     if args.lint_facts:
         return _lint_facts(paths)

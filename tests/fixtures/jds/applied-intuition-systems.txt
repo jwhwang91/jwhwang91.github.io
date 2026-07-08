@@ -1,0 +1,18 @@
+Systems Validation Engineer
+Mountain View, CA
+
+About Applied Intuition:
+We build tooling that helps autonomous driving teams verify their stacks.
+
+Responsibilities:
+- Own the verification and validation workflow for customer AV programs.
+- Design scenario-based testing suites and regression testing gates.
+- Build log replay tooling to reproduce field failures deterministically.
+
+Requirements:
+- Strong Python and C++ engineering.
+- Experience building Docker-based CI pipelines.
+- Familiarity with Hardware-in-the-Loop or Software-in-the-Loop validation.
+
+Preferred:
+- Exposure to sensor fusion and state estimation.

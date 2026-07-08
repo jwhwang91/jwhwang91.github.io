@@ -12,7 +12,15 @@ Every legacy flag is unchanged and handled by :func:`portfolio.cli.main`:
 """
 from __future__ import annotations
 
+import sys
+
 from portfolio.cli import main
 
 if __name__ == "__main__":
-    main()
+    # main() raises on user error (so tests can assert the exception) and returns an
+    # exit code for gating commands; the shim turns both into a clean CLI outcome.
+    try:
+        raise SystemExit(main())
+    except (FileNotFoundError, FileExistsError, ValueError) as exc:
+        print(f"error: {exc}", file=sys.stderr)
+        raise SystemExit(1)

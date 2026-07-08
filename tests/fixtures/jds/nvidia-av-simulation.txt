@@ -1,0 +1,21 @@
+Senior AV Simulation Engineer — Autonomous Driving
+Santa Clara, CA / Remote
+
+Who we are:
+We build the simulation stack that validates perception and planning for
+autonomous driving at scale.
+
+What you'll do:
+- Develop scenario-based testing pipelines that replay real driving logs.
+- Scale log replay and resimulation across a distributed compute fleet.
+- Integrate perception models and evaluate against ground truth.
+
+Requirements:
+- Expert Python and strong C++ for high-performance simulation.
+- Experience with machine learning frameworks such as PyTorch.
+- Comfort with Docker-based reproducible environments.
+- Deep understanding of perception (lidar, radar, camera) pipelines.
+
+Nice to have:
+- Familiarity with ONNX model export.
+- Prior work with ROS2 middleware.

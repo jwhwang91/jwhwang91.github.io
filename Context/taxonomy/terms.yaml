@@ -1,0 +1,576 @@
+# Keyword taxonomy (MASTER_PLAN §4.1). Committed, public-safe, zero personal data.
+# Alias matching is deterministic: case-insensitive, non-word-boundary, longest-first.
+# Alias tiers:
+#   exact       same thing, different spelling/case (HIL/HILS) — freely substitutable
+#   equivalent  industry synonym / OEM brand (SCC <-> ACC) — claimable as direct
+#   related     same family, NOT identical (LFA vs LKA) — caps support at partial (hedge)
+# ambiguous: true marks short aliases whose letters collide with common words / other
+#   meanings (ACC, CAN, MIL, BEV) — the human confirm at Gate G1 decides false positives.
+
+terms:
+  # ---------------------------------------------------------------- adas
+  - id: adas
+    canonical: "Advanced Driver Assistance Systems"
+    ats_form: "Advanced Driver Assistance Systems (ADAS)"
+    domain: adas
+    aliases:
+      - {text: "ADAS", tier: exact}
+      - {text: "L2 automation", tier: equivalent}
+      - {text: "driver assistance", tier: equivalent}
+      - {text: "autonomous driving", tier: related}
+      - {text: "self-driving", tier: related}
+  - id: scc
+    canonical: "Smart Cruise Control"
+    ats_form: "Smart Cruise Control (SCC / Adaptive Cruise Control)"
+    domain: adas
+    aliases:
+      - {text: "SCC", tier: exact}
+      - {text: "Adaptive Cruise Control", tier: equivalent}
+      - {text: "ACC", tier: equivalent, ambiguous: true}
+  - id: lfa
+    canonical: "Lane Following Assist"
+    ats_form: "Lane Following Assist (LFA)"
+    domain: adas
+    aliases:
+      - {text: "LFA", tier: exact}
+      - {text: "lane following assist", tier: exact}
+      - {text: "lane centering", tier: related}
+  - id: lka
+    canonical: "Lane Keeping Assist"
+    ats_form: "Lane Keeping Assist (LKA)"
+    domain: adas
+    aliases:
+      - {text: "LKA", tier: exact}
+      - {text: "lane keeping assist", tier: exact}
+      - {text: "lane keeping", tier: equivalent}
+      - {text: "lane departure warning", tier: related}
+  - id: target-selection
+    canonical: "Target Object Selection"
+    ats_form: "Target Object Selection (TOS/ODP)"
+    domain: adas
+    aliases:
+      - {text: "target object selection", tier: exact}
+      - {text: "target selection", tier: exact}
+      - {text: "TOS", tier: exact, ambiguous: true}
+      - {text: "object detection", tier: related}
+  - id: bev
+    canonical: "Bird's-Eye-View"
+    ats_form: "Bird's-Eye-View (BEV)"
+    domain: adas
+    aliases:
+      - {text: "bird's-eye-view", tier: exact}
+      - {text: "bird's eye view", tier: exact}
+      - {text: "BEV", tier: exact, ambiguous: true}
+  - id: ego-path-prediction
+    canonical: "Ego-Path Prediction"
+    ats_form: "Ego-Path Prediction"
+    domain: adas
+    aliases:
+      - {text: "ego-path prediction", tier: exact}
+      - {text: "path prediction", tier: equivalent}
+      - {text: "trajectory prediction", tier: related}
+  - id: road-curvature
+    canonical: "Road Curvature Estimation"
+    ats_form: "Road Curvature Estimation"
+    domain: adas
+    aliases:
+      - {text: "road curvature", tier: exact}
+      - {text: "road radius", tier: equivalent}
+      - {text: "curvature estimation", tier: equivalent}
+  - id: emergency-stop
+    canonical: "Emergency Stop"
+    ats_form: "Emergency Stop / Safe-Stop"
+    domain: adas
+    aliases:
+      - {text: "emergency stop", tier: exact}
+      - {text: "safe stop", tier: equivalent}
+      - {text: "minimal risk maneuver", tier: related}
+  - id: commercial-vehicle
+    canonical: "Commercial Vehicle"
+    ats_form: "Commercial Vehicle"
+    domain: adas
+    aliases:
+      - {text: "commercial vehicle", tier: exact}
+      - {text: "heavy-duty vehicle", tier: equivalent}
+      - {text: "heavy duty", tier: equivalent}
+  - id: perception
+    canonical: "Perception"
+    ats_form: "Perception"
+    domain: adas
+    aliases:
+      - {text: "perception", tier: exact}
+      - {text: "lidar", tier: related}
+      - {text: "radar", tier: related}
+
+  # ---------------------------------------------------------------- controls
+  - id: ekf
+    canonical: "Extended Kalman Filter"
+    ats_form: "Extended Kalman Filter (EKF)"
+    domain: controls
+    aliases:
+      - {text: "extended kalman filter", tier: exact}
+      - {text: "EKF", tier: exact}
+      - {text: "Kalman filter", tier: equivalent}
+  - id: sensor-fusion
+    canonical: "Sensor Fusion"
+    ats_form: "Sensor Fusion"
+    domain: controls
+    aliases:
+      - {text: "sensor fusion", tier: exact}
+      - {text: "multi-sensor fusion", tier: exact}
+      - {text: "data fusion", tier: equivalent}
+  - id: vehicle-dynamics
+    canonical: "Vehicle Dynamics"
+    ats_form: "Vehicle Dynamics"
+    domain: controls
+    aliases:
+      - {text: "vehicle dynamics", tier: exact}
+      - {text: "bicycle model", tier: related}
+      - {text: "yaw rate", tier: related}
+  - id: motion-control
+    canonical: "Motion Control"
+    ats_form: "Motion Control"
+    domain: controls
+    aliases:
+      - {text: "motion control", tier: exact}
+      - {text: "motion stabilization", tier: equivalent}
+      - {text: "stabilization control", tier: equivalent}
+  - id: nonlinear-control
+    canonical: "Nonlinear Control"
+    ats_form: "Nonlinear Control"
+    domain: controls
+    aliases:
+      - {text: "nonlinear control", tier: exact}
+      - {text: "non-linear control", tier: exact}
+  - id: state-estimation
+    canonical: "State Estimation"
+    ats_form: "State Estimation"
+    domain: controls
+    aliases:
+      - {text: "state estimation", tier: exact}
+      - {text: "state observer", tier: equivalent}
+  - id: model-based-development
+    canonical: "Model-Based Development"
+    ats_form: "Model-Based Development (MBD)"
+    domain: controls
+    aliases:
+      - {text: "model-based development", tier: exact}
+      - {text: "MBD", tier: exact}
+      - {text: "model-based design", tier: equivalent}
+      - {text: "model based design", tier: equivalent}
+  - id: control-systems
+    canonical: "Control Systems"
+    ats_form: "Control Systems"
+    domain: controls
+    aliases:
+      - {text: "control systems", tier: exact}
+      - {text: "control theory", tier: equivalent}
+      - {text: "feedback control", tier: equivalent}
+      - {text: "closed-loop control", tier: equivalent}
+  - id: pid-control
+    canonical: "PID Control"
+    ats_form: "PID Control"
+    domain: controls
+    aliases:
+      - {text: "PID control", tier: exact}
+      - {text: "PID controller", tier: exact}
+  - id: time-delay-estimation
+    canonical: "Time Delay Estimation"
+    ats_form: "Time Delay Estimation (TDE)"
+    domain: controls
+    aliases:
+      - {text: "time delay estimation", tier: exact}
+      - {text: "TDE", tier: exact, ambiguous: true}
+
+  # ---------------------------------------------------------------- embedded
+  - id: tcu
+    canonical: "Transmission Control Unit"
+    ats_form: "Transmission Control Unit (TCU)"
+    domain: embedded
+    aliases:
+      - {text: "transmission control unit", tier: exact}
+      - {text: "TCU", tier: exact}
+      - {text: "transmission control", tier: equivalent}
+  - id: embedded-control
+    canonical: "Embedded Control Software"
+    ats_form: "Embedded Control Software"
+    domain: embedded
+    aliases:
+      - {text: "embedded control", tier: exact}
+      - {text: "embedded software", tier: equivalent}
+      - {text: "embedded systems", tier: equivalent}
+      - {text: "firmware", tier: related}
+  - id: shift-control
+    canonical: "Shift Control"
+    ats_form: "Shift Control"
+    domain: embedded
+    aliases:
+      - {text: "shift control", tier: exact}
+      - {text: "shift logic", tier: exact}
+      - {text: "gear shift", tier: equivalent}
+  - id: plant-modeling
+    canonical: "Plant Modeling"
+    ats_form: "Plant Modeling"
+    domain: embedded
+    aliases:
+      - {text: "plant modeling", tier: exact}
+      - {text: "plant model", tier: exact}
+      - {text: "system modeling", tier: related}
+  - id: misra-c
+    canonical: "MISRA C"
+    ats_form: "MISRA C"
+    domain: embedded
+    aliases:
+      - {text: "MISRA C", tier: exact}
+      - {text: "MISRA-C", tier: exact}
+      - {text: "MISRA", tier: exact}
+  - id: autosar
+    canonical: "AUTOSAR"
+    ats_form: "AUTOSAR"
+    domain: embedded
+    aliases:
+      - {text: "AUTOSAR", tier: exact}
+  - id: rtos
+    canonical: "Real-Time Operating System"
+    ats_form: "Real-Time Operating System (RTOS)"
+    domain: embedded
+    aliases:
+      - {text: "RTOS", tier: exact}
+      - {text: "real-time operating system", tier: exact}
+  - id: cpp
+    canonical: "C/C++"
+    ats_form: "C/C++"
+    domain: embedded
+    aliases:
+      - {text: "C++", tier: exact}
+      - {text: "C/C++", tier: exact}
+      - {text: "C and C++", tier: equivalent}
+  - id: real-time-control
+    canonical: "Real-Time Control"
+    ats_form: "Real-Time Control"
+    domain: embedded
+    aliases:
+      - {text: "real-time control", tier: exact}
+      - {text: "real time control", tier: exact}
+      - {text: "hard real-time", tier: related}
+
+  # ---------------------------------------------------------------- validation
+  - id: hil
+    canonical: "Hardware-in-the-Loop"
+    ats_form: "Hardware-in-the-Loop (HIL/HILS)"
+    domain: validation
+    aliases:
+      - {text: "hardware-in-the-loop", tier: exact}
+      - {text: "hardware in the loop", tier: exact}
+      - {text: "HIL", tier: exact}
+      - {text: "HILS", tier: exact}
+  - id: mil
+    canonical: "Model-in-the-Loop"
+    ats_form: "Model-in-the-Loop (MIL/MILS)"
+    domain: validation
+    aliases:
+      - {text: "model-in-the-loop", tier: exact}
+      - {text: "model in the loop", tier: exact}
+      - {text: "MILS", tier: exact}
+      - {text: "MIL", tier: exact, ambiguous: true}
+  - id: sil
+    canonical: "Software-in-the-Loop"
+    ats_form: "Software-in-the-Loop (SIL)"
+    domain: validation
+    aliases:
+      - {text: "software-in-the-loop", tier: exact}
+      - {text: "software in the loop", tier: exact}
+      - {text: "SIL", tier: exact}
+  - id: dynamometer
+    canonical: "Dynamometer"
+    ats_form: "Dynamometer"
+    domain: validation
+    aliases:
+      - {text: "dynamometer", tier: exact}
+      - {text: "dyno", tier: exact}
+  - id: real-vehicle-validation
+    canonical: "Real-Vehicle Validation"
+    ats_form: "Real-Vehicle Validation"
+    domain: validation
+    aliases:
+      - {text: "real-vehicle validation", tier: exact}
+      - {text: "on-vehicle testing", tier: equivalent}
+      - {text: "field testing", tier: equivalent}
+      - {text: "vehicle testing", tier: equivalent}
+      - {text: "road test", tier: equivalent}
+  - id: regression-testing
+    canonical: "Regression Testing"
+    ats_form: "Regression Testing"
+    domain: validation
+    aliases:
+      - {text: "regression testing", tier: exact}
+      - {text: "regression test", tier: exact}
+  - id: log-replay
+    canonical: "Log Replay"
+    ats_form: "Log Replay"
+    domain: validation
+    aliases:
+      - {text: "log replay", tier: exact}
+      - {text: "replay validation", tier: exact}
+      - {text: "resimulation", tier: equivalent}
+  - id: scenario-testing
+    canonical: "Scenario-Based Testing"
+    ats_form: "Scenario-Based Testing"
+    domain: validation
+    aliases:
+      - {text: "scenario-based testing", tier: exact}
+      - {text: "scenario testing", tier: exact}
+      - {text: "scenario-based", tier: equivalent}
+  - id: functional-safety
+    canonical: "Functional Safety"
+    ats_form: "Functional Safety (ISO 26262)"
+    domain: validation
+    aliases:
+      - {text: "functional safety", tier: exact}
+      - {text: "ISO 26262", tier: exact}
+      - {text: "ISO26262", tier: exact}
+      - {text: "FuSa", tier: exact}
+  - id: mabx
+    canonical: "dSPACE MicroAutoBox"
+    ats_form: "dSPACE MicroAutoBox (MABx)"
+    domain: validation
+    aliases:
+      - {text: "MicroAutoBox", tier: exact}
+      - {text: "MABx", tier: exact}
+  - id: dspace
+    canonical: "dSPACE"
+    ats_form: "dSPACE"
+    domain: validation
+    aliases:
+      - {text: "dSPACE", tier: exact}
+  - id: validation-workflow
+    canonical: "Verification and Validation"
+    ats_form: "Verification and Validation (V&V)"
+    domain: validation
+    aliases:
+      - {text: "verification and validation", tier: exact}
+      - {text: "validation workflow", tier: equivalent}
+      - {text: "V&V", tier: exact}
+
+  # ---------------------------------------------------------------- software
+  - id: typescript
+    canonical: "TypeScript"
+    ats_form: "TypeScript"
+    domain: software
+    aliases:
+      - {text: "TypeScript", tier: exact}
+      - {text: "JavaScript", tier: related}
+  - id: react
+    canonical: "React"
+    ats_form: "React"
+    domain: software
+    aliases:
+      - {text: "React", tier: exact}
+      - {text: "React.js", tier: exact}
+      - {text: "Next.js", tier: equivalent}
+  - id: full-stack
+    canonical: "Full-Stack Development"
+    ats_form: "Full-Stack Development"
+    domain: software
+    aliases:
+      - {text: "full-stack", tier: exact}
+      - {text: "full stack", tier: exact}
+      - {text: "fullstack", tier: exact}
+  - id: fastapi
+    canonical: "FastAPI"
+    ats_form: "FastAPI"
+    domain: software
+    aliases:
+      - {text: "FastAPI", tier: exact}
+  - id: rest-api
+    canonical: "REST API"
+    ats_form: "REST API"
+    domain: software
+    aliases:
+      - {text: "REST API", tier: exact}
+      - {text: "RESTful", tier: equivalent}
+  - id: server-sent-events
+    canonical: "Server-Sent Events"
+    ats_form: "Server-Sent Events (SSE)"
+    domain: software
+    aliases:
+      - {text: "server-sent events", tier: exact}
+      - {text: "SSE", tier: exact}
+  - id: oauth2
+    canonical: "OAuth 2.0"
+    ats_form: "OAuth 2.0"
+    domain: software
+    aliases:
+      - {text: "OAuth 2.0", tier: exact}
+      - {text: "OAuth2", tier: exact}
+      - {text: "OAuth", tier: exact}
+  - id: macos-app
+    canonical: "macOS App Development"
+    ats_form: "macOS App Development"
+    domain: software
+    aliases:
+      - {text: "macOS", tier: exact}
+      - {text: "Mac app", tier: equivalent}
+  - id: swift
+    canonical: "Swift / SwiftUI"
+    ats_form: "Swift / SwiftUI"
+    domain: software
+    aliases:
+      - {text: "SwiftUI", tier: exact}
+      - {text: "AppKit", tier: exact}
+      - {text: "Swift", tier: exact, ambiguous: true}
+  - id: qt
+    canonical: "Qt / PySide6"
+    ats_form: "Qt / PySide6"
+    domain: software
+    aliases:
+      - {text: "PySide6", tier: exact}
+      - {text: "PyQt", tier: equivalent}
+      - {text: "Qt", tier: exact}
+  - id: python
+    canonical: "Python"
+    ats_form: "Python"
+    domain: software
+    aliases:
+      - {text: "Python", tier: exact}
+  - id: playwright
+    canonical: "Playwright"
+    ats_form: "Playwright"
+    domain: software
+    aliases:
+      - {text: "Playwright", tier: exact}
+      - {text: "browser automation", tier: related}
+      - {text: "Selenium", tier: related}
+  - id: docker
+    canonical: "Docker"
+    ats_form: "Docker"
+    domain: software
+    aliases:
+      - {text: "Docker", tier: exact}
+      - {text: "containerization", tier: equivalent}
+      - {text: "Kubernetes", tier: related}
+
+  # ---------------------------------------------------------------- ai_llm
+  - id: llm-pipeline
+    canonical: "LLM Application Engineering"
+    ats_form: "LLM Application Engineering"
+    domain: ai_llm
+    aliases:
+      - {text: "LLM pipeline", tier: exact}
+      - {text: "LLM application", tier: exact}
+      - {text: "large language model", tier: equivalent}
+      - {text: "LLM", tier: exact}
+  - id: multi-agent-workflow
+    canonical: "Multi-Agent Workflows"
+    ats_form: "Multi-Agent Workflows"
+    domain: ai_llm
+    aliases:
+      - {text: "multi-agent", tier: exact}
+      - {text: "agentic workflow", tier: equivalent}
+      - {text: "AI agents", tier: equivalent}
+  - id: machine-learning
+    canonical: "Machine Learning"
+    ats_form: "Machine Learning (ML)"
+    domain: ai_llm
+    aliases:
+      - {text: "machine learning", tier: exact}
+      - {text: "deep learning", tier: related}
+  - id: pytorch
+    canonical: "PyTorch"
+    ats_form: "PyTorch"
+    domain: ai_llm
+    aliases:
+      - {text: "PyTorch", tier: exact}
+      - {text: "TensorFlow", tier: related}
+  - id: onnx
+    canonical: "ONNX"
+    ats_form: "ONNX"
+    domain: ai_llm
+    aliases:
+      - {text: "ONNX", tier: exact}
+  - id: prompt-engineering
+    canonical: "Prompt Engineering"
+    ats_form: "Prompt Engineering"
+    domain: ai_llm
+    aliases:
+      - {text: "prompt engineering", tier: exact}
+      - {text: "prompting", tier: equivalent}
+  - id: rag
+    canonical: "Retrieval-Augmented Generation"
+    ats_form: "Retrieval-Augmented Generation (RAG)"
+    domain: ai_llm
+    aliases:
+      - {text: "retrieval-augmented generation", tier: exact}
+      - {text: "RAG", tier: exact, ambiguous: true}
+  - id: anthropic-claude
+    canonical: "Anthropic Claude API"
+    ats_form: "Anthropic Claude API"
+    domain: ai_llm
+    aliases:
+      - {text: "Claude API", tier: exact}
+      - {text: "Anthropic", tier: exact}
+      - {text: "OpenAI API", tier: related}
+
+  # ---------------------------------------------------------------- tooling
+  - id: canape
+    canonical: "Vector CANape"
+    ats_form: "Vector CANape"
+    domain: tooling
+    aliases:
+      - {text: "CANape", tier: exact}
+  - id: vn1640
+    canonical: "Vector VN1640"
+    ats_form: "Vector VN1640"
+    domain: tooling
+    aliases:
+      - {text: "VN1640", tier: exact}
+  - id: xcp
+    canonical: "XCP over CAN-FD"
+    ats_form: "XCP over CAN-FD"
+    domain: tooling
+    aliases:
+      - {text: "XCP", tier: exact}
+  - id: can
+    canonical: "Controller Area Network"
+    ats_form: "Controller Area Network (CAN)"
+    domain: tooling
+    aliases:
+      - {text: "Controller Area Network", tier: exact}
+      - {text: "CAN bus", tier: exact}
+      - {text: "CAN", tier: exact, ambiguous: true}
+  - id: can-fd
+    canonical: "CAN-FD"
+    ats_form: "CAN-FD"
+    domain: tooling
+    aliases:
+      - {text: "CAN-FD", tier: exact}
+      - {text: "CAN FD", tier: exact}
+  - id: uds
+    canonical: "Unified Diagnostic Services"
+    ats_form: "Unified Diagnostic Services (UDS)"
+    domain: tooling
+    aliases:
+      - {text: "unified diagnostic services", tier: exact}
+      - {text: "UDS", tier: exact}
+  - id: j1939
+    canonical: "SAE J1939"
+    ats_form: "SAE J1939"
+    domain: tooling
+    aliases:
+      - {text: "J1939", tier: exact}
+      - {text: "SAE J1939", tier: exact}
+  - id: mf4
+    canonical: "MF4 Measurement Logs"
+    ats_form: "MF4 measurement logs"
+    domain: tooling
+    aliases:
+      - {text: "MF4", tier: exact}
+      - {text: "MDF", tier: equivalent}
+  - id: matlab-simulink
+    canonical: "MATLAB/Simulink"
+    ats_form: "MATLAB/Simulink"
+    domain: tooling
+    aliases:
+      - {text: "MATLAB/Simulink", tier: exact}
+      - {text: "MATLAB", tier: exact}
+      - {text: "Simulink", tier: exact}

@@ -1,0 +1,20 @@
+Full-Stack AI Product Engineer
+Remote (US timezones)
+
+About us:
+We are a small team shipping an AI product for creative professionals.
+
+What you'll do:
+- Build full-stack features in TypeScript and React.
+- Design REST API and Server-Sent Events endpoints in FastAPI.
+- Integrate LLM application pipelines with the Anthropic Claude API.
+- Compose multi-agent workflows with deterministic validation gates.
+
+Requirements:
+- Strong TypeScript and Python.
+- Experience shipping LLM pipeline features to production.
+- Comfort with Docker and serverless deployment.
+
+Nice to have:
+- Prompt engineering experience.
+- Familiarity with Retrieval-Augmented Generation (RAG).
