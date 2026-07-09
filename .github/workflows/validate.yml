@@ -1,0 +1,41 @@
+name: Validate
+
+# Guards every push/PR: the test suite, backbone fact consistency, and the privacy
+# guard (no private path or phone number may enter the public tree). This never
+# deploys — deploy.yml owns publishing dist/.
+on:
+  push:
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.11"
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -r requirements.txt
+
+      - name: Privacy guard (no private path or phone in the tracked tree)
+        run: python scripts/privacy_guard.py
+
+      - name: Backbone fact consistency
+        run: python main.py --lint-facts
+
+      - name: Test suite
+        run: python -m pytest -q
+
+      - name: Public site builds
+        run: python main.py
