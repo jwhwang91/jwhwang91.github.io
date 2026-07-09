@@ -67,7 +67,13 @@ screens.new = () => {
     const res = await api("POST", "/api/new", {
       slug, company: $("f-company").value.trim(), positioning: $("f-pos").value.trim(), jd_text: $("f-jd").value,
     });
-    if (!report(res, "Application created + JD parsed")) return;
+    if (!report(res, null)) return;                      // `new` itself failed
+    const jp = res.jd_parse;                             // the parse sub-step may have failed independently
+    if (jp && (jp.ok === false || (jp.exit_code && jp.exit_code !== 0))) {
+      toast((jp.messages && jp.messages.slice(-1)[0]) || jp.error || "created, but JD parse failed", "warn");
+    } else {
+      toast(jp ? "Application created + JD parsed" : "Application created", "ok");
+    }
     await refreshApps(); await loadApp(slug); renderG1(box.querySelector("#g1"));
   };
   if (state.slug) renderG1(box.querySelector("#g1"));
@@ -257,7 +263,12 @@ function render() {
   v.appendChild((screens[state.screen] || screens.new)());
 }
 
-$("appPicker").onchange = async (e) => { await loadApp(e.target.value); render(); };
+$("appPicker").onchange = async (e) => {
+  await loadApp(e.target.value);
+  // clearing the selection must not leave a gated screen's actions live with a null slug
+  if (!state.slug && state.screen !== "new" && state.screen !== "tracker") state.screen = "new";
+  render();
+};
 
 (async function init() {
   await refreshApps();

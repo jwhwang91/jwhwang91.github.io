@@ -23,7 +23,7 @@ def client(tmp_path, monkeypatch):
     monkeypatch.setenv("JOBOPS_APPLICATIONS", str(apps))
     monkeypatch.delenv("JOBOPS_HEADLESS", raising=False)
     import ui.server as server
-    c = TestClient(server.app)
+    c = TestClient(server.app, base_url="http://127.0.0.1")   # loopback Host passes the guard
     c.apps = apps
     return c
 
@@ -89,6 +89,18 @@ def test_path_traversal_blocked(client):
 def test_invalid_slug_rejected(client):
     r = client.post("/api/new", json={"slug": "../evil"})
     assert r.status_code == 400
+
+
+def test_non_loopback_host_rejected(client):
+    # DNS-rebinding defense: a non-loopback Host header must be refused before any handler
+    r = client.get("/api/track", headers={"host": "evil.com:8765"})
+    assert r.status_code == 400
+    assert client.get("/api/track", headers={"host": "127.0.0.1:8765"}).status_code == 200
+
+
+def test_resume_save_nonexistent_slug_is_404(client):
+    r = client.post("/api/resume", json={"slug": "ghost", "yaml_text": "x: 1"})
+    assert r.status_code == 404
 
 
 def test_llm_manual_mode_default(client):

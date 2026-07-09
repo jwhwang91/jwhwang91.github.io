@@ -13,6 +13,11 @@ Two layers, one rule:
 
 Design mantra: *LLM proposes, Python disposes, human approves. Score extracted text, not intent.*
 
+> **Prefer a GUI?** A local web app drives this exact loop — `pip install -r ui/requirements.txt`
+> then `python -m ui.server` (localhost only). It's a viewer/orchestrator over the same CLI,
+> so it produces byte-identical artifacts. The CLI below is the source of truth; the UI is
+> optional. See [`ui/README.md`](ui/README.md).
+
 ---
 
 ## 0. One-time setup

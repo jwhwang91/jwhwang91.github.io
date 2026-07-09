@@ -5,6 +5,7 @@
 >   verified PDF → interview/coding prep → tracking → learning), read the one-file operator
 >   guide: **[`WORKFLOW.md`](WORKFLOW.md)**.
 > - For the high-level map (backbone → live site, plus the loop), see [`PIPELINE.md`](PIPELINE.md).
+> - Prefer a GUI over the CLI? A localhost web app drives the same loop — see [`ui/README.md`](ui/README.md).
 > - This README documents the **static-site generator** internals (the backbone that deploys).
 
 This version follows the redesigned strategy:

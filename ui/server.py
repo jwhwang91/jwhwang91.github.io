@@ -23,7 +23,7 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 if str(REPO_ROOT) not in sys.path:
     sys.path.insert(0, str(REPO_ROOT))
 
-from fastapi import Body, FastAPI, HTTPException                     # noqa: E402
+from fastapi import Body, FastAPI, HTTPException, Request           # noqa: E402
 from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTextResponse  # noqa: E402
 
 from portfolio.cli import _app_summary                              # read-only artifact summary  # noqa: E402
@@ -38,6 +38,23 @@ LLM_STEPS = {"jd-parse", "jd-match", "resume-plan", "interview-pack", "coding-pa
 
 app = FastAPI(title="JobOps", docs_url=None, redoc_url=None)
 
+_LOOPBACK_HOSTS = {"127.0.0.1", "localhost", "::1", "testserver"}   # testserver: starlette TestClient
+
+
+@app.middleware("http")
+async def _reject_non_loopback_host(request: Request, call_next):
+    """Defeat DNS rebinding: binding to 127.0.0.1 does not stop a browser from resolving an
+    attacker domain to loopback, so we must also reject any non-loopback Host header. Without
+    this the unauthenticated API could be read/written cross-origin after a rebind."""
+    raw = (request.headers.get("host") or "").strip()
+    if raw.startswith("["):                                  # [::1]:8765 -> ::1
+        host = raw[1:raw.index("]")] if "]" in raw else raw
+    else:
+        host = raw.rsplit(":", 1)[0] if ":" in raw else raw  # 127.0.0.1:8765 -> 127.0.0.1
+    if host not in _LOOPBACK_HOSTS:
+        return JSONResponse({"ok": False, "error": f"non-loopback Host rejected: {raw!r}"}, status_code=400)
+    return await call_next(request)
+
 
 # --------------------------------------------------------------------------- helpers
 
@@ -50,10 +67,13 @@ def _valid_slug(slug: str) -> str:
 def run_cli(args: list[str]) -> dict:
     """Run `python main.py --json <args>` at the repo root and return its JSON envelope.
     The child inherits our env (so JOBOPS_APPLICATIONS isolation propagates)."""
-    proc = subprocess.run(
-        [sys.executable, "main.py", "--json", *args],
-        cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=CLI_TIMEOUT, check=False,
-    )
+    try:
+        proc = subprocess.run(
+            [sys.executable, "main.py", "--json", *args],
+            cwd=str(REPO_ROOT), capture_output=True, text=True, timeout=CLI_TIMEOUT, check=False,
+        )
+    except subprocess.TimeoutExpired:
+        return {"ok": False, "error": f"CLI timed out after {CLI_TIMEOUT}s: {' '.join(args)}"}
     try:
         return json.loads(proc.stdout)
     except json.JSONDecodeError:
@@ -148,6 +168,8 @@ def api_match_confirm(body: dict = Body(...)):
 def api_resume(body: dict = Body(...)):
     """Save the resume.yaml edit surface (a human edit, as in the CLI flow), then validate."""
     slug = _valid_slug(body.get("slug", ""))
+    if not _app_dir(slug).exists():
+        raise HTTPException(404, f"no application {slug!r}")
     if "yaml_text" in body:
         (_app_dir(slug) / "resume.yaml").write_text(body["yaml_text"], encoding="utf-8")
     return run_cli(["validate", slug, "--stage", "resume"])
@@ -209,8 +231,12 @@ def api_llm(step: str, body: dict = Body(...)):
     if not _headless_enabled():
         return {"mode": "manual", "command": command,
                 "instruction": f"Run `{command}` in Claude Code (headless off), then continue."}
-    proc = subprocess.run(["claude", "-p", command], cwd=str(REPO_ROOT),
-                          capture_output=True, text=True, timeout=900, check=False)
+    try:
+        proc = subprocess.run(["claude", "-p", command], cwd=str(REPO_ROOT),
+                              capture_output=True, text=True, timeout=900, check=False)
+    except subprocess.TimeoutExpired:
+        return {"mode": "headless", "command": command, "ok": False,
+                "error": f"headless Claude timed out after 900s on {command}"}
     return {"mode": "headless", "command": command, "exit_code": proc.returncode,
             "output": (proc.stdout or "")[-4000:], "error": (proc.stderr or "")[-2000:]}
 
