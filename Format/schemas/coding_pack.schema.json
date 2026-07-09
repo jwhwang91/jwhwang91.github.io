@@ -1,0 +1,28 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "coding_pack.schema.json",
+  "title": "Coding interview prep pack (coding_pack.yaml)",
+  "type": "object",
+  "additionalProperties": false,
+  "required": ["schema", "application", "format", "problem_ids"],
+  "properties": {
+    "schema": { "const": "coding_pack/v1" },
+    "application": { "type": "string" },
+    "format": { "enum": ["leetcode-standard", "practical-python", "embedded-c", "takehome-plus-medium-lc"] },
+    "basis": { "type": "string" },
+    "format_override_reason": { "type": "string" },
+    "problem_ids": { "type": "array", "items": { "type": "string" }, "minItems": 1, "uniqueItems": true },
+    "pattern_priority": { "type": "array", "items": { "type": "string" } },
+    "complexity_expectations": {
+      "type": "array",
+      "items": {
+        "type": "object", "additionalProperties": false, "required": ["pattern", "expectation"],
+        "properties": { "pattern": { "type": "string" }, "expectation": { "type": "string" } }
+      }
+    },
+    "mock_questions": { "type": "array", "items": { "type": "string" } },
+    "debug_exercises": { "type": "array", "items": { "type": "string" } },
+    "practical_tasks": { "type": "array", "items": { "type": "string" } },
+    "plan": { "enum": ["2w", "4w", "8w"] }
+  }
+}

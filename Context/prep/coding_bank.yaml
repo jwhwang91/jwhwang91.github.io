@@ -1,0 +1,123 @@
+schema: coding_bank/v1
+# Curated, human-reviewed problem bank. Problems are SELECTED from here, never
+# generated (MASTER_PLAN §8). talking_point references ONLY real, owner-owned projects;
+# leave it empty when no project genuinely maps. Difficulty spread is intentional so a
+# valid 20-40 selection can hit any format band (see portfolio/prep.CODING_FORMATS).
+patterns:
+  - arrays-hashing
+  - two-pointers
+  - sliding-window
+  - stack
+  - binary-search
+  - linked-list
+  - trees-bfs-dfs
+  - heap
+  - intervals
+  - graph-bfs-dfs
+  - graph-topo
+  - dp-1d
+  - matrix
+  - strings
+  - design
+  - bit-manipulation
+  - state-machine
+  - log-parsing
+
+roles: [adas-av-validation, vehicle-systems-validation, embedded-controls, ai-tooling-fullstack, systems-ai-automation]
+
+problems:
+  # --- arrays-hashing ---
+  - {id: cb-ah-01, pattern: arrays-hashing, title: "Two Sum", source: "LeetCode 1", difficulty: easy, roles: [ai-tooling-fullstack, systems-ai-automation, adas-av-validation]}
+  - {id: cb-ah-02, pattern: arrays-hashing, title: "Contains Duplicate", source: "LeetCode 217", difficulty: easy, roles: [ai-tooling-fullstack, adas-av-validation]}
+  - {id: cb-ah-03, pattern: arrays-hashing, title: "Group Anagrams", source: "LeetCode 49", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-ah-04, pattern: arrays-hashing, title: "Top K Frequent Elements", source: "LeetCode 347", difficulty: medium, roles: [ai-tooling-fullstack, adas-av-validation], talking_point: "Frequency-bucketing is the same shape as ranking recurring false-detection signatures in the BEV log-replay triage work."}
+  - {id: cb-ah-05, pattern: arrays-hashing, title: "Product of Array Except Self", source: "LeetCode 238", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+
+  # --- two-pointers ---
+  - {id: cb-tp-01, pattern: two-pointers, title: "Valid Palindrome", source: "LeetCode 125", difficulty: easy, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-tp-03, pattern: two-pointers, title: "3Sum", source: "LeetCode 15", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-tp-04, pattern: two-pointers, title: "Container With Most Water", source: "LeetCode 11", difficulty: medium, roles: [ai-tooling-fullstack]}
+
+  # --- sliding-window ---
+  - {id: cb-sw-01, pattern: sliding-window, title: "Best Time to Buy and Sell Stock", source: "LeetCode 121", difficulty: easy, roles: [ai-tooling-fullstack, adas-av-validation]}
+  - {id: cb-sw-02, pattern: sliding-window, title: "Longest Substring Without Repeating Characters", source: "LeetCode 3", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-sw-03, pattern: sliding-window, title: "Longest Repeating Character Replacement", source: "LeetCode 424", difficulty: medium, roles: [ai-tooling-fullstack]}
+  - {id: cb-sw-04, pattern: sliding-window, title: "Minimum Window Substring", source: "LeetCode 76", difficulty: hard, roles: [ai-tooling-fullstack]}
+
+  # --- stack ---
+  - {id: cb-st-01, pattern: stack, title: "Valid Parentheses", source: "LeetCode 20", difficulty: easy, roles: [ai-tooling-fullstack, systems-ai-automation, embedded-controls]}
+  - {id: cb-st-02, pattern: stack, title: "Min Stack", source: "LeetCode 155", difficulty: medium, roles: [ai-tooling-fullstack, embedded-controls]}
+  - {id: cb-st-03, pattern: stack, title: "Daily Temperatures", source: "LeetCode 739", difficulty: medium, roles: [ai-tooling-fullstack, adas-av-validation]}
+  - {id: cb-st-04, pattern: stack, title: "Largest Rectangle in Histogram", source: "LeetCode 84", difficulty: hard, roles: [ai-tooling-fullstack]}
+
+  # --- binary-search ---
+  - {id: cb-bs-01, pattern: binary-search, title: "Binary Search", source: "LeetCode 704", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls, adas-av-validation]}
+  - {id: cb-bs-03, pattern: binary-search, title: "Koko Eating Bananas", source: "LeetCode 875", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-bs-04, pattern: binary-search, title: "Median of Two Sorted Arrays", source: "LeetCode 4", difficulty: hard, roles: [ai-tooling-fullstack]}
+
+  # --- linked-list ---
+  - {id: cb-ll-01, pattern: linked-list, title: "Reverse Linked List", source: "LeetCode 206", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls]}
+  - {id: cb-ll-02, pattern: linked-list, title: "Merge Two Sorted Lists", source: "LeetCode 21", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls]}
+  - {id: cb-ll-03, pattern: linked-list, title: "Linked List Cycle", source: "LeetCode 141", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls]}
+  - {id: cb-ll-04, pattern: linked-list, title: "LRU Cache", source: "LeetCode 146", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+
+  # --- trees-bfs-dfs ---
+  - {id: cb-tr-01, pattern: trees-bfs-dfs, title: "Invert Binary Tree", source: "LeetCode 226", difficulty: easy, roles: [ai-tooling-fullstack]}
+  - {id: cb-tr-02, pattern: trees-bfs-dfs, title: "Maximum Depth of Binary Tree", source: "LeetCode 104", difficulty: easy, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-tr-03, pattern: trees-bfs-dfs, title: "Binary Tree Level Order Traversal", source: "LeetCode 102", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-tr-04, pattern: trees-bfs-dfs, title: "Validate Binary Search Tree", source: "LeetCode 98", difficulty: medium, roles: [ai-tooling-fullstack]}
+
+  # --- heap ---
+  - {id: cb-hp-01, pattern: heap, title: "Kth Largest Element in a Stream", source: "LeetCode 703", difficulty: easy, roles: [ai-tooling-fullstack, adas-av-validation]}
+  - {id: cb-hp-02, pattern: heap, title: "Task Scheduler", source: "LeetCode 621", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-hp-03, pattern: heap, title: "Find Median from Data Stream", source: "LeetCode 295", difficulty: hard, roles: [ai-tooling-fullstack, adas-av-validation]}
+
+  # --- intervals ---
+  - {id: cb-iv-01, pattern: intervals, title: "Merge Intervals", source: "LeetCode 56", difficulty: medium, roles: [ai-tooling-fullstack, adas-av-validation], talking_point: "Merging overlapping time ranges is the same shape as coalescing event windows over drive logs in the replay/triage work."}
+  - {id: cb-iv-02, pattern: intervals, title: "Insert Interval", source: "LeetCode 57", difficulty: medium, roles: [ai-tooling-fullstack]}
+
+  # --- graph-bfs-dfs ---
+  - {id: cb-gr-01, pattern: graph-bfs-dfs, title: "Number of Islands", source: "LeetCode 200", difficulty: medium, roles: [ai-tooling-fullstack, adas-av-validation]}
+  - {id: cb-gr-02, pattern: graph-bfs-dfs, title: "Clone Graph", source: "LeetCode 133", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-gr-03, pattern: graph-bfs-dfs, title: "Rotting Oranges", source: "LeetCode 994", difficulty: medium, roles: [ai-tooling-fullstack, adas-av-validation]}
+
+  # --- graph-topo ---
+  - {id: cb-to-01, pattern: graph-topo, title: "Course Schedule", source: "LeetCode 207", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation], talking_point: "Cycle detection on a dependency graph — the DecisionCanvas engine rejects cyclic node graphs the same way before execution."}
+  - {id: cb-to-02, pattern: graph-topo, title: "Course Schedule II", source: "LeetCode 210", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation], talking_point: "DecisionCanvas's compiler detects control cycles via Kahn topological sort — the same algorithm; mention you built it there in a v0.3.0 prototype if it comes up."}
+
+  # --- dp-1d ---
+  - {id: cb-dp-01, pattern: dp-1d, title: "Climbing Stairs", source: "LeetCode 70", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls]}
+  - {id: cb-dp-02, pattern: dp-1d, title: "House Robber", source: "LeetCode 198", difficulty: medium, roles: [ai-tooling-fullstack]}
+  - {id: cb-dp-03, pattern: dp-1d, title: "Coin Change", source: "LeetCode 322", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-dp-04, pattern: dp-1d, title: "Longest Increasing Subsequence", source: "LeetCode 300", difficulty: medium, roles: [ai-tooling-fullstack]}
+
+  # --- matrix ---
+  - {id: cb-mx-02, pattern: matrix, title: "Rotate Image", source: "LeetCode 48", difficulty: medium, roles: [ai-tooling-fullstack]}
+  - {id: cb-mx-03, pattern: matrix, title: "Set Matrix Zeroes", source: "LeetCode 73", difficulty: medium, roles: [ai-tooling-fullstack, embedded-controls]}
+
+  # --- strings ---
+  - {id: cb-sr-01, pattern: strings, title: "Valid Anagram", source: "LeetCode 242", difficulty: easy, roles: [ai-tooling-fullstack, systems-ai-automation]}
+  - {id: cb-sr-02, pattern: strings, title: "Encode and Decode Strings", source: "LeetCode 271", difficulty: medium, roles: [ai-tooling-fullstack, systems-ai-automation]}
+
+  # --- design ---
+  - {id: cb-de-01, pattern: design, title: "Implement Trie (Prefix Tree)", source: "LeetCode 208", difficulty: medium, roles: [ai-tooling-fullstack]}
+  - {id: cb-de-02, pattern: design, title: "Design HashMap", source: "LeetCode 706", difficulty: easy, roles: [ai-tooling-fullstack, embedded-controls]}
+
+  # --- bit-manipulation (weighted for embedded-c) ---
+  - {id: cb-bm-01, pattern: bit-manipulation, title: "Number of 1 Bits", source: "LeetCode 191", difficulty: easy, roles: [embedded-controls, ai-tooling-fullstack]}
+  - {id: cb-bm-02, pattern: bit-manipulation, title: "Counting Bits", source: "LeetCode 338", difficulty: easy, roles: [embedded-controls]}
+  - {id: cb-bm-03, pattern: bit-manipulation, title: "Reverse Bits", source: "LeetCode 190", difficulty: easy, roles: [embedded-controls]}
+  - {id: cb-bm-04, pattern: bit-manipulation, title: "Single Number", source: "LeetCode 136", difficulty: easy, roles: [embedded-controls, ai-tooling-fullstack]}
+  - {id: cb-bm-05, pattern: bit-manipulation, title: "Bitwise AND of Numbers Range", source: "LeetCode 201", difficulty: medium, roles: [embedded-controls]}
+
+  # --- state-machine (weighted for embedded / validation) ---
+  - {id: cb-sm-01, pattern: state-machine, title: "String to Integer (atoi)", source: "LeetCode 8", difficulty: medium, roles: [embedded-controls, ai-tooling-fullstack]}
+  - {id: cb-sm-02, pattern: state-machine, title: "Design a debounced gear-shift state machine from an event stream", source: "custom (domain)", difficulty: medium, roles: [embedded-controls, vehicle-systems-validation], talking_point: "Mirrors the K2 tracked-vehicle TCU clutch/shift-control logic I worked on (sensorless clutch adaptation, kiss-point learning)."}
+  - {id: cb-sm-03, pattern: state-machine, title: "Model an SCC emergency-stop handover as a guarded state machine", source: "custom (domain)", difficulty: medium, roles: [adas-av-validation, vehicle-systems-validation, embedded-controls], talking_point: "The SCC emergency-stop behavior I independently developed and validated at HMC — describe the guarded transitions."}
+  - {id: cb-sm-04, pattern: state-machine, title: "Validate an actuator command sequence against a safety interlock FSM", source: "custom (domain)", difficulty: hard, roles: [embedded-controls, vehicle-systems-validation]}
+
+  # --- log-parsing (weighted for practical-python / validation) ---
+  - {id: cb-lp-01, pattern: log-parsing, title: "Logger Rate Limiter", source: "LeetCode 359", difficulty: easy, roles: [adas-av-validation, systems-ai-automation]}
+  - {id: cb-lp-02, pattern: log-parsing, title: "Parse a channel log and window a signal into fixed time buckets", source: "custom (domain)", difficulty: medium, roles: [adas-av-validation, vehicle-systems-validation], talking_point: "Windowing a time-series channel log is the daily shape of the drive-log replay/triage work at HMC."}
+  - {id: cb-lp-03, pattern: log-parsing, title: "Extract and align named channels from an MF4-style measurement file", source: "custom (domain)", difficulty: medium, roles: [adas-av-validation, vehicle-systems-validation]}
+  - {id: cb-lp-04, pattern: log-parsing, title: "Detect the first frame where two logged signals diverge beyond a threshold", source: "custom (domain)", difficulty: medium, roles: [adas-av-validation, embedded-controls], talking_point: "First-divergence detection is the same shape as localizing false target selections when replaying production logs offline."}

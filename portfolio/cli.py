@@ -4,7 +4,8 @@ import argparse
 from typing import Optional, Sequence
 
 from .applications import (gate, jd_confirm, jd_parse, match, match_confirm,
-                           new_application, pack_interview, pdfcheck, render_resume, validate_stage)
+                           new_application, pack_coding, pack_interview, pdfcheck,
+                           render_resume, validate_stage)
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
@@ -106,6 +107,7 @@ def build_parser() -> argparse.ArgumentParser:
     p_pack = sub.add_parser("pack", help="Validate + render an interview / coding prep pack.")
     pack_sub = p_pack.add_subparsers(dest="pack_command")
     pack_sub.add_parser("interview", help="Validate + render prep/interview_pack.yaml.").add_argument("slug")
+    pack_sub.add_parser("coding", help="Validate + render prep/coding_pack.yaml against the bank.").add_argument("slug")
 
     return parser
 
@@ -156,7 +158,9 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
     if command == "pack":
         if getattr(args, "pack_command", None) == "interview":
             return pack_interview(paths, args.slug)
-        print("usage: python main.py pack interview <slug>")
+        if getattr(args, "pack_command", None) == "coding":
+            return pack_coding(paths, args.slug)
+        print("usage: python main.py pack {interview|coding} <slug>")
         return 2
     return None
 

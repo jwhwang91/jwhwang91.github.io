@@ -537,3 +537,37 @@ def pack_interview(paths: Paths, slug: str) -> int:
     (folder / "prep" / "interview_pack.md").write_text(render_pack_md(pack), encoding="utf-8")
     print(f"Interview pack valid -> {rel_to_root(folder / 'prep' / 'interview_pack.md', paths.root)}")
     return 0
+
+
+def pack_coding(paths: Paths, slug: str) -> int:
+    """Validate the LLM-written prep/coding_pack.yaml against the committed bank
+    (all ids in bank, count 20-40, difficulty mix within the format band) and render it."""
+    from .prep import render_coding_pack_md, validate_coding_pack
+
+    folder = paths.applications / slug
+    pack_path = folder / "prep" / "coding_pack.yaml"
+    if not pack_path.exists():
+        raise FileNotFoundError(f"{pack_path} missing — run /coding-pack {slug} in Claude Code first")
+    bank_path = paths.context / "prep" / "coding_bank.yaml"
+    if not bank_path.exists():
+        raise FileNotFoundError(f"{bank_path} missing — the coding problem bank must be committed first")
+    pack, bank = load_yaml(pack_path), load_yaml(bank_path)
+
+    try:
+        jsonschema.validate(pack, _schema_json(paths, "coding_pack.schema.json"))
+    except jsonschema.ValidationError as e:
+        print(f"[error] schema:{'/'.join(map(str, e.absolute_path))}: {e.message}")
+        print("\npack coding FAILED: schema violation.")
+        return 1
+
+    violations = validate_coding_pack(pack, bank)
+    for v in violations:
+        print(v)
+    if [v for v in violations if v.level == "error"]:
+        print(f"\npack coding FAILED: {len([v for v in violations if v.level == 'error'])} error(s).")
+        return 1
+
+    (folder / "prep").mkdir(parents=True, exist_ok=True)
+    (folder / "prep" / "coding_pack.md").write_text(render_coding_pack_md(pack, bank), encoding="utf-8")
+    print(f"Coding pack valid -> {rel_to_root(folder / 'prep' / 'coding_pack.md', paths.root)}")
+    return 0

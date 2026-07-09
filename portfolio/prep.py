@@ -174,3 +174,92 @@ def render_pack_md(pack: dict) -> str:
     section("Refreshers plan", pack.get("refreshers_plan"),
             lambda r: f"- {r.get('topic')}" + (f" (~{r.get('hours')}h)" if r.get('hours') else ""))
     return "\n".join(L).rstrip() + "\n"
+
+
+# ---------------------------------------------------------------------------
+# Coding pack (MASTER_PLAN §8): problems are SELECTED from a committed bank, never
+# generated. Deterministic format inference + selection validation.
+# ---------------------------------------------------------------------------
+
+CODING_FORMATS = {
+    "leetcode-standard": {"easy": 0.30, "medium": 0.55, "hard": 0.15},
+    "practical-python": {"easy": 0.45, "medium": 0.45, "hard": 0.10},
+    "embedded-c": {"easy": 0.35, "medium": 0.50, "hard": 0.15},
+    "takehome-plus-medium-lc": {"easy": 0.20, "medium": 0.65, "hard": 0.15},
+}
+_MIX_TOLERANCE = 0.15
+
+
+def infer_format(jd_parsed: dict) -> dict:
+    """Deterministic coding-round format from the parsed JD (LLM may override w/ reason)."""
+    role_type = (jd_parsed.get("role_type") or "")
+    kws = {k.get("term") for k in (jd_parsed.get("keywords") or []) if k.get("term")}
+    text = (" ".join((k.get("quote") or "") for k in (jd_parsed.get("keywords") or [])) + " " + role_type).lower()
+    if role_type in ("embedded", "controls-software") or (kws & {"cpp", "misra-c", "autosar", "rtos"}):
+        return {"format": "embedded-c", "basis": "embedded / C-C++ / MISRA / RTOS signal"}
+    if role_type in ("adas-validation", "data-simulation-validation") or \
+            (re.search(r"\blog(s|-replay| replay| analysis)?\b", text) and "python" in kws):
+        return {"format": "practical-python", "basis": "validation/test role with Python scripting / log analysis"}
+    if role_type == "fullstack-saas":
+        return {"format": "takehome-plus-medium-lc", "basis": "startup full-stack signal"}
+    return {"format": "leetcode-standard", "basis": "general DSA / big-tech signal"}
+
+
+def validate_coding_pack(pack: dict, bank: dict) -> list[Violation]:
+    from collections import Counter
+    v: list[Violation] = []
+    by_id = {p["id"]: p for p in (bank.get("problems") or [])}
+    # de-dupe first: duplicated ids must not inflate the 20-40 count or skew the mix
+    ids = list(dict.fromkeys(pack.get("problem_ids") or []))
+
+    for pid in ids:
+        if pid not in by_id:
+            v.append(Violation("error", "problem_ids", f"problem '{pid}' is not in coding_bank.yaml (problems are selected, not invented)"))
+    if not (20 <= len(ids) <= 40):
+        v.append(Violation("error", "problem_ids", f"{len(ids)} problems selected — must be 20-40"))
+
+    band = CODING_FORMATS.get(pack.get("format"))
+    valid = [by_id[i] for i in ids if i in by_id]
+    if band and valid:
+        counts = Counter(p.get("difficulty", "medium") for p in valid)
+        for diff, target in band.items():
+            actual = counts.get(diff, 0) / len(valid)
+            if abs(actual - target) > _MIX_TOLERANCE:
+                v.append(Violation("error", "difficulty",
+                                   f"{diff} share {actual:.0%} is outside the {pack.get('format')} band "
+                                   f"(~{target:.0%} +/- {_MIX_TOLERANCE:.0%})"))
+    return v
+
+
+def render_coding_pack_md(pack: dict, bank: dict) -> str:
+    by_id = {p["id"]: p for p in (bank.get("problems") or [])}
+    L = [f"# Coding prep — {pack.get('application', '')}", "",
+         f"Format: **{pack.get('format', '')}**  ·  plan: **{pack.get('plan', '-')}**",
+         f"Basis: {pack.get('basis', '')}"]
+    if pack.get("format_override_reason"):
+        L.append(f"Override: {pack['format_override_reason']}")
+    L.append("")
+    if pack.get("pattern_priority"):
+        L.append("## Pattern priority")
+        L.append(" -> ".join(pack["pattern_priority"]))
+        L.append("")
+    L.append("## Problems")
+    for pid in pack.get("problem_ids", []) or []:
+        p = by_id.get(pid, {})
+        L.append(f"- [ ] `{pid}` [{p.get('difficulty', '?')}] {p.get('title', '(unknown)')} "
+                 f"({p.get('source', '')}) — {p.get('pattern', '')}")
+        if p.get("talking_point"):
+            L.append(f"      talk: {p['talking_point']}")
+    L.append("")
+    for title, key in (("Complexity expectations", "complexity_expectations"),):
+        if pack.get(key):
+            L.append(f"## {title}")
+            L += [f"- **{c.get('pattern')}:** {c.get('expectation')}" for c in pack[key]]
+            L.append("")
+    for title, key in (("Mock questions", "mock_questions"), ("Debug / code-review exercises", "debug_exercises"),
+                       ("Practical tasks", "practical_tasks")):
+        if pack.get(key):
+            L.append(f"## {title}")
+            L += [f"- {x}" for x in pack[key]]
+            L.append("")
+    return "\n".join(L).rstrip() + "\n"
