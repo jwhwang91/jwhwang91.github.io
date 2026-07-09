@@ -1,7 +1,11 @@
 # Resume / Portfolio Static Site Generator v3
 
-> **New here?** See [`PIPELINE.md`](PIPELINE.md) for the end-to-end flow — backbone → live
-> site, and the per-job application loop. This README documents the static-site internals.
+> **New here?**
+> - To run the per-job **application pipeline** (JD → keyword match → truthfulness-gated resume →
+>   verified PDF → interview/coding prep → tracking → learning), read the one-file operator
+>   guide: **[`WORKFLOW.md`](WORKFLOW.md)**.
+> - For the high-level map (backbone → live site, plus the loop), see [`PIPELINE.md`](PIPELINE.md).
+> - This README documents the **static-site generator** internals (the backbone that deploys).
 
 This version follows the redesigned strategy:
 

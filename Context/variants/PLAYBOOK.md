@@ -1,5 +1,13 @@
 # Playbook — optimizing the resume for a specific JD
 
+> **⚠️ Mechanics superseded.** The step-by-step overlay/variant mechanics below
+> (Steps 0–5) are the *legacy* manual loop. The current pipeline runs from
+> **[`WORKFLOW.md`](../../WORKFLOW.md)** (`new → jd parse → match → render+gate →
+> pdfcheck → submit`, with deterministic truthfulness gates). **This file is kept for
+> its strategy content** — the ATS-keyword priority and the "one rule that never bends"
+> below still govern how you select and word keywords. Read the strategy here; run the
+> loop from WORKFLOW.md.
+
 **No GUI needed.** Claude Code is the loop. You do three things: run one command,
 paste the JD into a text file, and talk to Claude. Claude proposes; you approve;
 the build is deterministic. The backbone (`Context/*.yaml`) and the live site are

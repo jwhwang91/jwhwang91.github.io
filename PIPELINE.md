@@ -1,16 +1,16 @@
 # Portfolio Pipeline — end-to-end steps
 
 One **backbone** (your true, field-agnostic resume) → many per-job **applications**, each a
-single private folder. This file is the map; the detailed playbooks live in
-`Context/variants/`.
+single private folder. This file is the map. **The full operator guide is [`WORKFLOW.md`](WORKFLOW.md)** —
+read that to run the loop; the strategy playbooks live in `Context/variants/`.
 
 ```
 Backbone (Context/*.yaml)  ──► python main.py            ──► dist/  ──► push ──► live site (HR-facing)
         │
-        └─ lens per job ──► Applications/<name>/overlay.yaml ──► python main.py --variant "<name>"
-                                                              └─► Applications/<name>/resume.html ──► PDF ──► send
-                                                                       │
-                                                              result.md + rejection pipeline ──► next application
+        └─ per job ──► Applications/<slug>/  (new → jd parse → match → resume → render+gate → pdfcheck → submit)
+                                            └─► out/resume_final.pdf ──► send   +   prep/ interview & coding packs
+                                                     │
+                                            track · outcome · lessons compile ──► ATS_LEDGER ──► next application
 ```
 
 Two truths that never bend:
@@ -43,103 +43,97 @@ Two truths that never bend:
 
 ---
 
-## Stage B — Per-job application (the regulated loop)
+## Stage B — Per-job application (the regulated pipeline)
 
-Each application is **one self-contained folder** `Applications/<name>/` holding source,
-output, and outcome. `<name>` is your private label (e.g. "Tesla 1") — it never appears on
-the resume. Full playbook: `Context/variants/PLAYBOOK.md` and `README.md`.
+Each application is **one self-contained folder** `Applications/<slug>/` holding every
+artifact from first paste to post-mortem. `<slug>` is your private label — it never appears on
+the resume. **Run it from [`WORKFLOW.md`](WORKFLOW.md)** (the step-by-step table + gates);
+the short version:
 
 ```
-Applications/<name>/
-    jd.txt          # 1. pasted job description (input)
-    overlay.yaml    # 2. Claude's proposal: which items to surface, order, ATS keywords (you review/edit)
-    notes.md        #    rationale + your review feedback + lessons
-    result.md       # 5. the outcome — YOU update this
-    resume.html     # 4. generated, lean, PDF-ready (case-study links -> live portfolio)
-    (PDF / evidence files you add)
+Applications/<slug>/
+    jd.txt                 # 1. pasted JD (input)
+    jd.parsed.yaml         # 2. parsed keywords, each with a verbatim JD quote
+    match.yaml             # 3. per-keyword support (direct/partial/adjacent/unsupported)
+    gap_report.md          #    coverage + pre-resume recommendation
+    resume.yaml            # 4. the draft (cited bullets only)
+    out/resume_ats.{txt,html,md}, resume_final.pdf   # 5. rendered + exported
+    gate_report.{yaml,md}, checklist.md, changes.md, audit.json   # 6. the truthfulness gate
+    prep/interview_pack.{yaml,md}, coding_pack.{yaml,md}          # 7. prep packs
+    application.yaml       # 8. the tracking record (status, events, outcome, lessons)
 ```
 
-1. **Ingest** → `python main.py --new-variant "<name>"` scaffolds the folder. Paste the full
-   job posting into `Applications/<name>/jd.txt` (UTF-8; posting URL on the first line).
-2. **Analyze + propose** → tell Claude: *"run the JD loop for `<name>`."* Claude reads the JD
-   + backbone and fills `overlay.yaml`, with rationale in `notes.md`. **Top priority: pass
-   the ATS keyword filter** — mirror the JD's exact wording (term + acronym) for every skill
-   the backbone *truly* supports; never invent one.
-3. **Review (your gate)** → read `overlay.yaml`, edit it directly, or send it back with
-   notes. Nothing publishes; the backbone never moves.
-4. **Build** → `python main.py --variant "<name>"` → `Applications/<name>/resume.html`. Open
-   it, Export PDF, send it. (The resume stays lean — every role/project links to its deep
-   case study on the live portfolio, so nothing is duplicated per application.)
-5. **Record the outcome** → update `Applications/<name>/result.md` (status / applied date /
-   outcome date / stage reached / why / next move) as the application moves.
+1. **Scaffold + paste** → `python main.py new <slug> --company X --positioning <track>`; paste
+   the JD into `jd.txt`.
+2. **Parse → match → draft → render** → `jd parse` / `match` / `/resume-plan` / `render`, each
+   gated by a human confirm (G1–G3). The **gate scores `resume_ats.txt` and re-verifies the
+   PDF text layer** — it asserts nothing beyond a confirmed claim.
+3. **Export + verify PDF** → browser *Save as PDF* → `pdfcheck`.
+4. **Submit (G4)** → `python main.py status <slug> submitted` — the hard gate; mechanically
+   refuses an ungated, text-less, or silently-edited resume.
+
+**Top priority is still to pass the ATS keyword filter** — mirror the JD's exact wording
+(term + acronym) for every skill the backbone *truly* supports; never invent one. The
+deterministic validators enforce exactly that.
 
 ### Exporting the PDF correctly — DON'T skip this
 
-This is where a perfect resume silently fails ATS. The HTML is text-based and ATS-friendly,
-but the **export step can destroy the text layer**, leaving a file that looks pixel-perfect
-to a human and reads as **blank** to an ATS.
+The HTML is ATS-friendly, but the **export step can destroy the text layer**, leaving a file
+that looks perfect to a human and reads as **blank** to an ATS.
 
-- **Export with the browser's "Save as PDF"** — in Chrome/Edge, click `Export PDF` (or
-  Ctrl+P), set **Destination → "Save as PDF"** (Chromium's Skia/PDF engine, which keeps a
-  real, selectable text layer).
-- **NEVER use "Microsoft Print to PDF"** (the Windows virtual printer). It converts the text
-  to vector outlines → **zero extractable text**. (A previously submitted resume was found to
-  have 0 characters across 4 pages because of exactly this.) Avoid any "print to image" path.
-- **Verify before you send (10 seconds):** open the PDF, `Ctrl+A` → `Ctrl+C`. If the text
-  won't select/copy, the ATS can't read it — re-export. Tell-tale of a bad file: large byte
-  size for little content, and no selectable text.
-- **Or ask Claude to check it:** drop the exported PDF in `Applications/<name>/` and say
-  *"verify the text layer."* A clean file returns the full resume text; a bad one returns
-  ~0 characters (no `/Font` resources, Producer "Microsoft: Print To PDF").
-
-Helpers: `python main.py --list-variants` (every application + whether built);
-`--all-variants` (rebuild all). Reusable, committable field lenses can live as a flat
-`Context/variants/<name>.yaml` instead of a folder.
+- **Export with the browser's "Save as PDF"** (Chrome/Edge → Ctrl+P → Destination *Save as PDF*).
+- **NEVER "Microsoft Print to PDF"** — it rasterizes text to outlines → zero extractable text.
+- **Verify:** `python main.py pdfcheck <slug>` (≥0.98 similarity to `resume_ats.txt`); the G4
+  submit gate runs it again, so a bad PDF cannot be sent.
 
 ---
 
 ## Stage C — After a rejection / ghost (the diagnosis loop)
 
-When a rejection, a 4+ week ghost, or a "moved forward with other candidates" email arrives
-for any `Applications/<name>/`. Full playbook: `Context/variants/REJECTION_PIPELINE.md`.
-
 1. Give Claude the two facts it can't infer: **how fast** the rejection came and **through
-   what channel** (auto-email / recruiter / portal flip).
-2. Tell Claude: *"run the rejection pipeline for `<name>`."* It classifies the filter, weighs
-   sponsorship (see `Context/candidate_profile.yaml`), audits real vs. recoverable gaps, and
-   picks a next move (referral / exact-match req / widen funnel / honest keyword recovery /
-   resolve auth unknown / stand down).
-3. It writes the short outcome to `result.md` and the full diagnosis + a carry-forward lesson
-   to `notes.md`, so the next application starts smarter.
+   what channel** (auto-email / recruiter / portal flip); log them with
+   `python main.py log <slug> --note "…"` and advance `status <slug> rejected|ghosted|…`.
+2. `/rejection <slug>` classifies the filter (auto-knockout vs keyword-gap), weighs
+   sponsorship (`Context/candidate_profile.yaml`), and fills `outcome:` + `lessons:` in
+   `application.yaml`. See `Context/variants/REJECTION_PIPELINE.md` for the strategy.
 
 ---
 
 ## Stage D — Evolve (learn across applications)
 
-Stage C diagnoses *one* application; this stage makes the *whole system* better. Full
-playbook: `Context/variants/EVOLUTION.md`; the growing knowledge: `Context/variants/ATS_LEDGER.md`.
+Stage C diagnoses *one* application; this stage makes the *whole system* better.
+Full strategy: `Context/variants/EVOLUTION.md`; the growing knowledge: `ATS_LEDGER.md`.
 
-1. **Score it** → `python main.py --insights` reads every `result.md` and prints ATS
-   pass-through (reaching a human = passed the ATS), which applications were knocked out before
-   a human read them, and any PDF text-layer warnings.
-2. **Evolve the ledger** → tell Claude *"evolve the ATS ledger."* It mines recurring,
-   anonymized patterns from the ATS-fail JDs/overlays and updates `ATS_LEDGER.md`.
-3. **Feed-forward** → every new overlay starts by reading `ATS_LEDGER.md` (Step 2 of the loop),
-   so each result compounds into the next resume.
+1. **Track** → `python main.py track [--open|--closed|--csv]` for the scoreboard (new
+   applications + legacy folders).
+2. **Compile lessons** → `python main.py lessons compile` aggregates lessons from **closed**
+   applications into an anonymization-linted `Applications/_ledger_draft.md`; `backbone-gap`
+   lessons append to `Context/variants/BACKLOG.md`.
+3. **Evolve the ledger** → `/evolve-ledger` proposes an anonymized `ATS_LEDGER.md` edit; **you
+   commit it**. Nothing auto-writes to the registry or taxonomy.
 
 **The rule that keeps this honest:** only **ATS-stage** rejections drive resume ATS changes. A
-post-interview rejection means the resume already cleared ATS — don't churn its keywords; fix
-fit/interview instead.
+post-interview rejection means the resume already cleared ATS — that's an interview lesson.
+`lessons compile` enforces this in code.
 
 ---
 
 ## Quick command reference
 
+Full detail in [`WORKFLOW.md`](WORKFLOW.md). Pipeline (new):
+
 | Command | What it does |
 |---|---|
 | `python main.py` | Build the backbone site to `dist/` (what CI runs). |
-| `python main.py --new-variant "<name>"` | Scaffold `Applications/<name>/` (jd, overlay, notes, result). |
-| `python main.py --variant "<name>"` | Build one application's `resume.html`. |
-| `python main.py --all-variants` | Rebuild every application. |
-| `python main.py --list-variants` | List applications and whether each is built. |
-| `python main.py --insights` | Scoreboard from all `result.md`: ATS pass-through, knockouts, PDF text-layer warnings. |
+| `new <slug> --company X --positioning <track>` | Scaffold an application + `jd.txt`. |
+| `jd parse <slug>` / `jd confirm <slug>` | Parse JD, then confirm (G1). |
+| `match <slug>` / `match confirm <slug>` | Classify support, then confirm (G2); writes gap + plan. |
+| `validate <slug> --stage resume` | Validate the finalized `resume.yaml` draft. |
+| `render <slug>` | Render `out/` + run the truthfulness gate (→ `gated` on PASS). |
+| `status <slug> <status>` | Advance the lifecycle (`approved`/`submitted`/…); submit is the G4 hard gate. |
+| `pdfcheck <slug>` | Verify the exported PDF text layer. |
+| `pack interview <slug>` / `pack coding <slug>` | Validate + render the prep packs. |
+| `track` / `log <slug> --note` / `lessons compile` | Scoreboard, event log, ledger draft. |
+
+Legacy site/variant commands (still supported): `--new-variant`, `--variant`,
+`--all-variants`, `--list-variants`, `--insights` — see [`WORKFLOW.md`](WORKFLOW.md) §8.
