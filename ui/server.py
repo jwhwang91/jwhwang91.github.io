@@ -34,6 +34,10 @@ SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,80}$")
 CLI_TIMEOUT = 120
 DEFAULT_MODEL = "claude-opus-4-8"                 # headless-Claude model; override with JOBOPS_MODEL
 MODEL_RE = re.compile(r"^[A-Za-z0-9][A-Za-z0-9._:-]{0,60}$")
+DEFAULT_EFFORT = "max"                            # reasoning effort per call; override with JOBOPS_EFFORT
+# Accepted `claude --effort` levels (installed CLI: low/medium/high/xhigh/max; `ultracode`
+# is forward-compat for newer CLIs). Unknown values fall back to DEFAULT_EFFORT.
+EFFORT_VALUES = {"low", "medium", "high", "xhigh", "max", "ultracode"}
 # LLM slash-command contracts the runner can drive (same Format/prompts/*.md the CLI uses).
 LLM_STEPS = {"jd-parse", "jd-match", "resume-plan", "interview-pack", "coding-pack",
              "rejection", "evolve-ledger"}
@@ -225,8 +229,9 @@ def _headless_enabled() -> bool:
 def api_llm(step: str, body: dict = Body(...)):
     """One runner interface for the LLM steps. Defaults to MANUAL (returns the slash
     command to run in Claude Code); with JOBOPS_HEADLESS=1 and claude on PATH it drives
-    headless Claude Code executing the same Format/prompts/*.md contract. The model is
-    DEFAULT_MODEL (Opus 4.8), overridable with the JOBOPS_MODEL env var."""
+    headless Claude Code executing the same Format/prompts/*.md contract. Model is
+    DEFAULT_MODEL (Opus 4.8, override JOBOPS_MODEL); reasoning effort is DEFAULT_EFFORT
+    (max, override JOBOPS_EFFORT)."""
     if step not in LLM_STEPS:
         raise HTTPException(400, f"unknown step {step!r}")
     slug = _valid_slug(body.get("slug", "")) if body.get("slug") else ""
@@ -237,14 +242,19 @@ def api_llm(step: str, body: dict = Body(...)):
     model = os.environ.get("JOBOPS_MODEL", DEFAULT_MODEL)
     if not MODEL_RE.match(model):                 # ignore a malformed override, fall back to default
         model = DEFAULT_MODEL
+    effort = os.environ.get("JOBOPS_EFFORT", DEFAULT_EFFORT).strip().lower()
+    if effort not in EFFORT_VALUES:              # ignore an unknown level, fall back to default
+        effort = DEFAULT_EFFORT
+    argv = ["claude", "-p", "--model", model, "--effort", effort, command]
     try:
-        proc = subprocess.run(["claude", "-p", "--model", model, command], cwd=str(REPO_ROOT),
+        proc = subprocess.run(argv, cwd=str(REPO_ROOT),
                               capture_output=True, text=True, timeout=900, check=False)
     except subprocess.TimeoutExpired:
-        return {"mode": "headless", "command": command, "model": model, "ok": False,
+        return {"mode": "headless", "command": command, "model": model, "effort": effort, "ok": False,
                 "error": f"headless Claude timed out after 900s on {command}"}
-    return {"mode": "headless", "command": command, "model": model, "exit_code": proc.returncode,
-            "output": (proc.stdout or "")[-4000:], "error": (proc.stderr or "")[-2000:]}
+    return {"mode": "headless", "command": command, "model": model, "effort": effort,
+            "exit_code": proc.returncode, "output": (proc.stdout or "")[-4000:],
+            "error": (proc.stderr or "")[-2000:]}
 
 
 def serve(host: str = "127.0.0.1", port: int = 8765):

@@ -124,12 +124,27 @@ def _fake_claude(monkeypatch):
     return cap
 
 
-def test_headless_defaults_to_opus_4_8(client, monkeypatch):
+def test_headless_defaults_to_opus_4_8_and_max_effort(client, monkeypatch):
     cap = _fake_claude(monkeypatch)
     r = client.post("/api/llm/interview-pack", json={"slug": "tesla"})
     body = r.json()
-    assert body["mode"] == "headless" and body["model"] == "claude-opus-4-8"
+    assert body["mode"] == "headless" and body["model"] == "claude-opus-4-8" and body["effort"] == "max"
     assert "--model" in cap["argv"] and "claude-opus-4-8" in cap["argv"]
+    assert "--effort" in cap["argv"] and "max" in cap["argv"]
+
+
+def test_headless_effort_env_override(client, monkeypatch):
+    cap = _fake_claude(monkeypatch)
+    monkeypatch.setenv("JOBOPS_EFFORT", "high")
+    r = client.post("/api/llm/jd-parse", json={"slug": "tesla"})
+    assert r.json()["effort"] == "high" and "high" in cap["argv"]
+
+
+def test_headless_malformed_effort_falls_back_to_max(client, monkeypatch):
+    cap = _fake_claude(monkeypatch)
+    monkeypatch.setenv("JOBOPS_EFFORT", "turbo!!")   # not a valid level -> default
+    r = client.post("/api/llm/jd-parse", json={"slug": "tesla"})
+    assert r.json()["effort"] == "max" and "turbo!!" not in cap["argv"]
 
 
 def test_headless_model_env_override(client, monkeypatch):

@@ -20,7 +20,10 @@ python -m ui.server                      # serves http://127.0.0.1:8765
   `claude` CLI on PATH) to have the UI drive headless Claude Code executing the same
   `Format/prompts/*.md` contracts — one runner interface, so headless-CLI and a future
   API mode are interchangeable. Headless runs use **Opus 4.8** (`claude-opus-4-8`) by
-  default; override with `JOBOPS_MODEL=<model-id>` (e.g. `claude-sonnet-5`).
+  default; override with `JOBOPS_MODEL=<model-id>` (e.g. `claude-sonnet-5`). Reasoning
+  effort per call defaults to **`max`** (`claude -p --effort max`); override with
+  `JOBOPS_EFFORT` (`low`/`medium`/`high`/`xhigh`/`max`; `ultracode` too if your `claude`
+  CLI supports it — an unknown value falls back to `max`).
 - **Isolate data** (dev/test): `JOBOPS_APPLICATIONS=/tmp/apps python -m ui.server` relocates
   only the private Applications/ dir.
 
