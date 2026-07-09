@@ -1,15 +1,20 @@
 from __future__ import annotations
 
 import argparse
+import contextlib
+import io
+import json
 from typing import Optional, Sequence
 
 from .applications import (gate, jd_confirm, jd_parse, match, match_confirm,
                            new_application, pack_coding, pack_interview, pdfcheck,
                            render_resume, validate_stage)
+from .content import load_yaml
 from .facts import sweep_site_consistency, validate_registry
 from .paths import Paths, default_paths, rel_to_root
 from .site import build
-from .tracking import lessons_compile, log_event, print_insights, set_status, track
+from .tracking import (lessons_compile, log_event, print_insights, set_status,
+                       track, track_rows)
 from .variants import build_all_variants, build_variant, list_variants, scaffold_variant
 
 
@@ -49,6 +54,12 @@ def build_parser() -> argparse.ArgumentParser:
         action="store_true",
         help="Validate Context/facts/** (schema + verbatim source quotes + references) and "
              "sweep Context/*.yaml for drift against employers.yaml (warn-level). Exits 1 on errors.",
+    )
+    parser.add_argument(
+        "--json",
+        action="store_true",
+        help="Emit a machine-readable JSON result for a subcommand (the local UI contract). "
+             "Runs the same command; human output is captured into the JSON envelope.",
     )
 
     # New JD-pipeline subcommands (legacy flags above stay working unchanged).
@@ -165,6 +176,90 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
     return None
 
 
+def _app_summary(paths: Paths, slug: str) -> dict:
+    """Read the schema-validated artifacts an application has produced. This never
+    recomputes anything — Format/schemas/ remains the source of truth for the types."""
+    from collections import Counter
+
+    folder = paths.applications / slug
+    out: dict = {}
+    ap = folder / "application.yaml"
+    if ap.exists():
+        try:
+            a = load_yaml(ap)
+        except ValueError:
+            a = {}
+        out["status"] = a.get("status")
+        out["company"] = a.get("company")
+        out["role_title"] = a.get("role_title")
+        if a.get("gate"):
+            out["gate"] = a["gate"]
+        if a.get("outcome"):
+            out["outcome"] = a["outcome"]
+    jp = folder / "jd.parsed.yaml"
+    if jp.exists():
+        j = load_yaml(jp)
+        out["jd"] = {"confirmed": j.get("confirmed"), "role_title": j.get("role_title"),
+                     "keywords": len(j.get("keywords") or [])}
+    mp = folder / "match.yaml"
+    if mp.exists():
+        m = load_yaml(mp)
+        cls = m.get("classifications") or []
+        out["match"] = {"confirmed": m.get("confirmed"), "count": len(cls),
+                        "support": dict(Counter(c.get("support") for c in cls))}
+    gr = folder / "gate_report.yaml"
+    if gr.exists():
+        g = load_yaml(gr)
+        # ATS display-honesty rule: verdict + coverage + confidence tier only; NO probability.
+        out["gate_report"] = {k: g.get(k) for k in
+                              ("verdict", "recommendation", "confidence", "must_have_coverage",
+                               "unsupported_ratio")}
+        out["gate_report"]["error_count"] = len(g.get("errors") or [])
+        out["gate_report"]["missing_terms"] = g.get("missing_terms") or []
+        out["gate_report"]["risky_for_review"] = g.get("risky_for_review") or []
+    out["artifacts"] = [rel for rel in (
+        "jd.txt", "jd.parsed.yaml", "match.yaml", "gap_report.md", "portfolio_plan.md",
+        "resume.yaml", "out/resume_ats.txt", "out/resume_ats.html", "out/resume_ats.md",
+        "out/resume_final.pdf", "gate_report.yaml", "gate_report.md", "checklist.md",
+        "changes.md", "audit.json", "prep/interview_pack.md", "prep/coding_pack.md")
+        if (folder / rel).exists()]
+    return out
+
+
+def _slug_of(args: argparse.Namespace) -> Optional[str]:
+    if getattr(args, "slug", None):
+        return args.slug
+    if getattr(args, "command", None) == "match":
+        a = args.args
+        return a[1] if len(a) == 2 and a[0] == "confirm" else (a[0] if a else None)
+    return None
+
+
+def _run_json(paths: Paths, args: argparse.Namespace) -> int:
+    """Run a subcommand and emit a single JSON envelope: the command result plus the
+    artifacts it produced. Human stdout is captured, not printed, so stdout is pure JSON."""
+    command = getattr(args, "command", None)
+    slug = _slug_of(args)
+    envelope: dict = {"command": command, "slug": slug, "ok": True, "exit_code": 0}
+    buf = io.StringIO()
+    try:
+        with contextlib.redirect_stdout(buf):
+            code = _run_subcommand(paths, args)
+        envelope["exit_code"] = code if code is not None else 0
+    except (FileNotFoundError, FileExistsError, ValueError) as e:
+        envelope["ok"] = False
+        envelope["exit_code"] = 1
+        envelope["error"] = str(e)
+    envelope["messages"] = [ln for ln in buf.getvalue().splitlines() if ln.strip()]
+    if command == "track":
+        envelope["rows"] = track_rows(paths, getattr(args, "open_only", False),
+                                      getattr(args, "closed_only", False))
+    elif slug:
+        envelope["summary"] = _app_summary(paths, slug)
+    print(json.dumps(envelope, indent=2, default=str))
+    return envelope["exit_code"]
+
+
 def _lint_facts(paths: Paths) -> int:
     violations = validate_registry(paths) + sweep_site_consistency(paths)
     errors = [x for x in violations if x.level == "error"]
@@ -187,6 +282,9 @@ def main(argv: Optional[Sequence[str]] = None, paths: Optional[Paths] = None) ->
     Returns an int exit code for gating commands (lint-facts), else None."""
     paths = paths or default_paths()
     args = build_parser().parse_args(argv)
+
+    if getattr(args, "json", False) and getattr(args, "command", None):
+        return _run_json(paths, args)
 
     sub_result = _run_subcommand(paths, args)
     if sub_result is not None or getattr(args, "command", None):

@@ -294,7 +294,8 @@ def log_event(paths: Paths, slug: str, note: str, date: str | None = None) -> in
     return 0
 
 
-def track(paths: Paths, open_only: bool = False, closed_only: bool = False, csv: bool = False) -> int:
+def track_rows(paths: Paths, open_only: bool = False, closed_only: bool = False) -> list[dict]:
+    """The tracker table as data — shared by the CLI table, --csv, and the UI's --json."""
     rows = []
     if paths.applications.exists():
         for folder in sorted(paths.applications.iterdir()):
@@ -317,7 +318,11 @@ def track(paths: Paths, open_only: bool = False, closed_only: bool = False, csv:
 
     def closed(r):
         return r["status"] in _TERMINAL
-    rows = [r for r in rows if (not open_only or not closed(r)) and (not closed_only or closed(r))]
+    return [r for r in rows if (not open_only or not closed(r)) and (not closed_only or closed(r))]
+
+
+def track(paths: Paths, open_only: bool = False, closed_only: bool = False, csv: bool = False) -> int:
+    rows = track_rows(paths, open_only, closed_only)
 
     if csv:
         out = paths.applications / "_track.csv"
