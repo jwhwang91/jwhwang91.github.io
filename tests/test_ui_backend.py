@@ -110,6 +110,42 @@ def test_llm_manual_mode_default(client):
     assert body["mode"] == "manual" and body["command"] == "/interview-pack tesla"
 
 
+def _fake_claude(monkeypatch):
+    """Force headless mode and capture the argv without invoking real Claude."""
+    import ui.server as server
+    monkeypatch.setenv("JOBOPS_HEADLESS", "1")
+    monkeypatch.setattr(server.shutil, "which", lambda name: "/usr/bin/claude")
+    cap = {}
+
+    class P:
+        returncode, stdout, stderr = 0, "ok", ""
+
+    monkeypatch.setattr(server.subprocess, "run", lambda argv, **kw: (cap.update(argv=argv) or P()))
+    return cap
+
+
+def test_headless_defaults_to_opus_4_8(client, monkeypatch):
+    cap = _fake_claude(monkeypatch)
+    r = client.post("/api/llm/interview-pack", json={"slug": "tesla"})
+    body = r.json()
+    assert body["mode"] == "headless" and body["model"] == "claude-opus-4-8"
+    assert "--model" in cap["argv"] and "claude-opus-4-8" in cap["argv"]
+
+
+def test_headless_model_env_override(client, monkeypatch):
+    cap = _fake_claude(monkeypatch)
+    monkeypatch.setenv("JOBOPS_MODEL", "claude-sonnet-5")
+    r = client.post("/api/llm/coding-pack", json={"slug": "tesla"})
+    assert r.json()["model"] == "claude-sonnet-5" and "claude-sonnet-5" in cap["argv"]
+
+
+def test_headless_malformed_model_falls_back(client, monkeypatch):
+    cap = _fake_claude(monkeypatch)
+    monkeypatch.setenv("JOBOPS_MODEL", "--dangerous flag")   # invalid -> fall back to default
+    r = client.post("/api/llm/resume-plan", json={"slug": "tesla"})
+    assert r.json()["model"] == "claude-opus-4-8" and "--dangerous flag" not in cap["argv"]
+
+
 def test_ui_artifact_byte_identical_to_cli(client, tmp_path):
     """Acceptance: a UI-driven render produces the same bytes as a pure CLI render."""
     _seed(client)

@@ -19,7 +19,8 @@ python -m ui.server                      # serves http://127.0.0.1:8765
   shows the `/slash-command` to run in Claude Code. Set `JOBOPS_HEADLESS=1` (with the
   `claude` CLI on PATH) to have the UI drive headless Claude Code executing the same
   `Format/prompts/*.md` contracts — one runner interface, so headless-CLI and a future
-  API mode are interchangeable.
+  API mode are interchangeable. Headless runs use **Opus 4.8** (`claude-opus-4-8`) by
+  default; override with `JOBOPS_MODEL=<model-id>` (e.g. `claude-sonnet-5`).
 - **Isolate data** (dev/test): `JOBOPS_APPLICATIONS=/tmp/apps python -m ui.server` relocates
   only the private Applications/ dir.
 
