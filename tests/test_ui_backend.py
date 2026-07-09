@@ -1,0 +1,121 @@
+"""JobOps backend contract (MASTER_PLAN §14 Phase 11).
+
+Isolated via JOBOPS_APPLICATIONS so no test touches the real Applications/. Every write
+goes through `python main.py --json`, so UI-produced artifacts are byte-identical to the
+CLI flow — the acceptance criterion is asserted directly.
+"""
+import os
+from pathlib import Path
+
+import pytest
+
+pytest.importorskip("fastapi")
+pytest.importorskip("httpx")
+from fastapi.testclient import TestClient   # noqa: E402
+
+SAMPLE = Path(__file__).parent / "fixtures" / "sample_output"
+
+
+@pytest.fixture()
+def client(tmp_path, monkeypatch):
+    apps = tmp_path / "Applications"
+    apps.mkdir()
+    monkeypatch.setenv("JOBOPS_APPLICATIONS", str(apps))
+    monkeypatch.delenv("JOBOPS_HEADLESS", raising=False)
+    import ui.server as server
+    c = TestClient(server.app)
+    c.apps = apps
+    return c
+
+
+def _seed(client, slug="tesla"):
+    r = client.post("/api/new", json={"slug": slug, "company": "Tesla", "positioning": "adas-av-validation"})
+    assert r.status_code == 200 and r.json()["ok"]
+    app = client.apps / slug
+    for f in ("jd.parsed.yaml", "match.yaml", "resume.yaml"):
+        (app / f).write_text((SAMPLE / f).read_text(), encoding="utf-8")
+    return app
+
+
+def test_serves_frontend(client):
+    idx = client.get("/")
+    assert idx.status_code == 200 and "JobOps" in idx.text
+    js = client.get("/app.js")
+    assert js.status_code == 200 and "screens" in js.text
+
+
+def test_new_then_summary(client):
+    _seed(client)
+    r = client.get("/api/app/tesla")
+    assert r.status_code == 200
+    assert r.json()["summary"]["status"] == "draft"
+
+
+def test_render_surfaces_gate_and_serves_preview(client):
+    _seed(client)
+    r = client.post("/api/render", json={"slug": "tesla"})
+    body = r.json()
+    assert body["summary"]["gate_report"]["verdict"] == "PASS"
+    # the rendered HTML artifact is served for preview
+    a = client.get("/api/artifact/tesla/out/resume_ats.html")
+    assert a.status_code == 200 and "<h1" in a.text.lower()
+
+
+def test_status_flow(client):
+    _seed(client)
+    client.post("/api/render", json={"slug": "tesla"})
+    r = client.post("/api/status", json={"slug": "tesla", "status": "approved"})
+    assert r.json()["summary"]["status"] == "approved"
+
+
+def test_track_lists_rows(client):
+    _seed(client)
+    r = client.get("/api/track")
+    assert r.json()["rows"][0]["id"] == "tesla"
+
+
+def test_match_confirm(client):
+    _seed(client)
+    r = client.post("/api/match/confirm", json={"slug": "tesla"})
+    assert r.json()["summary"]["match"]["confirmed"] is True
+
+
+def test_path_traversal_blocked(client):
+    _seed(client)
+    r = client.get("/api/artifact/tesla/../../../../etc/hosts")
+    assert r.status_code == 404
+
+
+def test_invalid_slug_rejected(client):
+    r = client.post("/api/new", json={"slug": "../evil"})
+    assert r.status_code == 400
+
+
+def test_llm_manual_mode_default(client):
+    _seed(client)
+    r = client.post("/api/llm/interview-pack", json={"slug": "tesla"})
+    body = r.json()
+    assert body["mode"] == "manual" and body["command"] == "/interview-pack tesla"
+
+
+def test_ui_artifact_byte_identical_to_cli(client, tmp_path):
+    """Acceptance: a UI-driven render produces the same bytes as a pure CLI render."""
+    _seed(client)
+    client.post("/api/render", json={"slug": "tesla"})
+    ui_txt = (client.apps / "tesla" / "out" / "resume_ats.txt").read_bytes()
+
+    # pure-CLI render into a separate isolated Applications dir
+    import dataclasses
+    from portfolio.cli import main
+    from portfolio.paths import default_paths
+    cli_apps = tmp_path / "cli-apps"
+    paths = dataclasses.replace(default_paths(), applications=cli_apps, dist=tmp_path / "d",
+                                private=default_paths().private)
+    cli_apps.mkdir(parents=True)   # `new` creates the tesla/ folder itself
+    main(["new", "tesla", "--company", "Tesla", "--positioning", "adas-av-validation"], paths=paths)
+    for f in ("jd.parsed.yaml", "match.yaml", "resume.yaml"):
+        (cli_apps / "tesla" / f).write_text((SAMPLE / f).read_text(), encoding="utf-8")
+    main(["render", "tesla"], paths=paths)
+    cli_txt = (cli_apps / "tesla" / "out" / "resume_ats.txt").read_bytes()
+
+    assert ui_txt == cli_txt

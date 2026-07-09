@@ -1,6 +1,7 @@
 from __future__ import annotations
 
-from dataclasses import dataclass
+import os
+from dataclasses import dataclass, replace
 from pathlib import Path
 
 
@@ -49,8 +50,17 @@ REPO_ROOT = Path(__file__).resolve().parent.parent
 
 
 def default_paths() -> Paths:
-    """Paths for the real repository checkout."""
-    return Paths.from_root(REPO_ROOT)
+    """Paths for the real repository checkout.
+
+    ``JOBOPS_APPLICATIONS`` (when set) relocates only the private Applications/ dir —
+    the local UI and its tests use this to isolate application data without touching the
+    committed repo. Everything else (backbone, templates, dist) stays repo-relative.
+    """
+    p = Paths.from_root(REPO_ROOT)
+    apps = os.environ.get("JOBOPS_APPLICATIONS")
+    if apps:
+        p = replace(p, applications=Path(apps).resolve())
+    return p
 
 
 def rel_to_root(path: Path, root: Path) -> Path:
