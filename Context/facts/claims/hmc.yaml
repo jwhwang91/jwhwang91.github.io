@@ -162,7 +162,7 @@ claims:
     - 10
     - 5
     value: Reduced repeated bus-only-lane road-test loops from about 10 trips to about 5
-    as_of: <OWNER TO DATE>
+    as_of: 2021-03 – present
     method: Approximate field observation of repeated bus-only-lane road-test loops for similar false-detection issues; self-reported, framed as 'about'.
     allowed_renderings:
     - from about 10 trips to about 5
@@ -173,7 +173,7 @@ claims:
     - 4
     - 5
     value: each trip could take roughly 4-5 hours
-    as_of: <OWNER TO DATE>
+    as_of: 2021-03 – present
     method: Approximate per-trip duration, self-reported, framed as 'roughly'.
     allowed_renderings:
     - roughly 4-5 hours
@@ -197,7 +197,7 @@ claims:
     omitted:
     - proprietary vehicle logs
     - internal ECU signal names
-  notes: This is the ONLY quantified claim. Digits 10, 5, 4, 5 are verbatim in the quoted sentence. All figures are approximate ('about'/'roughly') and self-reported; owner must supply an as_of date at G0. Ownership 'independent' reflects experiences.yaml 'Built and used replay-based validation tooling'.
+  notes: This is the ONLY quantified claim. Digits 10, 5, 4, 5 are verbatim in the quoted sentence. All figures are approximate ('about'/'roughly') and self-reported; as_of set to the ADAS role window (2021-03 – present) per owner. Ownership 'independent' reflects experiences.yaml 'Built and used replay-based validation tooling'.
 - id: hmc-target-selection
   status: confirmed
   anchor: hmc-adas
