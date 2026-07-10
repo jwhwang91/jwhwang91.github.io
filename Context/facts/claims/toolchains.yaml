@@ -18,6 +18,7 @@ claims:
   - can-fd
   - onnx
   - canape
+  - cpp
   confidence: high
   evidence:
   - type: repo
@@ -61,6 +62,7 @@ claims:
   - simulink
   - bev
   - tos-odp
+  - sil
   confidence: high
   metrics:
   - id: bev-real-bus-trip-reduction

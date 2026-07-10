@@ -4,6 +4,33 @@
 # Validated by Format/schemas/claim.schema.json.
 
 claims:
+- id: add-tcu-embedded-c
+  status: confirmed
+  anchor: add-k2-tcu
+  statement: Developed K2 tracked-vehicle TCU application software and core control algorithms in embedded C, with the C code mounted to an RCP / development TCU and validated in a dSPACE HILS environment.
+  ownership: independent
+  deployment: production
+  source_quote:
+    file: Context/Experiences/add_k2_tcu/context.yaml
+    quote: 'HILS: C code mounted to RCP/development TCU and tested with dSPACE tools.'
+  terms:
+  - cpp
+  - embedded-control
+  - real-time-control
+  - tcu
+  confidence: high
+  evidence:
+  - type: repo
+    ref: Context/Experiences/add_k2_tcu/context.yaml
+    verifiable_by: employer
+  - type: repo
+    ref: Context/experiences.yaml
+    verifiable_by: employer
+  disclosure:
+    public_safe: true
+    omitted:
+    - proprietary control parameters
+    - internal signal names
 - id: add-clutch-adaptation
   status: confirmed
   anchor: add-k2-tcu
