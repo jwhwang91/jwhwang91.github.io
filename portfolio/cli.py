@@ -120,6 +120,13 @@ def build_parser() -> argparse.ArgumentParser:
     pack_sub.add_parser("interview", help="Validate + render prep/interview_pack.yaml.").add_argument("slug")
     pack_sub.add_parser("coding", help="Validate + render prep/coding_pack.yaml against the bank.").add_argument("slug")
 
+    p_ui = sub.add_parser("ui", help="Launch the local JobOps web app (starts the server and opens the browser).")
+    p_ui.add_argument("--port", type=int, default=8765)
+    p_ui.add_argument("--host", default="127.0.0.1")
+    p_ui.add_argument("--headless", action="store_true",
+                      help="Drive headless Claude for LLM steps (needs the `claude` CLI on PATH).")
+    p_ui.add_argument("--no-open", action="store_true", dest="no_open", help="Do not auto-open the browser.")
+
     return parser
 
 
@@ -173,7 +180,82 @@ def _run_subcommand(paths: Paths, args: argparse.Namespace) -> Optional[int]:
             return pack_coding(paths, args.slug)
         print("usage: python main.py pack {interview|coding} <slug>")
         return 2
+    if command == "ui":
+        return _launch_ui(args.host, args.port, args.headless, not args.no_open)
     return None
+
+
+def _launch_ui(host: str = "127.0.0.1", port: int = 8765, headless: bool = False,
+               open_browser: bool = True) -> int:
+    """Start the local JobOps web app and open the browser at it. Blocks until stopped
+    (Ctrl-C). If a server is already listening on the port, just open the page instead of
+    crashing on a bind conflict. UI deps (FastAPI/uvicorn) are imported lazily so the rest
+    of the CLI never depends on them."""
+    import os
+    import socket
+    import threading
+    import time
+    import webbrowser
+
+    LOOPBACK = {"127.0.0.1", "localhost", "::1"}        # ui.server.serve() enforces the same set
+    if host not in LOOPBACK:
+        print(f"error: --host must be one of {', '.join(sorted(LOOPBACK))} (localhost only); got {host!r}")
+        return 2
+
+    hostpart = f"[{host}]" if ":" in host else host      # bracket IPv6 literals in the URL
+    url = f"http://{hostpart}:{port}"
+
+    def _open(u: str) -> None:                           # never let a browser-launch failure escape
+        try:
+            if not webbrowser.open(u):
+                print(f"open {u} in your browser")
+        except Exception:
+            print(f"open {u} in your browser")
+
+    def _listening() -> bool:                            # family-agnostic (works for IPv4 and ::1)
+        try:
+            with socket.create_connection((host, port), timeout=0.3):
+                return True
+        except OSError:
+            return False
+
+    if _listening():                                     # something already here — open it, don't bind-crash
+        tail = "opening it; stop it first to restart" if open_browser else "stop it first to restart"
+        print(f"Something is already serving {url}   ({tail})")
+        if open_browser:
+            _open(url)
+        return 0
+
+    try:                                                 # fail cleanly if the UI deps are absent
+        from ui.server import serve                       # lazy: pulls in FastAPI/uvicorn only for `ui`
+    except ImportError:
+        print("The JobOps UI needs FastAPI + uvicorn:  pip install -r ui/requirements.txt")
+        return 1
+
+    if headless:
+        os.environ["JOBOPS_HEADLESS"] = "1"
+
+    if open_browser:                                     # open the page once the server accepts connections
+        def _open_when_up() -> None:
+            for _ in range(75):                          # poll up to ~15s
+                if _listening():
+                    break
+                time.sleep(0.2)
+            _open(url)
+        threading.Thread(target=_open_when_up, daemon=True).start()
+
+    print(f"JobOps UI → {url}   (Ctrl-C to stop)")
+    if headless:
+        print("headless Claude: ON — LLM steps run via the `claude` CLI")
+
+    try:
+        serve(host=host, port=port)
+    except KeyboardInterrupt:
+        pass
+    except OSError as exc:                                # port grabbed between the probe and the bind
+        print(f"could not start on {url}: {exc}. Try --port <other>.")
+        return 1
+    return 0
 
 
 def _app_summary(paths: Paths, slug: str) -> dict:
@@ -283,8 +365,8 @@ def main(argv: Optional[Sequence[str]] = None, paths: Optional[Paths] = None) ->
     paths = paths or default_paths()
     args = build_parser().parse_args(argv)
 
-    if getattr(args, "json", False) and getattr(args, "command", None):
-        return _run_json(paths, args)
+    if getattr(args, "json", False) and getattr(args, "command", None) and args.command != "ui":
+        return _run_json(paths, args)   # `ui` is a long-running server, never a one-shot JSON command
 
     sub_result = _run_subcommand(paths, args)
     if sub_result is not None or getattr(args, "command", None):

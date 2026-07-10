@@ -9,6 +9,8 @@ Every legacy flag is unchanged and handled by :func:`portfolio.cli.main`:
     python main.py --list-variants    list variants that have an overlay
     python main.py --all-variants     build every variant
     python main.py --insights         outcome scoreboard from Applications/*/result.md
+    python main.py ui                 launch the local JobOps web app + open the browser
+                                      (--headless drives Claude for LLM steps; --port / --no-open)
 """
 from __future__ import annotations
 
