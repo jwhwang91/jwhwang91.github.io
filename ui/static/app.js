@@ -14,8 +14,15 @@ async function api(method, path, body) {
   const opt = { method, headers: { "Content-Type": "application/json" } };
   if (body) opt.body = JSON.stringify(body);
   const r = await fetch(path, opt);
-  const j = await r.json().catch(() => ({ ok: false, error: `HTTP ${r.status}` }));
-  if (!r.ok && j.error === undefined) j.error = `HTTP ${r.status}`;
+  const j = await r.json().catch(() => ({}));
+  if (!r.ok) {                                          // normalize every error envelope into {ok:false,error}
+    j.ok = false;                                       // FastAPI raises {"detail": ...} with no `ok` field,
+    const d = j.detail;                                 // so without this report() saw no failure and
+    j.error = j.error ||                                // swallowed 400/404s as silent "success" toasts.
+      (typeof d === "string" ? d
+        : Array.isArray(d) ? d.map((e) => e.msg || JSON.stringify(e)).join("; ")
+        : `HTTP ${r.status}`);
+  }
   return j;
 }
 async function text(path) { const r = await fetch(path); return r.ok ? r.text() : ""; }
@@ -64,6 +71,10 @@ screens.new = () => {
   </div>`);
   box.querySelector("#f-create").onclick = async () => {
     const slug = $("f-slug").value.trim();
+    if (!/^[a-z0-9][a-z0-9._-]{0,80}$/.test(slug)) {     // mirror server SLUG_RE — guide instead of a silent 400
+      toast("Slug must be kebab-case: lowercase letters, digits and - . _ (e.g. tesla-adas-validation-2026-07)", "err");
+      return;
+    }
     const res = await api("POST", "/api/new", {
       slug, company: $("f-company").value.trim(), positioning: $("f-pos").value.trim(), jd_text: $("f-jd").value,
     });
@@ -83,7 +94,22 @@ screens.new = () => {
 async function renderG1(mount) {
   if (!state.slug) return;
   const parsed = await text(`/api/artifact/${state.slug}/jd.parsed.yaml`);
-  if (!parsed) { mount.innerHTML = `<p class="muted">Parse the JD, then run <code class="cmd">/jd-parse ${esc(state.slug)}</code> (or enable headless) to produce jd.parsed.yaml.</p>`; return; }
+  if (!parsed) {
+    mount.innerHTML = "";
+    mount.appendChild(el(`<div class="panel"><h2>Gate G1 · parse the JD</h2>
+      <p class="muted">No <code class="cmd">jd.parsed.yaml</code> yet. Run the LLM parse to produce it, then confirm the keyword/quote pairs.</p>
+      <div style="margin-top:10px"><button class="act" id="g1-parse">Run parse with Claude</button>
+        <span class="muted" style="margin-left:10px">headless on → runs here; headless off → shows the <code class="cmd">/jd-parse ${esc(state.slug)}</code> command to run in Claude Code</span></div></div>`));
+    const pb = mount.querySelector("#g1-parse");
+    pb.onclick = async () => {
+      const label = pb.textContent; pb.disabled = true; pb.textContent = "Running parse…";
+      const r = await api("POST", "/api/llm/jd-parse", { slug: state.slug });
+      llmToast(r);
+      pb.disabled = false; pb.textContent = label;
+      await loadApp(state.slug); renderG1(mount);      // if the parse produced jd.parsed.yaml, flip to the confirm panel
+    };
+    return;
+  }
   const confirmed = state.summary?.jd?.confirmed;
   mount.innerHTML = "";
   mount.appendChild(el(`<div class="panel"><h2>Gate G1 · confirm the parse ${confirmed ? '<span class="pill ok">confirmed</span>' : ""}</h2>

@@ -93,17 +93,20 @@ def _app_dir(slug: str) -> Path:
 
 # --------------------------------------------------------------------------- UI shell
 
+_NO_STORE = {"Cache-Control": "no-store"}   # localhost dev tool: never let a browser run a stale bundle
+
+
 @app.get("/", response_class=HTMLResponse)
 def index():
     idx = STATIC / "index.html"
     if not idx.exists():
         return HTMLResponse("<h1>JobOps</h1><p>frontend not built</p>", status_code=200)
-    return HTMLResponse(idx.read_text(encoding="utf-8"))
+    return HTMLResponse(idx.read_text(encoding="utf-8"), headers=_NO_STORE)
 
 
 @app.get("/app.js")
 def appjs():
-    return FileResponse(STATIC / "app.js", media_type="application/javascript")
+    return FileResponse(STATIC / "app.js", media_type="application/javascript", headers=_NO_STORE)
 
 
 # --------------------------------------------------------------------------- reads (render artifacts)
