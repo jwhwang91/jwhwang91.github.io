@@ -111,6 +111,16 @@ def appjs():
 
 # --------------------------------------------------------------------------- reads (render artifacts)
 
+@app.get("/api/roles")
+def api_roles():
+    """Serve the committed job-discovery board (ui/data/roles.json) — a curated, filterable
+    snapshot from the job-search runs. Static for now; a live refresh is a future step."""
+    f = Path(__file__).resolve().parent / "data" / "roles.json"
+    if not f.exists():
+        return {"roles": []}
+    return {"roles": json.loads(f.read_text(encoding="utf-8"))}
+
+
 @app.get("/api/track")
 def api_track(open: bool = False, closed: bool = False):
     args = ["track"] + (["--open"] if open else []) + (["--closed"] if closed else [])

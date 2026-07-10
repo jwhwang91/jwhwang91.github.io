@@ -2,13 +2,17 @@
 // JobOps SPA — renders artifacts, drives the CLI via the backend. No external calls.
 
 const SCREENS = [
+  ["discover", "Discover"],
   ["new", "1 · New"], ["match", "2 · Match"], ["resume", "3 · Resume"],
   ["approve", "4 · Approve & Export"], ["prep", "5 · Prep"], ["tracker", "6 · Tracker"],
 ];
-const state = { slug: null, screen: "new", summary: null, apps: [] };
+const state = { slug: null, screen: "discover", summary: null, apps: [], roles: [], draftRole: null };
 const $ = (id) => document.getElementById(id);
 const el = (h) => { const t = document.createElement("template"); t.innerHTML = h.trim(); return t.content.firstChild; };
 const esc = (s) => (s == null ? "" : String(s).replace(/[&<>]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;" }[c])));
+// Turn any human text into a filesystem/URL-safe id: "Software AI Engineer 2026" -> "software-ai-engineer-2026".
+const slugify = (s) => String(s == null ? "" : s).toLowerCase().trim()
+  .replace(/[^a-z0-9._-]+/g, "-").replace(/-{2,}/g, "-").replace(/^[-._]+|[-._]+$/g, "").slice(0, 80);
 
 async function api(method, path, body) {
   const opt = { method, headers: { "Content-Type": "application/json" } };
@@ -60,7 +64,7 @@ screens.new = () => {
   const box = el(`<div>
     <div class="panel"><h2>New application</h2>
       <div class="row">
-        <div><label>Slug (private, kebab-case)</label><input type="text" id="f-slug" placeholder="tesla-adas-validation-2026-07"></div>
+        <div><label>Name / id (any text — auto-formatted)</label><input type="text" id="f-slug" placeholder="Tesla ADAS Validation 2026"></div>
         <div><label>Company</label><input type="text" id="f-company" placeholder="Tesla"></div>
         <div><label>Positioning track</label><input type="text" id="f-pos" placeholder="adas-av-validation"></div>
       </div>
@@ -69,12 +73,18 @@ screens.new = () => {
     </div>
     <div id="g1"></div>
   </div>`);
+  if (state.draftRole) {                                 // one-click apply prefill from the Discover board
+    const d = state.draftRole; state.draftRole = null;
+    const co = d.co.replace(/\s*\(.*$/, "").trim();
+    box.querySelector("#f-company").value = co;
+    box.querySelector("#f-slug").value = slugify(`${co} ${d.role}`).slice(0, 60).replace(/[-._]+$/, "");
+    box.querySelector("#f-pos").value = ({ ADAS: "adas-av-validation", Robo: "embedded-controls", AI: "ai-tooling-fullstack" })[d.track] || "";
+  }
   box.querySelector("#f-create").onclick = async () => {
-    const slug = $("f-slug").value.trim();
-    if (!/^[a-z0-9][a-z0-9._-]{0,80}$/.test(slug)) {     // mirror server SLUG_RE — guide instead of a silent 400
-      toast("Slug must be kebab-case: lowercase letters, digits and - . _ (e.g. tesla-adas-validation-2026-07)", "err");
-      return;
-    }
+    const raw = $("f-slug").value;
+    const slug = slugify(raw);                           // accept any text; format it into a safe id
+    if (!slug) { toast("Give this application a name (any text) — I'll turn it into an id.", "err"); return; }
+    if (slug !== raw.trim()) { $("f-slug").value = slug; toast(`Using id: ${slug}`, ""); }   // show what it became
     const res = await api("POST", "/api/new", {
       slug, company: $("f-company").value.trim(), positioning: $("f-pos").value.trim(), jd_text: $("f-jd").value,
     });
@@ -272,12 +282,109 @@ function llmToast(r) {
   else toast(`Claude Code ran ${r.command} (exit ${r.exit_code}).`, r.exit_code ? "warn" : "ok");
 }
 
+// --------------------------------------------------------------------------- discover (job board)
+const TRACK_LBL = { ADAS: "ADAS/Controls", Robo: "Robotics", AI: "AI-LLM" };
+const STATUS_LBL = { live: "live", likely: "likely-live", stale: "stale" };
+const disc = { track: "all", region: "all", minfit: 0, relo: false, hideStale: false, q: "", sort: "fit" };
+
+screens.discover = () => {
+  const box = el(`<div class="panel">
+    <h2>Discover roles <span class="muted" style="font-weight:400">— curated from job-search runs; click a role to start an application</span></h2>
+    <div class="disc-controls" id="disc-controls"></div>
+    <div class="disc-count" id="disc-count"></div>
+    <div id="disc-list"><p class="muted">Loading roles…</p></div>
+  </div>`);
+  (async () => {
+    if (!state.roles.length) state.roles = (await api("GET", "/api/roles")).roles || [];
+    buildDiscControls(box.querySelector("#disc-controls"));
+    renderDiscList(box);
+  })();
+  return box;
+};
+
+function chipGroup(label, opts, key, onset) {
+  const g = el(`<div class="grp"><span class="gl">${esc(label)}</span></div>`);
+  opts.forEach(([v, txt]) => {
+    const b = el(`<button class="chip" aria-pressed="${String(disc[key]) === String(v)}">${esc(txt)}</button>`);
+    b.onclick = () => {
+      onset(v);
+      g.querySelectorAll(".chip").forEach((c, i) => c.setAttribute("aria-pressed", String(opts[i][0]) === String(disc[key])));
+      renderDiscList(b.closest(".panel"));
+    };
+    g.appendChild(b);
+  });
+  return g;
+}
+function toggleChip(label, key) {
+  const b = el(`<button class="chip" aria-pressed="${disc[key]}">${esc(label)}</button>`);
+  b.onclick = () => { disc[key] = !disc[key]; b.setAttribute("aria-pressed", disc[key]); renderDiscList(b.closest(".panel")); };
+  return b;
+}
+function buildDiscControls(mount) {
+  mount.innerHTML = "";
+  mount.appendChild(chipGroup("Track", [["all", "All"], ["ADAS", "ADAS"], ["Robo", "Robotics"], ["AI", "AI-LLM"]], "track", (v) => disc.track = v));
+  mount.appendChild(chipGroup("Region", [["all", "All"], ["USA", "USA"], ["EU/UK", "EU/UK"], ["APAC", "APAC"], ["Remote", "Remote"]], "region", (v) => disc.region = v));
+  mount.appendChild(chipGroup("Min fit", [[0, "All"], [3, "3+"], [4, "4+"], [5, "5"]], "minfit", (v) => disc.minfit = +v));
+  const q = el(`<div class="grp"><span class="gl">Quick</span></div>`);
+  q.appendChild(toggleChip("Relocation-free", "relo"));
+  q.appendChild(toggleChip("Hide stale", "hideStale"));
+  mount.appendChild(q);
+  const s = el(`<div class="disc-search"><input type="text" id="disc-q" placeholder="Search company, role…" value="${esc(disc.q)}"></div>`);
+  s.querySelector("input").oninput = (e) => { disc.q = e.target.value.trim().toLowerCase(); renderDiscList(mount.closest(".panel")); };
+  mount.appendChild(s);
+}
+function renderDiscList(panel) {
+  if (!panel) return;
+  const list = panel.querySelector("#disc-list"), count = panel.querySelector("#disc-count");
+  const items = state.roles.filter((r) => {
+    if (disc.track !== "all" && r.track !== disc.track) return false;
+    if (disc.region !== "all" && r.region !== disc.region) return false;
+    if ((r.fit || 0) < disc.minfit) return false;
+    if (disc.relo && !r.relo) return false;
+    if (disc.hideStale && r.status === "stale") return false;
+    if (disc.q && !(`${r.co} ${r.role} ${r.note} ${r.loc}`.toLowerCase().includes(disc.q))) return false;
+    return true;
+  });
+  const rank = { live: 0, likely: 1, stale: 2 };
+  items.sort((a, b) => (b.fit || 0) - (a.fit || 0) || (rank[a.status] || 0) - (rank[b.status] || 0) || a.co.localeCompare(b.co));
+  count.innerHTML = `<b>${items.length}</b> of ${state.roles.length} roles`;
+  if (!items.length) { list.innerHTML = `<p class="muted">No roles match these filters.</p>`; return; }
+  list.innerHTML = "";
+  items.forEach((r) => {
+    const row = el(`<div class="role-row ${r.status === "stale" ? "stale" : ""}">
+      <div class="fitb fit${r.fit}">${r.fit}/5</div>
+      <div>
+        <div class="rt">${esc(r.role)}</div>
+        <div class="rc">${esc(r.co)} · ${esc(r.loc)}</div>
+        <div class="rmeta">
+          <span class="tagm">${esc(TRACK_LBL[r.track] || r.track)}</span>
+          <span class="tagm">${esc(r.region)}</span>
+          ${r.relo ? '<span class="tagm relo">relocation-free</span>' : ""}
+          <span class="tagm ${esc(r.status)}">${esc(STATUS_LBL[r.status] || r.status)}</span>
+          <span class="muted" style="font-size:11px">${esc(r.spons || "")}</span>
+        </div>
+        <div class="rn">${esc(r.note || "")}</div>
+        <div class="rq">${esc(r.req || "")}</div>
+      </div>
+      <div class="rail2">
+        <a class="openx" href="${esc(r.url)}" target="_blank" rel="noopener">Open ↗</a>
+        <button class="act sec startapp" style="padding:4px 10px;font-size:12px">Start application</button>
+      </div>
+    </div>`);
+    row.querySelector(".startapp").onclick = () => {
+      state.draftRole = r; state.screen = "new"; render();
+      toast(`Prefilled New from ${r.co.replace(/\s*\(.*$/, "").trim()} — open the role, copy the JD, paste it, and Create`, "ok");
+    };
+    list.appendChild(row);
+  });
+}
+
 // --------------------------------------------------------------------------- shell
 function renderNav() {
   const nav = $("nav");
   nav.innerHTML = "";
   SCREENS.forEach(([id, label]) => {
-    const b = el(`<button class="${id === state.screen ? "active" : ""}"${!state.slug && id !== "new" && id !== "tracker" ? " disabled" : ""}>${esc(label)}</button>`);
+    const b = el(`<button class="${id === state.screen ? "active" : ""}"${!state.slug && id !== "new" && id !== "tracker" && id !== "discover" ? " disabled" : ""}>${esc(label)}</button>`);
     b.onclick = () => { state.screen = id; render(); };
     nav.appendChild(b);
   });
@@ -292,7 +399,7 @@ function render() {
 $("appPicker").onchange = async (e) => {
   await loadApp(e.target.value);
   // clearing the selection must not leave a gated screen's actions live with a null slug
-  if (!state.slug && state.screen !== "new" && state.screen !== "tracker") state.screen = "new";
+  if (!state.slug && state.screen !== "new" && state.screen !== "tracker" && state.screen !== "discover") state.screen = "new";
   render();
 };
 
