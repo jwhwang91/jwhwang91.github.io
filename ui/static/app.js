@@ -368,6 +368,7 @@ function renderDiscList(panel) {
       </div>
       <div class="rail2">
         <a class="openx" href="${esc(r.url)}" target="_blank" rel="noopener">Open ↗</a>
+        <button class="act genbtn" style="padding:4px 10px;font-size:12px">Generate</button>
         <button class="act sec startapp" style="padding:4px 10px;font-size:12px">Start application</button>
       </div>
     </div>`);
@@ -375,8 +376,115 @@ function renderDiscList(panel) {
       state.draftRole = r; state.screen = "new"; render();
       toast(`Prefilled New from ${r.co.replace(/\s*\(.*$/, "").trim()} — open the role, copy the JD, paste it, and Create`, "ok");
     };
+    row.querySelector(".genbtn").onclick = () => genOverlay(r);
     list.appendChild(row);
   });
+}
+
+// --------------------------------------------------------------------------- generate (one-click)
+const POS_BY_TRACK = { ADAS: "adas-av-validation", Robo: "embedded-controls", AI: "ai-tooling-fullstack" };
+const STEP_ICON = { pending: "○", active: "◔", ok: "●", warn: "◑", fail: "✕" };
+
+function genOverlay(role) {
+  const co = role.co.replace(/\s*\(.*$/, "").trim();
+  const ctx = { role, co, url: role.url,
+    slug: slugify(`${co} ${role.role}`).slice(0, 60).replace(/[-._]+$/, ""),
+    pos: POS_BY_TRACK[role.track] || "" };
+  const ov = el(`<div class="gen-ov"><div class="gen-card">
+    <div class="gen-head"><b>Generate resume</b><span class="muted">— ${esc(role.role)} · ${esc(co)}</span><button class="gen-x" title="Close">✕</button></div>
+    <div class="gen-body" id="gen-body"></div>
+  </div></div>`);
+  ov.querySelector(".gen-x").onclick = () => ov.remove();
+  ov.addEventListener("click", (e) => { if (e.target === ov) ov.remove(); });
+  document.body.appendChild(ov);
+  genForm(ov.querySelector("#gen-body"), ctx);
+}
+
+function genForm(body, ctx) {
+  body._ctx = ctx;
+  body.innerHTML = `
+    <div class="row">
+      <div><label>Application id</label><input type="text" id="gx-slug" value="${esc(ctx.slug)}"></div>
+      <div><label>Company</label><input type="text" id="gx-co" value="${esc(ctx.co)}"></div>
+      <div><label>Positioning track</label><input type="text" id="gx-pos" value="${esc(ctx.pos)}"></div>
+    </div>
+    <label>Paste the job description <span class="muted">— open the role ↗ and copy the full JD</span></label>
+    <textarea id="gx-jd" placeholder="Paste the full JD here…"></textarea>
+    <label>Emphasis <span class="muted">(optional)</span></label>
+    <input type="text" id="gx-emph" placeholder="e.g. emphasize SIL &amp; test automation; keep it tight">
+    <div style="margin-top:12px;display:flex;gap:8px;align-items:center;flex-wrap:wrap">
+      <button class="act" id="gx-run">Generate resume</button>
+      <a class="act sec" href="${esc(ctx.url)}" target="_blank" rel="noopener">Open role ↗</a>
+      <span class="muted" style="font-size:12px">runs the full pipeline headlessly — a few minutes</span>
+    </div>`;
+  body.querySelector("#gx-run").onclick = async () => {
+    const slug = slugify(body.querySelector("#gx-slug").value);
+    const jd = body.querySelector("#gx-jd").value.trim();
+    if (!slug) return toast("Enter an application id", "err");
+    if (jd.length < 40) return toast("Paste the full job description first", "err");
+    const r = await api("POST", "/api/generate", {
+      slug, company: body.querySelector("#gx-co").value.trim(),
+      positioning: body.querySelector("#gx-pos").value.trim(), jd_text: jd,
+      emphasis: body.querySelector("#gx-emph").value.trim() });
+    if (r.ok === false) return toast(r.error, "err");
+    genProgress(body, slug);
+  };
+}
+
+function genProgress(body, slug) {
+  body.innerHTML = `<div id="gen-steps"></div>
+    <div class="muted" id="gen-log" style="margin-top:12px;font-family:ui-monospace,Menlo,monospace;font-size:11.5px;line-height:1.7"></div>`;
+  const steps = body.querySelector("#gen-steps"), log = body.querySelector("#gen-log");
+  const tick = async () => {
+    if (!body.isConnected) return;                          // overlay closed — stop polling
+    const st = await api("GET", `/api/generate/status/${slug}`);
+    if (st.phase === "none") return void setTimeout(tick, 1500);
+    steps.innerHTML = (st.steps || []).map((s) =>
+      `<div class="gen-step ${esc(s.state)}">${STEP_ICON[s.state] || "○"} ${esc(s.label)}</div>`).join("");
+    log.innerHTML = (st.log || []).slice(-8).map(esc).join("<br>");
+    if (st.phase === "running") return void setTimeout(tick, 2000);
+    if (st.phase === "error") {
+      log.innerHTML += `<br><span class="bad">✕ ${esc(st.error || "failed")}</span>`;
+      const back = el(`<button class="act sec" style="margin-top:12px">Back</button>`);
+      back.onclick = () => genForm(body, body._ctx || { role: { url: "#" }, co: "", url: "#", slug, pos: "" });
+      body.appendChild(back);
+      return;
+    }
+    if (st.phase === "done") genResult(body, slug, st);
+  };
+  tick();
+}
+
+function genResult(body, slug, st) {
+  const v = st.verdict || {};
+  body.innerHTML = `
+    <div class="stat" style="margin-bottom:10px">Gate
+      <b class="${v.verdict === "PASS" ? "ok" : "warn"}">${esc(v.verdict || "?")}</b>
+      · coverage ${esc(v.must_have_coverage || "—")} · U=${esc(String(v.unsupported_ratio ?? "—"))}
+      · ${esc(v.recommendation || "")}${st.pdf ? "" : ' <span class="warn">(PDF not exported)</span>'}</div>
+    <iframe class="preview" src="/api/artifact/${esc(slug)}/out/resume_ats.html"></iframe>
+    <div class="row" style="margin-top:10px">
+      <a class="act sec" href="/api/artifact/${esc(slug)}/out/resume_final.pdf" target="_blank" rel="noopener">Open PDF ↗</a>
+      <a class="act sec" href="/api/artifact/${esc(slug)}/out/resume_ats.html" target="_blank" rel="noopener">Open HTML ↗</a>
+    </div>
+    <label style="margin-top:12px">What to fix? <span class="muted">— leave empty if it's good</span></label>
+    <textarea id="gx-fb" placeholder="e.g. punchier summary; lead with the EKF work; trim to one page"></textarea>
+    <div style="margin-top:10px;display:flex;gap:8px">
+      <button class="act" id="gx-regen">Regenerate with changes</button>
+      <button class="act sec" id="gx-done">Looks good — done</button>
+    </div>`;
+  body.querySelector("#gx-regen").onclick = async () => {
+    const fb = body.querySelector("#gx-fb").value.trim();
+    if (!fb) return toast("Type what to fix, or hit 'Looks good'", "err");
+    const r = await api("POST", "/api/generate/revise", { slug, feedback: fb });
+    if (r.ok === false) return toast(r.error, "err");
+    genProgress(body, slug);
+  };
+  body.querySelector("#gx-done").onclick = async () => {
+    body.closest(".gen-ov").remove();
+    await refreshApps();
+    toast(`Resume ready for ${slug} — it's in the Tracker (open it to review/submit)`, "ok");
+  };
 }
 
 // --------------------------------------------------------------------------- shell

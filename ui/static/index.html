@@ -84,6 +84,17 @@
   a.openx { color:var(--accent); font-size:12px; text-decoration:none; border:1px solid var(--line);
             border-radius:6px; padding:3px 9px; }
   a.openx:hover { border-color:var(--accent); }
+  /* --- Generate overlay --- */
+  .gen-ov { position:fixed; inset:0; background:#000a; display:flex; align-items:flex-start; justify-content:center;
+            z-index:50; padding:26px 14px; overflow:auto; }
+  .gen-card { background:var(--panel); border:1px solid var(--line); border-radius:12px; width:100%; max-width:780px;
+              box-shadow:0 24px 70px #000c; }
+  .gen-head { display:flex; align-items:center; gap:8px; padding:12px 16px; border-bottom:1px solid var(--line); }
+  .gen-head .gen-x { margin-left:auto; background:none; border:none; color:var(--dim); cursor:pointer; font-size:16px; }
+  .gen-body { padding:16px; }
+  .gen-step { padding:4px 0; font-size:13px; color:var(--dim); }
+  .gen-step.active { color:var(--ink); } .gen-step.ok { color:var(--ok); }
+  .gen-step.warn { color:var(--warn); } .gen-step.fail { color:var(--bad); }
 </style>
 </head>
 <body>

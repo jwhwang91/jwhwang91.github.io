@@ -7,7 +7,13 @@ is cited to confirmed claims; the deterministic gate scores the plain-text rende
 **Inputs:** `match.yaml` (support classifications + pre-resume verdict), `jd.parsed.yaml`,
 `gap_report.md`, `portfolio_plan.md`, the confirmed claim registry (`Context/facts/claims/*`),
 `Context/taxonomy/terms.yaml` (for `ats_form`s), `Context/facts/positioning_titles.yaml`,
-and — on a re-run after a gate FAIL — `gate_feedback.yaml`.
+and — on a re-run after a gate FAIL — `gate_feedback.yaml`; and, if the owner asked for
+changes, `revision_request.md` (free-text "what to fix" instructions).
+
+**Owner revisions:** if `Applications/<slug>/revision_request.md` exists, treat it as the
+owner's requested changes and apply them to `resume.yaml` — but only within the same
+truthfulness boundaries (no fabricated claims, verbs still match ownership, hedges on
+partials). Delete the file once applied, then render as usual.
 
 **Output:** `resume.yaml` (schema `resume/v1`, validated by `Format/schemas/resume.schema.json`).
 

@@ -28,6 +28,7 @@ from fastapi.responses import FileResponse, HTMLResponse, JSONResponse, PlainTex
 
 from portfolio.cli import _app_summary                              # read-only artifact summary  # noqa: E402
 from portfolio.paths import default_paths                           # noqa: E402
+from ui import generate as jobgen                                   # one-click generate orchestrator  # noqa: E402
 
 STATIC = Path(__file__).resolve().parent / "static"
 SLUG_RE = re.compile(r"^[a-z0-9][a-z0-9._-]{0,80}$")
@@ -168,6 +169,24 @@ def api_new(body: dict = Body(...)):
     return res
 
 
+@app.post("/api/generate")
+def api_generate(body: dict = Body(...)):
+    """One-click: run the whole pipeline headlessly to a gate-passed PDF (background job)."""
+    return jobgen.start(_valid_slug(body.get("slug", "")), body.get("company", ""),
+                        body.get("positioning", ""), body.get("jd_text", ""), body.get("emphasis", ""))
+
+
+@app.post("/api/generate/revise")
+def api_generate_revise(body: dict = Body(...)):
+    """Re-run resume-plan with the owner's 'what to fix' feedback, then re-render + PDF."""
+    return jobgen.start_revise(_valid_slug(body.get("slug", "")), body.get("feedback", ""))
+
+
+@app.get("/api/generate/status/{slug}")
+def api_generate_status(slug: str):
+    return jobgen.status(_valid_slug(slug)) or {"phase": "none"}
+
+
 @app.post("/api/jd/confirm")
 def api_jd_confirm(body: dict = Body(...)):
     return run_cli(["jd", "confirm", _valid_slug(body.get("slug", ""))])
@@ -258,7 +277,7 @@ def api_llm(step: str, body: dict = Body(...)):
     effort = os.environ.get("JOBOPS_EFFORT", DEFAULT_EFFORT).strip().lower()
     if effort not in EFFORT_VALUES:              # ignore an unknown level, fall back to default
         effort = DEFAULT_EFFORT
-    argv = ["claude", "-p", "--model", model, "--effort", effort, command]
+    argv = ["claude", "-p", "--permission-mode", "acceptEdits", "--model", model, "--effort", effort, command]
     try:
         proc = subprocess.run(argv, cwd=str(REPO_ROOT),
                               capture_output=True, text=True, timeout=900, check=False)
