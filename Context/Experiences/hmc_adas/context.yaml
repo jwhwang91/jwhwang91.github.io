@@ -17,7 +17,7 @@ highlights:
   - label: "Platforms"
     value: "Truck, tractor, and bus variants with ICE and FCEV powertrains"
   - label: "Workflow"
-    value: "MILS, HILS, dynamometer, real-vehicle validation, and log replay"
+    value: "Routine MILS work replaying real-vehicle data in MATLAB/Simulink, predominantly real-vehicle validation and log replay, with limited HILS use"
   - label: "Toolchain"
     value: "CANape, VN1640, XCP/CAN-FD, MF4, MATLAB/Simulink, and in-house validation tooling (Python/C++)"
 
@@ -41,7 +41,7 @@ sections:
       - "Road-radius fusion logic development using steering-intent, yaw-rate, and conditional lane/camera validity concepts."
       - "SCC/FOC tuning, state-transition updates, calibration, regression testing, and release-readiness support."
       - "Target-selection robustness improvement and false-detection analysis using real logs and BEV replay workflows."
-      - "MILS/HILS/dynamometer/real-vehicle validation and production issue response."
+      - "Routine MILS work replaying real-vehicle data in MATLAB/Simulink, predominantly real-vehicle validation and production issue response, with limited HILS use."
       - "Internal tooling and workflow improvement for validation bottleneck reduction and future AI-validation transition."
 
 case_studies:
@@ -121,7 +121,7 @@ case_studies:
       Selected control-logic areas must be validated across platform, regulation, powertrain, brake-system, and field-test constraints before release.
     contribution:
       - "Supported calibration, regression testing, vehicle-level debugging, and production release-readiness workflows across multiple commercial-vehicle platforms."
-      - "Participated in MILS, HILS, dynamometer, and real-vehicle validation workflows."
+      - "Ran MILS routinely by replaying real-vehicle data in MATLAB/Simulink, and participated in validation workflows that otherwise ran predominantly on real vehicles, with only limited HILS use; compiled production binaries were exercised on the real vehicle rather than on a bench, so no SIL stage was involved."
       - "Analyzed production-development issues and supported logic/calibration updates under platform, regulation, and field-test constraints."
     outcome: >
       Helped move selected ADAS behavior updates through production-development validation workflows.

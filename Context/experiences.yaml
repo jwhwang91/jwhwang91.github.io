@@ -7,7 +7,7 @@ experiences:
     bullets:
       - "Developed and validated selected production ADAS behavior logic for commercial trucks, tractors, buses, and fuel-cell platform variants."
       - "Owned independent contributions including SCC emergency-stop behavior and EKF-based RoadRadius fusion using steering-angle and yaw-rate information under commercial-vehicle sensing constraints."
-      - "Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities across MILS, HILS, dynamometer, and real-vehicle workflows."
+      - "Supported SCC tuning, FOC tuning, state-transition modification, regression testing, vehicle-level debugging, and release-readiness activities through routine MILS replay of real-vehicle data and predominantly real-vehicle workflows, with only limited HILS use."
       - "Built and used replay-based validation tooling to analyze false target-selection behavior with real logs and production TOS/ODP logic, reducing repeated real-bus validation loops for rare bus-lane scenarios."
       - "Designed resource-constrained AI-transition toolchains that reused existing CANape/VN1640/MF4 workflows to help ADAS module owners experiment with learned models before dedicated AI validation infrastructure was available."
     detail_output: "experience/hmc-adas/index.html"
