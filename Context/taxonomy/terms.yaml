@@ -693,3 +693,102 @@ terms:
       - {text: "air gapped", tier: exact}
       - {text: "closed-network", tier: exact}
       - {text: "closed network", tier: exact}
+
+  # ------------------------------------------------- simulation / vehicle modeling
+  # Added 2026-09-04 from the Torc R-102814 parse. Vocabulary only. Half of these
+  # resolve to unsupported on purpose — that is what lets Q16 hard-fail if they ever
+  # reach resume text.
+  - id: powertrain-modeling
+    canonical: "Powertrain Modeling"
+    ats_form: "Powertrain Modeling"
+    domain: embedded
+    aliases:
+      - {text: "powertrain modeling", tier: exact}
+      - {text: "powertrain", tier: exact}
+      - {text: "driveline", tier: equivalent}
+      - {text: "drivetrain", tier: equivalent}
+  - id: closed-loop-simulation
+    canonical: "Closed-Loop Simulation"
+    ats_form: "Closed-Loop Simulation"
+    domain: validation
+    aliases:
+      - {text: "closed-loop simulation", tier: exact}
+      - {text: "closed-loop", tier: exact}
+      - {text: "closed loop", tier: exact}
+  - id: automated-validation-pipelines
+    canonical: "Automated Validation Pipelines"
+    ats_form: "Automated Validation Pipelines"
+    domain: validation
+    aliases:
+      - {text: "automated validation pipeline", tier: exact}
+      - {text: "automated validation pipelines", tier: exact}
+      - {text: "performance benchmarking", tier: equivalent}
+  - id: sim-to-real-correlation
+    canonical: "Sim-to-Real Correlation"
+    ats_form: "Sim-to-Real Correlation"
+    domain: validation
+    aliases:
+      - {text: "sim-to-real", tier: exact}
+      - {text: "sim to real", tier: exact}
+  - id: data-acquisition-telemetry
+    canonical: "Data Acquisition and Telemetry"
+    ats_form: "Data Acquisition and Telemetry"
+    domain: validation
+    aliases:
+      - {text: "data acquisition", tier: exact}
+      - {text: "telemetry", tier: exact}
+      - {text: "field data collection", tier: equivalent}
+  - id: tire-model
+    canonical: "Tire Modeling"
+    ats_form: "Tire Modeling"
+    domain: controls
+    aliases:
+      - {text: "tire model", tier: exact}
+      - {text: "tire models", tier: exact}
+      - {text: "tyre model", tier: exact}
+      - {text: "Pacejka", tier: equivalent}
+      - {text: "magic formula", tier: equivalent}
+  - id: lateral-dynamics
+    canonical: "Lateral Vehicle Dynamics"
+    ats_form: "Lateral Vehicle Dynamics"
+    domain: controls
+    aliases:
+      - {text: "lateral dynamics", tier: exact}
+      - {text: "load transfer", tier: equivalent}
+      - {text: "cornering stiffness", tier: equivalent}
+  - id: ros
+    canonical: "ROS / ROS 2"
+    ats_form: "Robot Operating System (ROS/ROS 2)"
+    domain: software
+    aliases:
+      - {text: "ROS", tier: exact}
+      - {text: "ROS2", tier: exact}
+      - {text: "ROS 2", tier: exact}
+      - {text: "Robot Operating System", tier: equivalent}
+  - id: cmake
+    canonical: "CMake"
+    ats_form: "CMake"
+    domain: software
+    aliases:
+      - {text: "CMake", tier: exact}
+  - id: linux
+    canonical: "Linux"
+    ats_form: "Linux"
+    domain: software
+    aliases:
+      - {text: "Linux", tier: exact}
+  - id: cross-org-ownership
+    canonical: "Cross-Org Technical Ownership"
+    ats_form: "Cross-Org Technical Ownership"
+    domain: software
+    aliases:
+      - {text: "multiple repositories", tier: exact}
+      - {text: "cross-org", tier: exact}
+  - id: truck-trailer-modeling
+    canonical: "Truck & Trailer Modeling"
+    ats_form: "Truck & Trailer / Heavy-Vehicle Modeling"
+    domain: controls
+    aliases:
+      - {text: "truck & trailer", tier: exact}
+      - {text: "truck and trailer", tier: exact}
+      - {text: "heavy-vehicle model", tier: exact}

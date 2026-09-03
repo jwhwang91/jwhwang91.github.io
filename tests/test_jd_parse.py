@@ -50,9 +50,18 @@ def test_embedded_scan():
 
 def test_unknown_candidates_surface_new_terms():
     tesla = {c["candidate"] for c in mine_candidates((JDS / "tesla-adas-validation.txt").read_text(), TAX)}
-    nvidia = {c["candidate"] for c in mine_candidates((JDS / "nvidia-av-simulation.txt").read_text(), TAX)}
     assert "CARLA" in tesla
-    assert "ROS2" in nvidia
+
+
+def test_a_mined_candidate_stops_being_unknown_once_it_is_a_term():
+    """ROS2 used to surface here as an unknown candidate. It was promoted to a real
+    taxonomy id on 2026-09-04 (from the Torc R-102814 parse), so the correct behaviour
+    now is the opposite: it resolves as a scan hit and no longer appears as unknown.
+    That is the whole point of the mine-then-promote loop — this test pins the
+    transition so a silent regression in either direction is caught."""
+    text = (JDS / "nvidia-av-simulation.txt").read_text()
+    assert "ROS2" not in {c["candidate"] for c in mine_candidates(text, TAX)}
+    assert any(h.term_id == "ros" for h in scan_jd(text, TAX))
 
 
 def test_scan_is_deterministic():
