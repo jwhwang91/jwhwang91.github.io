@@ -40,6 +40,27 @@ def _period_sort_key(registry: Registry, source: str) -> str:
     return ((registry.employers.get(source) or {}).get("period") or {}).get("start") or "0000-00"
 
 
+def _project_titles(paths: Paths) -> dict[str, str]:
+    """{project id -> display title} from the two backbone project catalogs, so a
+    `projects:` section in resume.yaml renders a real heading instead of its slug.
+    The title before the em/en dash: "DeckFlip - AI Presentation Editor" is a portfolio
+    headline, but a resume heading wants the product name."""
+    out: dict[str, str] = {}
+    for name in ("software_projects.yaml", "toolchain_projects.yaml"):
+        path = paths.context / name
+        if not path.exists():
+            continue
+        for p in (load_yaml(path) or {}).get("projects", []) or []:
+            title = str(p.get("title") or "").strip()
+            for dash in ("—", "–", " - "):
+                if dash in title:
+                    title = title.split(dash, 1)[0].strip()
+                    break
+            if p.get("id") and title:
+                out[str(p["id"])] = title
+    return out
+
+
 def build_context(paths: Paths, resume: dict, registry: Registry) -> dict[str, Any]:
     """Normalize resume.yaml into a render-ready structure (contact + resolved sections)."""
     personal = load_yaml(paths.context / "personal_info.yaml")
@@ -54,13 +75,18 @@ def build_context(paths: Paths, resume: dict, registry: Registry) -> dict[str, A
         "github": (personal.get("github") or {}).get("url", ""),
     }
 
-    def resolve_section(entries):
+    # Projects have no employers.yaml anchor, so without a catalog every project heading
+    # fell back to the raw `source` slug and a rendered resume printed "### deckflip".
+    project_titles = _project_titles(paths)
+
+    def resolve_section(entries, catalog=None):
         out = []
         for e in entries or []:
             emp = registry.employers.get(e["source"]) or {}
+            heading = emp.get("organization") or (catalog or {}).get(e["source"]) or e["source"]
             out.append({
                 "source": e["source"],
-                "organization": emp.get("organization", e["source"]),
+                "organization": heading,
                 "title": emp.get("official_title", ""),
                 "period": _period(emp) if emp else "",
                 "bullets": [b.get("text", "") for b in e.get("bullets", []) or []],
@@ -69,7 +95,7 @@ def build_context(paths: Paths, resume: dict, registry: Registry) -> dict[str, A
 
     experience = sorted(resolve_section(resume.get("experience")),
                         key=lambda s: _period_sort_key(registry, s["source"]), reverse=True)
-    projects = resolve_section(resume.get("projects"))
+    projects = resolve_section(resume.get("projects"), project_titles)
 
     education = []
     if resume.get("education") == "from_registry":

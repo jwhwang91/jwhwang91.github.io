@@ -585,3 +585,111 @@ terms:
       - {text: "MATLAB/Simulink", tier: exact}
       - {text: "MATLAB", tier: exact}
       - {text: "Simulink", tier: exact}
+
+  # ---------------------------------------------------------------- product software
+  # Added 2026-09-03 from the Applied Intuition "Software Engineer - Defense Tooling"
+  # parse. Vocabulary only: a term here asserts nothing about the candidate — the claim
+  # registry decides support. Several of these resolve to `unsupported`/`adjacent` on
+  # purpose, which is what lets Q16 catch them if they ever reach resume text.
+  - id: simulation-platform
+    canonical: "Simulation Platform Engineering"
+    ats_form: "Simulation Platform Development"
+    domain: validation
+    aliases:
+      - {text: "simulation platform", tier: exact}
+      - {text: "simulation platforms", tier: exact}
+      - {text: "simulation engine", tier: equivalent}
+      - {text: "simulation engines", tier: equivalent}
+      - {text: "simulation framework", tier: equivalent}
+  - id: developer-tooling
+    canonical: "Developer Tooling"
+    ats_form: "Developer Tooling"
+    domain: software
+    aliases:
+      - {text: "developer tooling", tier: exact}
+      - {text: "developer tools", tier: exact}
+      - {text: "internal tooling", tier: equivalent}
+      - {text: "engineering tooling", tier: equivalent}
+  - id: reinforcement-learning
+    canonical: "Reinforcement Learning"
+    ats_form: "Reinforcement Learning (RL)"
+    domain: ai_llm
+    aliases:
+      - {text: "reinforcement learning", tier: exact}
+      - {text: "policy learning", tier: related}
+  - id: agile-delivery
+    canonical: "Agile Delivery"
+    ats_form: "Agile / High-Frequency Release Cycles"
+    domain: software
+    aliases:
+      - {text: "agile", tier: exact}
+      - {text: "lean-agile", tier: equivalent}
+      - {text: "scrum", tier: related}
+      - {text: "high-frequency release", tier: exact}
+  - id: english-communication
+    canonical: "English Technical Communication"
+    ats_form: "English Communication (Written & Verbal)"
+    domain: software
+    aliases:
+      - {text: "English communication", tier: exact}
+      - {text: "English proficiency", tier: equivalent}
+      - {text: "English-medium", tier: related}
+  - id: customer-requirements-discovery
+    canonical: "Customer Requirements Discovery"
+    ats_form: "Customer Requirements Elicitation"
+    domain: software
+    aliases:
+      - {text: "requirements elicitation", tier: exact}
+      - {text: "customer requirements", tier: exact}
+      - {text: "technical discovery", tier: equivalent}
+  - id: system-architecture
+    canonical: "System Architecture"
+    ats_form: "System Design & Architecture"
+    domain: software
+    aliases:
+      - {text: "system architecture", tier: exact}
+      - {text: "system-level design", tier: exact}
+      - {text: "software architecture", tier: equivalent}
+  - id: technical-mentorship
+    canonical: "Technical Mentorship"
+    ats_form: "Technical Mentorship & Leadership"
+    domain: software
+    aliases:
+      - {text: "mentor", tier: exact}
+      - {text: "mentoring", tier: exact}
+      - {text: "mentorship", tier: exact}
+      - {text: "technical leadership", tier: equivalent}
+  - id: ci-cd
+    canonical: "CI/CD"
+    ats_form: "CI/CD Pipelines"
+    domain: software
+    aliases:
+      - {text: "CI/CD", tier: exact}
+      - {text: "continuous integration", tier: exact}
+      - {text: "continuous delivery", tier: exact}
+  - id: path-planning
+    canonical: "Path Planning"
+    ats_form: "Path / Motion Planning"
+    domain: adas
+    aliases:
+      - {text: "path planning", tier: exact}
+      - {text: "motion planning", tier: equivalent}
+      - {text: "trajectory planning", tier: equivalent}
+  - id: unmanned-autonomy-stack
+    canonical: "Unmanned Autonomy Stack"
+    ats_form: "Unmanned / UAV Autonomy Stack"
+    domain: adas
+    aliases:
+      - {text: "unmanned autonomy", tier: exact}
+      - {text: "autonomy stack", tier: exact}
+      - {text: "drone swarming", tier: exact}
+      - {text: "aerial domain", tier: exact}
+  - id: air-gapped-deployment
+    canonical: "Air-Gapped Deployment"
+    ats_form: "Closed-Network / Air-Gapped Deployment"
+    domain: software
+    aliases:
+      - {text: "air-gapped", tier: exact}
+      - {text: "air gapped", tier: exact}
+      - {text: "closed-network", tier: exact}
+      - {text: "closed network", tier: exact}

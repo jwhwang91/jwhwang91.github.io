@@ -14,7 +14,15 @@ BLOCKS = ("responsibilities", "requirements", "preferred", "benefits", "about", 
 # "Preferred Qualifications" is not swallowed by the "qualifications" rule).
 _HEADINGS: list[tuple[str, re.Pattern]] = [
     ("preferred", re.compile(r"(preferred|nice[-\s]?to[-\s]?have|bonus|a plus|desirable|good to have)", re.I)),
-    ("requirements", re.compile(r"(requirements?|required|qualifications?|must[-\s]?have|minimum|what you.{0,4}ll (need|bring|have)|basic qualifications|your (skills|profile))", re.I)),
+    # Real postings almost never write the word "Requirements". Tesla uses "What You'll
+    # Bring"; Applied Intuition uses "WE'RE LOOKING FOR SOMEONE WHO HAS". A heading that
+    # matches nothing inherits the previous block, so the whole must-have list silently
+    # lands in `responsibilities` and the requirements-coverage guard in validate_parsed
+    # can never fire. Every alternative below is a heading observed on a real posting.
+    ("requirements", re.compile(r"(requirements?|required|qualifications?|must[-\s]?have|minimum"
+                                r"|what you.{0,4}ll (need|bring|have)|basic qualifications"
+                                r"|we.{0,3}re looking for|who you are|about you"
+                                r"|your (skills|profile))", re.I)),
     ("responsibilities", re.compile(r"(responsibilit|what you.{0,4}ll do|the role|day[-\s]?to[-\s]?day|duties|in this role|you will)", re.I)),
     ("benefits", re.compile(r"(benefits|perks|compensation|what we offer|why (join|you))", re.I)),
     ("about", re.compile(r"(about\b|who we are|our (team|mission|company)|company overview)", re.I)),
