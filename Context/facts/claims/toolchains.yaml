@@ -18,7 +18,6 @@ claims:
   - can-fd
   - onnx
   - canape
-  - cpp
   confidence: high
   evidence:
   - type: repo
@@ -27,6 +26,15 @@ claims:
   - type: repo
     ref: https://github.com/jwhwang91/realtime-vehicle-ai-validation-studio
     verifiable_by: public
+  notes: 'AUTHORSHIP CORRECTED 2026-09-03. `cpp` was removed from terms[]. The repo
+    does contain a C++ vehicle-facing bridge and that stays documented in
+    Context/toolchain_projects.yaml (stack/tags) and the case-study page — a reviewer
+    can open the repo and see it. But the C++ was largely agent-written (LLM-assisted)
+    under his architecture and direction, so it is not evidence of hand-authored C/C++
+    proficiency. Carrying `cpp` here made classify(''cpp'') resolve against a confirmed
+    claim, which is what let an unhedged "C/C++" reach the resume. Ownership stays
+    independent — the design, requirements, integration and validation were his — but
+    the language claim does not survive. Do not reintroduce cpp here.'
 - id: tc-timeseries-ai
   status: confirmed
   anchor: timeseries-ai-training

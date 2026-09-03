@@ -7,7 +7,7 @@ claims:
 - id: sw-deckflip-pipeline
   status: confirmed
   anchor: deckflip
-  statement: 'Self-built full-stack web app (DeckFlip) that turns a prompt into editable slide decks via a multi-pass LLM pipeline: plan, foundation, parallel per-slide generation, deterministic assembly, and lint-gated QA repair, with AI edits constrained to a validated JSON patch/action vocabulary.'
+  statement: 'Designed and shipped a full-stack web app (DeckFlip) that turns a prompt into editable slide decks via a multi-pass LLM pipeline: plan, foundation, parallel per-slide generation, deterministic assembly, and lint-gated QA repair, with AI edits constrained to a validated JSON patch/action vocabulary.'
   ownership: independent
   deployment: personal
   source_quote:
@@ -28,15 +28,21 @@ claims:
   - typescript-react
   - validation-gate
   confidence: high
+  notes: 'AUTHORSHIP FRAMED 2026-09. Statement previously opened "Self-built", which
+    implied hand-authored TypeScript; the source header was de-asserted the same way
+    ("self-built, public products" -> "public products"). He designed, directed and
+    shipped the product — the repo really is TypeScript/React — so the technology
+    names stay as a description of what the repo contains, but the verb no longer
+    claims he hand-wrote the code.'
 - id: sw-deckflip-editor
   status: confirmed
   anchor: deckflip
-  statement: Built a ~3,000-line sandboxed in-iframe DOM editor for DeckFlip that lets users restyle generated decks live while preserving each deck's own CSS/JS/3D animations.
+  statement: Designed and shipped a sandboxed in-iframe DOM editor for DeckFlip that lets users restyle generated decks live while preserving each deck's own CSS/JS/3D animations.
   ownership: independent
   deployment: personal
   source_quote:
     file: Context/software_projects.yaml
-    quote: a ~3,000-line sandboxed in-iframe DOM editor that preserves each deck's own CSS/JS/3D animations
+    quote: a sandboxed in-iframe DOM editor that preserves each deck's own CSS/JS/3D animations
   evidence:
   - type: repo
     ref: https://github.com/jwhwang91/DeckFlip
@@ -44,16 +50,6 @@ claims:
   - type: live
     ref: https://deckflip.net
     verifiable_by: public
-  metrics:
-  - id: sw-deckflip-editor-loc
-    numbers:
-    - 3000
-    value: ~3,000-line sandboxed in-iframe DOM editor
-    method: approximate line count of the editor module
-    as_of: <OWNER TO DATE>
-    allowed_renderings:
-    - ~3,000-line in-iframe DOM editor
-    - roughly 3,000 lines
   terms:
   - in-browser-editor
   - iframe-sandbox
@@ -61,29 +57,26 @@ claims:
   - live-styling
   - typescript-react
   confidence: high
+  notes: 'SOURCE DE-QUANTIFIED 2026-09; metric retired. The owner removed "~3,000-line"
+    from Context/software_projects.yaml because the line count is not verifiable by a
+    reviewer, so sw-deckflip-editor-loc lost its source and was deleted rather than
+    re-sourced. The quote was re-synced to the surviving sentence and the verb changed
+    from "Built" to "Designed and shipped": the editor exists and is his product, but
+    the TypeScript was LLM-assisted, so the claim describes the artifact, not
+    hand-authorship.'
 - id: sw-decisioncanvas-engine
   status: confirmed
   anchor: decisioncanvas
-  statement: Self-built working prototype (DecisionCanvas Studio, v0.3.0) with a ~832-line async execution engine that streams graph state over Server-Sent Events, a compiler that detects control cycles via Kahn topological sort, a multi-provider LLM router, and an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision.
+  statement: Designed and shipped a working prototype (DecisionCanvas Studio, v0.3.0) with an async execution engine that streams graph state over Server-Sent Events, a compiler that detects control cycles via Kahn topological sort, a multi-provider LLM router, and an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision.
   ownership: independent
   deployment: prototype
   source_quote:
     file: Context/software_projects.yaml
-    quote: Working prototype (v0.3.0). ~832-line async execution engine, a pluggable LLM router across OpenAI / Gemini / Anthropic / Ollama with automatic offline mock fallback, an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision
+    quote: Working prototype (v0.3.0). Async execution engine, a pluggable LLM router across OpenAI / Gemini / Anthropic / Ollama with automatic offline mock fallback, an AI-independent safety subsystem (gate chain + regime classifier) evaluated after the model decision
   evidence:
   - type: repo
     ref: https://github.com/jwhwang91/decisioncanvas-studio
     verifiable_by: public
-  metrics:
-  - id: sw-decisioncanvas-engine-loc
-    numbers:
-    - 832
-    value: ~832-line async execution engine
-    method: approximate line count of the execution engine
-    as_of: <OWNER TO DATE>
-    allowed_renderings:
-    - ~832-line async execution engine
-    - roughly 832 lines
   terms:
   - multi-agent-workflow
   - topological-sort
@@ -92,30 +85,21 @@ claims:
   - fastapi
   - server-sent-events
   confidence: high
-  notes: Source frames this explicitly as a 'Working prototype (v0.3.0)', so deployment is prototype (not production). Kahn topological sort is described in the objective line; the ~832-line async engine and safety gates are quoted from the impact line.
+  notes: Source frames this explicitly as a 'Working prototype (v0.3.0)', so deployment is prototype (not production). Kahn topological sort is described in the objective line; the async engine and safety gates are quoted from the impact line. SOURCE DE-QUANTIFIED 2026-09; metric retired - the owner removed '~832-line' (and the '~20 FastAPI endpoints' / '80 pytest tests' counts) from Context/software_projects.yaml as unverifiable, so sw-decisioncanvas-engine-loc lost its source and was deleted rather than re-sourced. 'Self-built' became 'Designed and shipped' - the prototype is his, but the Python/TypeScript was LLM-assisted, so the claim describes the artifact, not hand-authorship.
 - id: sw-voiceprint
   status: confirmed
   anchor: voiceprint
-  statement: Self-built ~3,600-line Python writing assistant (Voiceprint) that learns a writer's voice and photo-layout style from past posts, with 1,000+ lines of resilient Playwright browser automation and an ffmpeg media pipeline, and a safety-first design that always stops at 'save as draft' for human approval.
+  statement: Designed and shipped a Python writing assistant (Voiceprint) that learns a writer's voice and photo-layout style from past posts, with resilient Playwright browser automation of a rich-text editor, an ffmpeg media pipeline, and a safety-first design that always stops at 'save as draft' for human approval.
   ownership: independent
   deployment: personal
   source_quote:
     file: Context/software_projects.yaml
-    quote: ~3,600-line Python assistant that learns a writer's voice and photo-layout style from past posts, then drafts new ones
+    quote: Python assistant that learns a writer's voice and photo-layout style from past posts, then drafts new ones
   evidence:
   - type: repo
     ref: https://github.com/jwhwang91/voiceprint
     verifiable_by: public
   metrics:
-  - id: sw-voiceprint-total-loc
-    numbers:
-    - 3600
-    value: ~3,600-line Python assistant
-    method: approximate total line count
-    as_of: <OWNER TO DATE>
-    allowed_renderings:
-    - ~3,600-line Python assistant
-    - roughly 3,600 lines
   - id: sw-voiceprint-playwright-loc
     numbers:
     - 1000
@@ -125,35 +109,37 @@ claims:
     allowed_renderings:
     - 1,000+ lines of Playwright automation
   terms:
+  - python
   - playwright-automation
   - browser-automation
   - web-scraping
   - llm-orchestration
   - ffmpeg-media-pipeline
-  - python
   confidence: high
+  notes: 'SOURCE DE-QUANTIFIED 2026-09. The owner removed "~3,600-line" from
+    Context/software_projects.yaml as unverifiable, so sw-voiceprint-total-loc lost its
+    source and was deleted. sw-voiceprint-playwright-loc STAYS: "1,000+ lines of
+    resilient Playwright automation" is still verbatim in the impact line, and a metric
+    is retired only when its source goes, never for symmetry. "Self-built" became
+    "Designed and shipped" — the tool is his, the Python was LLM-assisted, so the claim
+    describes the artifact rather than hand-authorship. The `python` term stays: unlike
+    `cpp` (removed from tc-xcp-bypass and add-tcu-embedded-c in the same pass), Python
+    proficiency has not been reviewed by the owner, and silently dropping it would break
+    the "Python" skills chips in Context/resume.yaml and both variants. Whether Python
+    should be term_capped like the C/C++ claims is an OPEN G0 QUESTION.'
 - id: sw-pinterest-oauth
   status: confirmed
   anchor: pinterest-exporter
-  statement: Built a cross-platform Python/Qt desktop app (Pinterest Reference Exporter) with an OAuth 2.0 authorization-code flow implemented from scratch on the Python standard library (loopback callback server, CSRF state validation, silent refresh-token reconnect), threaded network/IO, and native macOS/Windows packaging.
+  statement: Designed and shipped a cross-platform Python/Qt desktop app (Pinterest Reference Exporter) with an OAuth 2.0 authorization-code flow on the Python standard library and no third-party OAuth dependency (loopback callback server, CSRF state validation, silent refresh-token reconnect), threaded network/IO, and native macOS/Windows packaging.
   ownership: independent
   deployment: personal
   source_quote:
     file: Context/software_projects.yaml
-    quote: OAuth 2.0 authorization-code flow built from scratch on the Python standard library (loopback callback server, CSRF state validation, silent refresh-token reconnect)
+    quote: OAuth 2.0 authorization-code flow on the Python standard library with no third-party OAuth dependency (loopback callback server, CSRF state validation, silent refresh-token reconnect)
   evidence:
   - type: repo
     ref: https://github.com/jwhwang91/pinterest_reference_exporter
     verifiable_by: public
-  metrics:
-  - id: sw-pinterest-test-count
-    numbers:
-    - 17
-    value: 17-test unittest suite
-    method: count of unittest cases stated in source
-    as_of: <OWNER TO DATE>
-    allowed_renderings:
-    - 17-test unittest suite
   terms:
   - oauth2-authorization-code
   - desktop-app
@@ -162,10 +148,17 @@ claims:
   - cross-platform-packaging
   - rest-api
   confidence: high
+  notes: 'SOURCE DE-QUANTIFIED 2026-09; metric retired. The owner removed "17-test"
+    from Context/software_projects.yaml (the suite exists, the count is not something a
+    reviewer checks), so sw-pinterest-test-count lost its source and was deleted rather
+    than re-sourced. "built from scratch" also went: the flow really does run on the
+    standard library with no third-party OAuth dependency — which is what the re-synced
+    quote now says — but the Python was LLM-assisted, so the statement claims the design
+    and the shipped app, not hand-authorship of the code.'
 - id: sw-pathpilot-app
   status: confirmed
   anchor: pathpilot
-  statement: Self-built feature-complete native macOS file manager (PathPilot) with a keyboard-first, path-first workflow — editable address bar, dense details table, and a run-any-action command palette — now in preparation for Mac App Store release (listing finalized, not yet live).
+  statement: Designed and shipped a feature-complete native macOS file manager (PathPilot) with a keyboard-first, path-first workflow — editable address bar, dense details table, and a run-any-action command palette — now in preparation for Mac App Store release (listing finalized, not yet live).
   ownership: independent
   deployment: prototype
   source_quote:
@@ -199,4 +192,4 @@ claims:
   - available on the App Store
   - github\.com/jwhwang91/pathpilot
   confidence: high
-  notes: 'Per source comment: App Store listing is finalized but NOT yet live, and the app source is in a PRIVATE repo (~70 Swift files, owner-verified). Deployment MUST NOT be production and MUST NOT claim a published/available App Store app. Public rendering must cite the live product site (pathpilot-site), never the private repo URL. G0: owner to confirm current App Store status and any updated file/line counts.'
+  notes: 'Per source comment: App Store listing is finalized but NOT yet live, and the app source is in a PRIVATE repo (~70 Swift files, owner-verified). Deployment MUST NOT be production and MUST NOT claim a published/available App Store app. Public rendering must cite the live product site (pathpilot-site), never the private repo URL. G0: owner to confirm current App Store status and any updated file/line counts. AUTHORSHIP FRAMED 2026-09: "Self-built" became "Designed and shipped" to match the other software claims — the app is his product but the Swift was LLM-assisted, so the claim describes the artifact, not hand-authorship. source_quote was unaffected by the 2026-09 de-quantification of software_projects.yaml and still matches verbatim; sw-pathpilot-swift-files survives because the ~70-file count is still stated in the source comment and is owner-verified.'

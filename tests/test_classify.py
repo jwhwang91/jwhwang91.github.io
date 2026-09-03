@@ -7,8 +7,9 @@ import jsonschema
 import pytest
 import yaml
 
-from portfolio.classify import (JoinIndex, classify_keywords, pre_resume_verdict,
-                                 render_portfolio_plan, resolve_term_to_taxonomy, EMPHASIS)
+from portfolio.classify import (JoinIndex, classify_keywords, location_knockouts,
+                                 pre_resume_verdict, render_portfolio_plan,
+                                 resolve_term_to_taxonomy, EMPHASIS)
 from portfolio.facts import Registry
 from portfolio.paths import default_paths
 from portfolio.taxonomy import Alias, Taxonomy, Term
@@ -144,6 +145,132 @@ def test_absent_profile_skips_knockouts():
     assert v["profile_checked"] is False and v["knockout_hits"] == [] and v["verdict"] == "Proceed"
 
 
+# --- location knockouts (he is in South Korea with no US authorization) ---
+
+def _kr_profile():
+    """Minimal shape of the real (gitignored) Context/candidate_profile.yaml."""
+    return {
+        "work_authorization": {"kr": "citizen", "us": {"status": "requires-sponsorship"}},
+        "locations": {
+            "current": {"city": "Seoul", "country": "South Korea"},
+            "authorized_now": {"place": "South Korea",
+                               "names": ["South Korea", "Korea", "Seoul", "Pangyo"]},
+            "relocation": [{"place": "United States", "names": ["United States", "USA", "U.S."],
+                            "relocation_ok": True, "requires_sponsorship": True}],
+            "remote": {"remote_ok": True, "names": ["fully remote", "work from anywhere"]},
+        },
+    }
+
+
+@pytest.mark.parametrize("ko", [
+    {"type": "location", "quote": "This role is onsite in Palo Alto, CA."},
+    {"type": "location", "quote": "Must be based in Austin, Texas."},
+    {"type": "onsite", "quote": "5 days a week in-person at our Fremont factory."},
+    {"type": "location", "quote": "Hybrid: 3 days per week in the Mountain View office."},
+    {"type": "relocation", "quote": "Relocation to Michigan is required."},
+    {"type": "location", "quote": "Remote (US only)."},
+    {"type": "location", "quote": "onsite role — location: (unspecified)"},  # unnamed -> fail closed
+])
+def test_location_knockout_hits_when_he_cannot_be_there(ko):
+    v = pre_resume_verdict([_must("a", "direct")], [ko], _kr_profile())
+    assert v["knockout_hits"] == [ko["type"]] and v["verdict"] == "Do-Not-Apply-Yet"
+
+
+@pytest.mark.parametrize("ko", [
+    {"type": "location", "quote": "Onsite in Seoul, South Korea."},
+    {"type": "location", "quote": "Hybrid from our Pangyo office."},
+    {"type": "onsite", "quote": "This role must be based in Korea."},
+    {"type": "location", "quote": "Fully remote — work from anywhere."},
+])
+def test_location_knockout_clears_where_he_may_work(ko):
+    v = pre_resume_verdict([_must("a", "direct")], [ko], _kr_profile())
+    assert v["knockout_hits"] == [] and v["verdict"] == "Proceed"
+
+
+def test_us_place_names_are_word_boundary_matched():
+    # substring matching would find 'US' inside 'must' and mislabel every knockout
+    from portfolio.classify import _mentions
+    assert not _mentions("must be based in seoul", ["US"])
+    assert _mentions("relocation to the us is required", ["US"])
+
+
+def test_location_branch_needs_location_data_in_the_profile():
+    # a profile with no locations block must not invent a location knockout
+    prof = {"work_authorization": {"us": {"status": "requires-sponsorship"}}}
+    v = pre_resume_verdict([_must("a", "direct")], [{"type": "location", "quote": "Onsite in Palo Alto."}], prof)
+    assert v["knockout_hits"] == [] and v["profile_checked"] is True
+
+
+def test_sponsorship_branch_still_wins_and_is_unchanged():
+    ko = [{"type": "work_authorization",
+           "quote": "Must be authorized to work in the US without sponsorship; relocation assistance provided."}]
+    v = pre_resume_verdict([_must("a", "direct")], ko, _kr_profile())
+    assert v["knockout_hits"] == ["work_authorization"]
+
+
+# --- synthesizing a location knockout from location_policy (the parser emits none) ---
+
+def test_location_knockout_synthesized_from_onsite_policy():
+    # exactly the Tesla shape: knockouts: [] but location_policy says onsite
+    kos = location_knockouts({"onsite": True, "city": None, "remote": False}, _kr_profile())
+    assert len(kos) == 1
+    assert kos[0]["type"] == "location" and kos[0]["source"] == "derived:location_policy"
+    assert "not a verbatim JD quote" in kos[0]["quote"]  # never valid inside jd.parsed.yaml
+
+
+def test_location_knockout_synthesized_from_named_city():
+    kos = location_knockouts({"onsite": True, "city": "Palo Alto, CA", "remote": False}, _kr_profile())
+    assert len(kos) == 1 and "Palo Alto, CA" in kos[0]["quote"]
+    # `place` isolates the work location so _knockout_matches judges it alone
+    assert kos[0]["place"] == "Palo Alto, CA"
+
+
+def test_no_location_knockout_for_a_korean_onsite_role():
+    assert location_knockouts({"onsite": True, "city": "Seoul", "remote": False}, _kr_profile()) == []
+
+
+# --- regressions: the location branch used to fail OPEN on US reqs naming Korea ---
+
+def test_us_req_that_mentions_korea_still_knocks_out():
+    # blocked-place-first ordering: naming a relocation target he cannot reach
+    # unsponsored decides before any authorized place mentioned in the same text
+    ko = {"type": "location",
+          "quote": "Onsite in the United States; our Seoul office collaborates closely."}
+    v = pre_resume_verdict([_must("a", "direct")], [ko], _kr_profile())
+    assert v["knockout_hits"] == ["location"]
+
+
+def test_korean_as_a_nationality_adjective_is_not_a_place():
+    # "Korean OEM partners" / "Korean-English bilingual" must not clear a US req;
+    # word boundaries stop `korea` matching inside `korean`
+    ko = {"type": "location",
+          "quote": "Onsite in Santa Clara, CA. Korean-English bilingual a plus."}
+    v = pre_resume_verdict([_must("a", "direct")], [ko], _kr_profile())
+    assert v["knockout_hits"] == ["location"]
+
+
+def test_unknown_city_fails_closed_and_ignores_the_jd_body():
+    # an earlier version scanned all of jd.txt, so a US posting mentioning a Seoul
+    # office cleared its own location knockout. With no parsed city the answer is a
+    # hit — a visible gap_report row the owner can overrule beats a silent clear.
+    kos = location_knockouts({"onsite": True, "city": None, "remote": False}, _kr_profile())
+    assert len(kos) == 1 and kos[0]["place"] == ""
+
+
+def test_region_and_country_fill_in_when_city_is_absent():
+    kos = location_knockouts({"onsite": True, "country": "South Korea", "remote": False},
+                             _kr_profile())
+    assert kos == []
+
+
+def test_no_location_knockout_for_remote_or_silent_policies():
+    prof = _kr_profile()
+    assert location_knockouts({"onsite": False, "city": None, "remote": True}, prof) == []
+    assert location_knockouts({"onsite": False, "city": None, "remote": False}, prof) == []
+    assert location_knockouts({"onsite": True, "city": None, "remote": False}, None) == []
+    assert location_knockouts(None, prof) == []
+
+
 # --- portfolio plan ordering ---
 
 def test_portfolio_plan_orders_by_positioning():
@@ -174,7 +301,7 @@ def _confirmed_parse():
                 kw("scc", "Validate Smart Cruise Control (SCC).", "responsibilities"),
                 kw("hil", "Hardware-in-the-Loop (HIL) benches."),
                 kw("functional-safety", "Working knowledge of ISO 26262."),
-                kw("python", "Strong Python scripting."),
+                kw("cpp", "Basic proficiency with embedded firmware development in C/C++."),
             ]}
 
 
@@ -192,14 +319,20 @@ def test_end_to_end_match_and_confirm(tmp_path):
     assert support["scc"] == "direct"
     assert support["hil"] == "direct"
     assert support["functional-safety"] in ("adjacent", "unsupported")  # no ISO 26262 claim
-    assert support["python"] == "direct"
+    # `cpp` was removed from every claim's terms[] (add-tcu-embedded-c autocoded its C
+    # from Simulink; tc-xcp-bypass's C++ was agent-written), so a C/C++ keyword must
+    # never score direct proficiency again — scoring direct is what put an unhedged
+    # "embedded C/C++" on the resume submitted to Tesla in July 2026.
+    assert support["cpp"] in ("adjacent", "unsupported")
     assert m1["queue"] == []  # all terms resolve deterministically
 
     assert main(["match", "confirm", slug], paths=paths) == 0
     m2 = yaml.safe_load((app / "match.yaml").read_text())
     assert m2["confirmed"] is True
     assert m2["pre_resume"]["verdict"] in ("Proceed", "Proceed-Caution", "Do-Not-Apply-Yet")
-    assert m2["pre_resume"]["profile_checked"] is False  # no candidate_profile.yaml
+    # Context/candidate_profile.yaml is gitignored, so it exists on the owner's
+    # machine and not in a fresh clone. Either way the flag must report the truth.
+    assert m2["pre_resume"]["profile_checked"] is (paths.context / "candidate_profile.yaml").exists()
     assert (app / "gap_report.md").exists() and (app / "portfolio_plan.md").exists()
     assert yaml.safe_load((app / "application.yaml").read_text())["status"] == "matched"
 

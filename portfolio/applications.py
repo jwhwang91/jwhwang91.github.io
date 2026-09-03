@@ -7,8 +7,8 @@ import re
 import jsonschema
 import yaml
 
-from .classify import (SUPPORT_RANK, JoinIndex, classify_keywords, pre_resume_verdict,
-                       render_gap_report, render_portfolio_plan)
+from .classify import (SUPPORT_RANK, JoinIndex, classify_keywords, location_knockouts,
+                       pre_resume_verdict, render_gap_report, render_portfolio_plan)
 from .content import load_yaml
 from .facts import Violation, load_registry
 from .jd import jd_sha256, mine_candidates, scan_jd, validate_parsed
@@ -208,6 +208,22 @@ def _load_candidate_profile(paths: Paths):
     return prof
 
 
+def _knockouts_with_location(folder, doc: dict, profile) -> list[dict]:
+    """The JD's own knockouts plus any location knockout derived from the parsed
+    `location_policy`. Parsers routinely emit `knockouts: []` while recording an
+    onsite policy, so without this the location branch of the knockout check would
+    never see anything to judge. Deduped on (type, quote) so re-running
+    `match confirm` cannot stack duplicates."""
+    knockouts = list(doc.get("knockouts") or [])
+    parsed_path = folder / "jd.parsed.yaml"
+    parsed = load_yaml(parsed_path) if parsed_path.exists() else {}
+    seen = {(k.get("type"), k.get("quote")) for k in knockouts if isinstance(k, dict)}
+    for ko in location_knockouts(parsed.get("location_policy"), profile):
+        if (ko["type"], ko["quote"]) not in seen:
+            knockouts.append(ko)
+    return knockouts
+
+
 def _require_confirmed_parse(folder):
     parsed_path = folder / "jd.parsed.yaml"
     if not parsed_path.exists():
@@ -299,16 +315,18 @@ def match_confirm(paths: Paths, slug: str) -> int:
         return 1
 
     profile = _load_candidate_profile(paths)
-    verdict = pre_resume_verdict(classifications, doc.get("knockouts", []) or [], profile)
+    knockouts = _knockouts_with_location(folder, doc, profile)
+    verdict = pre_resume_verdict(classifications, knockouts, profile)
     _append_cache(paths, classifications)
 
     app = load_yaml(folder / "application.yaml") if (folder / "application.yaml").exists() else {}
     positioning = app.get("positioning", "")
     (folder / "gap_report.md").write_text(
-        render_gap_report(slug, classifications, verdict, doc.get("knockouts", []) or [], index, verdict["profile_checked"]),
+        render_gap_report(slug, classifications, verdict, knockouts, index, verdict["profile_checked"]),
         encoding="utf-8")
     (folder / "portfolio_plan.md").write_text(render_portfolio_plan(slug, positioning, classifications), encoding="utf-8")
 
+    doc["knockouts"] = knockouts
     doc["pre_resume"] = verdict
     doc["confirmed"] = True
     _dump(match_path, doc)
@@ -317,6 +335,8 @@ def match_confirm(paths: Paths, slug: str) -> int:
     print(f"Pre-resume verdict: {verdict['verdict']}  (unsupported-must-have ratio U={verdict['U']})")
     if not verdict["profile_checked"]:
         print("  NOTE: Context/candidate_profile.yaml absent — knockout checks skipped (create it to enable).")
+    if verdict["knockout_hits"]:
+        print(f"  AUTO-KNOCKOUT: {', '.join(str(h) for h in verdict['knockout_hits'])} — see gap_report.md")
     if verdict["missing_must_haves"]:
         print(f"  Missing must-haves: {', '.join(verdict['missing_must_haves'])}")
     print(f"Wrote gap_report.md + portfolio_plan.md. Status -> matched (Gate G2).")

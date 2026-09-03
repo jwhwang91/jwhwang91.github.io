@@ -23,7 +23,7 @@ site:
     - "Vehicle Dynamics"
     - "MATLAB / Simulink"
     - "MILS / HILS / Vehicle Test"
-    - "Python / C++"
+    - "Model-Based Design"
   main_focus:
     - "Production SCC/L2 ADAS behavior logic on commercial trucks, tractors, buses, and fuel-cell platforms."
     - "EKF-based road-radius fusion and target-selection robustness under real-world sensing constraints."
@@ -74,7 +74,6 @@ resume:
       items:
         - "MATLAB / Simulink"
         - "Python"
-        - "C / C++"
         - "CANape / VN1640"
         - "XCP over CAN-FD"
     - label: "Licenses"

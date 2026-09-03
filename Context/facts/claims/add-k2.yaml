@@ -7,16 +7,17 @@ claims:
 - id: add-tcu-embedded-c
   status: confirmed
   anchor: add-k2-tcu
-  statement: Developed K2 tracked-vehicle TCU application software and core control algorithms in embedded C, with the C code mounted to an RCP / development TCU and validated in a dSPACE HILS environment.
+  statement: Developed K2 tracked-vehicle TCU application software and core control algorithms as MATLAB/Simulink models, with the C generated from those models mounted to an RCP / development TCU and validated in a dSPACE HILS environment.
   ownership: independent
   deployment: production
   source_quote:
     file: Context/Experiences/add_k2_tcu/context.yaml
     quote: 'HILS: C code mounted to RCP/development TCU and tested with dSPACE tools.'
   terms:
-  - cpp
   - embedded-control
   - real-time-control
+  - model-based-development
+  - code-generation
   - tcu
   confidence: high
   evidence:
@@ -31,6 +32,13 @@ claims:
     omitted:
     - proprietary control parameters
     - internal signal names
+  notes: 'AUTHORSHIP CORRECTED 2026-07-31. The statement previously read "in embedded
+    C" with cpp in terms, which implied hand-authored C/C++. The authoring artifact
+    was MATLAB/Simulink; the C was generated from those models and run on the RCP
+    target. Ownership stays independent — the models were his — but the language
+    claim does not survive. Do not reintroduce cpp here: there is no C++ anywhere in
+    this engagement. The resume line rendered from this claim must match
+    (out/resume_ats.md currently says "in embedded C/C++" and needs the same fix).'
 - id: add-clutch-adaptation
   status: confirmed
   anchor: add-k2-tcu
@@ -63,12 +71,12 @@ claims:
     - TCU shift-state logic
     coding_relevance:
     - embedded control algorithm implementation
-    - C code for TCU
+    - MATLAB/Simulink model-based development and production code generation
   disclosure:
     public_safe: true
     omitted:
     - classified/defense-sensitive numeric performance specifications withheld
-  notes: OWNERSHIP AMBIGUOUS - flag for G0. The source gives no explicit ownership-boundary statement. Ownership was judged from the 'Developed core TCU control algorithms and shift-state logic' framing (My Role, line 15) plus the 'Control Logic Highlights' listing, both independent-implying. However this is ADD team/research defense work with no ownership boundary, so 'independent' may be inflated. Owner must confirm at G0 whether the sensorless adaptation / EOL / kiss-point learning logic was independently developed or shared with the team.
+  notes: OWNERSHIP AMBIGUOUS - flag for G0. The source gives no explicit ownership-boundary statement. Ownership was judged from the 'Developed core TCU control algorithms and shift-state logic' framing (My Role, line 15) plus the 'Control Logic Highlights' listing, both independent-implying. However this is ADD team/research defense work with no ownership boundary, so 'independent' may be inflated. Owner must confirm at G0 whether the sensorless adaptation / EOL / kiss-point learning logic was independently developed or shared with the team. AUTHORSHIP CORRECTED 2026-09-03 - interview.coding_relevance previously read 'C code for TCU', which made the interview-pack and coding-pack skills generate C prep material for the one language he does not hand-author. The authoring artifact was MATLAB/Simulink and the C was generated from those models, so the entry now names model-based development and code generation. See the add-tcu-embedded-c note.
 - id: add-plant-modeling
   status: confirmed
   anchor: add-k2-tcu

@@ -158,6 +158,17 @@ terms:
       - {text: "MBD", tier: exact}
       - {text: "model-based design", tier: equivalent}
       - {text: "model based design", tier: equivalent}
+  - id: code-generation
+    canonical: "Production Code Generation"
+    ats_form: "Production Code Generation (Embedded Coder)"
+    domain: controls
+    aliases:
+      - {text: "code generation", tier: exact}
+      - {text: "production code generation", tier: exact}
+      - {text: "auto-code", tier: equivalent}
+      - {text: "autocode", tier: equivalent}
+      - {text: "autocoding", tier: equivalent}
+      - {text: "embedded coder", tier: equivalent}
   - id: control-systems
     canonical: "Control Systems"
     ats_form: "Control Systems"

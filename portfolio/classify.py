@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+import re
 from collections import defaultdict
 from typing import Any
 
@@ -132,13 +133,118 @@ def _reclassify_cached(term: str, cached: dict, tier: str, index: JoinIndex) -> 
 
 # --- scoring & pre-resume verdict (§4.4) ---
 
+# Cues that mark a knockout as being about WHERE the work is performed. Matched
+# against quote + type, so `type: location` alone is enough to route here.
+_LOCATION_CUES = ("location", "onsite", "on-site", "on site", "in-person", "in person",
+                  "relocat", "hybrid", "must be based", "based in", "must live", "commut")
+LOCATION_KNOCKOUT_TYPE = "location"
+
+
+def _place_names(entry: Any) -> list[str]:
+    """The JD spellings that identify one place, from a profile locations entry."""
+    if isinstance(entry, dict):
+        names = entry.get("names") or ([entry["place"]] if entry.get("place") else [])
+        return [str(n) for n in names]
+    if isinstance(entry, (list, tuple, set)):
+        return [str(n) for n in entry]
+    return [str(entry)] if entry else []
+
+
+def _mentions(text: str, names: list[str]) -> bool:
+    """Word-boundary, case-insensitive place-name match on already-lowercased text.
+    Boundaries are mandatory: a bare substring test fires 'US' inside 'must'."""
+    return any(re.search(rf"(?<![a-z0-9]){re.escape(n.strip().lower())}(?![a-z0-9])", text)
+               for n in names if n and n.strip())
+
+
+def _location_matches(q: str, profile: dict) -> bool:
+    """True when a location/onsite knockout names somewhere he cannot work.
+
+    Order matters and is deliberate: a BLOCKED place named in the text decides
+    BEFORE an authorized one. US automotive postings routinely name Korea ("our
+    Seoul office", "Korean OEM partners"), so checking `authorized_now` first
+    would let every one of them clear.
+
+    Fails CLOSED: only a place he may already work in, an unrestricted-remote
+    phrase, or a relocation target that costs the employer nothing he might
+    refuse clears the knockout. An unnamed or unrecognized location stays a hit —
+    an onsite req he cannot reach is exactly what this exists to catch.
+
+    KNOWN BOUND: this judges whatever text it is handed. Callers should hand it
+    the work location alone (see the `place` key set by `location_knockouts`).
+    Given free prose that names both a blocked and an authorized place, only the
+    blocked-first ordering below protects it; prose naming ONLY an authorized
+    place still clears, which is why the parser should emit location knockouts
+    whose quote is the posting's stated location, not a sentence."""
+    locs = profile.get("locations") or {}
+    if not isinstance(locs, dict) or not locs:
+        return False  # no location data in the profile -> nothing to judge against
+    # 1. Relocation targets decide first, and blocked wins: if the text names two
+    #    and either needs sponsorship he does not have, the req is still a hit.
+    verdicts = [not (entry.get("relocation_ok") and not entry.get("requires_sponsorship"))
+                for entry in locs.get("relocation") or []
+                if isinstance(entry, dict) and _mentions(q, _place_names(entry))]
+    if verdicts:
+        return any(verdicts)
+    # 2. No relocation target named -> the role may sit where he already works.
+    if _mentions(q, _place_names(locs.get("authorized_now"))):
+        return False  # the role sits where he can already work, today, unsponsored
+    remote = locs.get("remote") or {}
+    if isinstance(remote, dict) and remote.get("remote_ok") and _mentions(q, _place_names(remote.get("names"))):
+        return False  # explicitly hire-from-anywhere remote
+    return True
+
+
 def _knockout_matches(knockout: dict, profile: dict) -> bool:
     q = (str(knockout.get("quote", "")) + " " + str(knockout.get("type", ""))).lower()
     us = (profile.get("work_authorization") or {}).get("us") or {}
     if any(k in q for k in ("sponsor", "authorized to work", "citizen", "clearance", "security clearance")):
         if isinstance(us, dict) and us.get("status") == "requires-sponsorship":
             return True
+    if any(k in q for k in _LOCATION_CUES):
+        # Judge the work location alone whenever the caller isolated it into
+        # `place` (location_knockouts does). Falling back to the whole quote is a
+        # last resort: free prose regularly names a second, irrelevant place.
+        place = str(knockout.get("place") or "").strip().lower()
+        return _location_matches(place or q, profile)
     return False
+
+
+def location_knockouts(location_policy: dict | None, profile: dict | None) -> list[dict]:
+    """Synthesize the location knockout a JD implies but rarely states outright.
+
+    Parsers fill `location_policy: {onsite, city, remote}` and leave `knockouts: []`,
+    so an onsite US req produced no auto-knockout at all. Returns a `{type, quote}`
+    entry (the shape `render_gap_report` and `_knockout_matches` consume) ONLY when
+    the policy actually conflicts with the profile — a satisfiable location emits
+    nothing rather than a "clear" row of noise. The quote is explicitly labelled
+    derived: it is NOT a verbatim jd.txt substring and must never be written into
+    jd.parsed.yaml, whose quotes are verbatim-checked by `validate_parsed`.
+
+    `place` carries the stated work location on its own so `_knockout_matches`
+    judges the location and nothing else. This deliberately does NOT scan the JD
+    body: an earlier version did, and a US posting that mentioned a Seoul office
+    cleared its own location knockout. With no parsed location the answer is a
+    hit — a false auto-knockout is a visible row in gap_report.md the owner can
+    overrule, while a false clear is silent."""
+    if not profile or not isinstance(location_policy, dict):
+        return []
+    locs = profile.get("locations") or {}
+    if not isinstance(locs, dict) or not locs:
+        return []
+    onsite = location_policy.get("onsite") is True
+    city = " ".join(str(location_policy.get(k) or "").strip()
+                    for k in ("city", "region", "country")).strip()
+    if location_policy.get("remote") is True and not onsite:
+        return []  # a remote req imposes no place; a real blocker would be an explicit knockout
+    if not onsite and not city:
+        return []  # the parse asserts nothing about presence -> derive nothing
+    ko = {"type": LOCATION_KNOCKOUT_TYPE,
+          "quote": f"onsite role — location: {city or '(unspecified)'} "
+                   f"(derived from location_policy in jd.parsed.yaml; not a verbatim JD quote)",
+          "place": city,
+          "source": "derived:location_policy"}
+    return [ko] if _knockout_matches(ko, profile) else []
 
 
 def pre_resume_verdict(classifications: list[dict], knockouts: list[dict],

@@ -62,7 +62,6 @@ skills:
   - label: "Languages & Tooling"
     items:
       - "Python"
-      - "C / C++"
       - "TypeScript"
       - "MATLAB / Simulink"
       - "Git / GitHub Actions"

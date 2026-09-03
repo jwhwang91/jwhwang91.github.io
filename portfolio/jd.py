@@ -14,7 +14,7 @@ BLOCKS = ("responsibilities", "requirements", "preferred", "benefits", "about", 
 # "Preferred Qualifications" is not swallowed by the "qualifications" rule).
 _HEADINGS: list[tuple[str, re.Pattern]] = [
     ("preferred", re.compile(r"(preferred|nice[-\s]?to[-\s]?have|bonus|a plus|desirable|good to have)", re.I)),
-    ("requirements", re.compile(r"(requirements?|required|qualifications?|must[-\s]?have|minimum|what you.{0,4}ll need|basic qualifications|your (skills|profile))", re.I)),
+    ("requirements", re.compile(r"(requirements?|required|qualifications?|must[-\s]?have|minimum|what you.{0,4}ll (need|bring|have)|basic qualifications|your (skills|profile))", re.I)),
     ("responsibilities", re.compile(r"(responsibilit|what you.{0,4}ll do|the role|day[-\s]?to[-\s]?day|duties|in this role|you will)", re.I)),
     ("benefits", re.compile(r"(benefits|perks|compensation|what we offer|why (join|you))", re.I)),
     ("about", re.compile(r"(about\b|who we are|our (team|mission|company)|company overview)", re.I)),
@@ -22,6 +22,23 @@ _HEADINGS: list[tuple[str, re.Pattern]] = [
 
 _STOPWORDS = {"AND", "OR", "THE", "FOR", "YOU", "OUR", "ARE", "WILL", "WITH", "NOT", "ALL",
               "USA", "US", "EU", "CV", "PTO", "HR", "OK", "ID", "IT", "AI"}
+
+# Title-case function words a real heading leaves lowercase ("What to Expect").
+_TITLE_SMALL_WORDS = {"a", "an", "and", "as", "at", "by", "for", "from", "in",
+                      "of", "on", "or", "the", "to", "with"}
+_TITLE_WORD = re.compile(r"[A-Za-z][A-Za-z'’‐-]*")
+
+
+def _title_case_like(s: str) -> bool:
+    """Tolerant Title Case. ``str.istitle()`` is too strict for real headings: it
+    rejects lowercase function words ("What to Expect") and treats the letter after
+    an apostrophe as a new word ("What You'll Bring" -> False), so whole sections of
+    Tesla-style JDs were never recognized as headings. Every word that is not a
+    function word must still start uppercase, so sentence-case content lines
+    ("Strong MATLAB required") are still rejected."""
+    words = _TITLE_WORD.findall(s)
+    cased = [w for w in words if w.lower() not in _TITLE_SMALL_WORDS]
+    return bool(cased) and all(w[0].isupper() for w in cased)
 
 
 def _is_heading_like(line: str) -> bool:
@@ -35,7 +52,7 @@ def _is_heading_like(line: str) -> bool:
     # required" get misclassified as headings and dropped from the scan.
     return (len(s) <= 55 and not s.endswith(".")
             and not s.startswith(("-", "*", "•", "–", "◦"))
-            and (s.isupper() or s.istitle()))
+            and (s.isupper() or _title_case_like(s)))
 
 
 def segment(text: str) -> list[tuple[str, str]]:

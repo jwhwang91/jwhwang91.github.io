@@ -1,6 +1,6 @@
 # Software / Web / AI / Desktop products — the second spine of the backbone.
 #
-# These are self-built, public products that prove app/web/AI/desktop ability,
+# These are public products that prove app/web/AI/desktop ability,
 # independent of the automotive work. Each links to its real repo and/or live
 # deployment (the artifact a reviewer can open), so no generated detail page is
 # needed. Keep every claim TRUE and auditable: a reviewer who opens the repo or
@@ -27,8 +27,8 @@ projects:
       QA repair) produces decks, and an in-browser editor lets users restyle them live while the
       AI is constrained to a safe, validated JSON patch/action vocabulary.
     impact: >-
-      Deployed at deckflip.net. ~224-file TypeScript codebase with a provider fallback chain
-      (Anthropic Opus -> OpenAI -> deterministic mock) so generation never hard-fails, a ~3,000-line
+      Deployed at deckflip.net. TypeScript codebase with a provider fallback chain
+      (Anthropic Opus -> OpenAI -> deterministic mock) so generation never hard-fails, a
       sandboxed in-iframe DOM editor that preserves each deck's own CSS/JS/3D animations, a
       cross-device live audience layer over Supabase Realtime with row-level-security event replay,
       a multilingual UI (KO/EN/JA/ZH), and Vitest + Playwright test suites.
@@ -60,10 +60,10 @@ projects:
       control cycles (Kahn topological sort), and an async engine executes the graph while streaming
       node/edge state to the UI over Server-Sent Events.
     impact: >-
-      Working prototype (v0.3.0). ~832-line async execution engine, a pluggable LLM router across
+      Working prototype (v0.3.0). Async execution engine, a pluggable LLM router across
       OpenAI / Gemini / Anthropic / Ollama with automatic offline mock fallback, an AI-independent
-      safety subsystem (gate chain + regime classifier) evaluated after the model decision, ~20
-      FastAPI REST endpoints plus SSE streaming, a YAML-manifest package system, and 80 pytest tests.
+      safety subsystem (gate chain + regime classifier) evaluated after the model decision, a
+      FastAPI REST surface plus SSE streaming, a YAML-manifest package system, and a pytest suite.
     tags:
       - Python
       - FastAPI
@@ -83,7 +83,7 @@ projects:
     category: software
     stack: Python / Playwright / BeautifulSoup / ffmpeg / LLM orchestration
     hook: >-
-      ~3,600-line Python assistant that learns a writer's voice and photo-layout style from past
+      Python assistant that learns a writer's voice and photo-layout style from past
       posts, then drafts new ones — a clean split between deterministic Python (automation, scraping,
       media) and an LLM that does the writing, coupled only through files.
     objective: >-
@@ -113,16 +113,17 @@ projects:
     stack: Python / PySide6 (Qt 6) / OAuth 2.0 / Nuitka / PyInstaller
     hook: >-
       Cross-platform desktop app (Python/Qt, packaged for macOS and Windows via Nuitka/PyInstaller)
-      that authenticates to Pinterest via a hand-rolled OAuth 2.0 flow and batch-exports saved
+      that authenticates to Pinterest via an OAuth 2.0 authorization-code flow and batch-exports saved
       reference images to a local folder.
     objective: >-
       Give designers a one-click way to pull their saved reference boards offline, with a responsive
       Qt UI that never blocks during network or file IO.
     impact: >-
-      OAuth 2.0 authorization-code flow built from scratch on the Python standard library (loopback
-      callback server, CSRF state validation, silent refresh-token reconnect), all network/IO
-      offloaded to dedicated QThread workers, a resilient downloader (highest-resolution variant
-      selection, atomic writes, idempotent skip-existing), a 17-test unittest suite, and native
+      OAuth 2.0 authorization-code flow on the Python standard library with no third-party OAuth
+      dependency (loopback callback server, CSRF state validation, silent refresh-token reconnect),
+      all network/IO offloaded to dedicated QThread workers, a resilient downloader
+      (highest-resolution variant selection, atomic writes, idempotent skip-existing), a
+      unittest suite, and native
       packaging for macOS and Windows via Nuitka / PyInstaller.
     tags:
       - Python

@@ -54,7 +54,7 @@ resume:
         - "macOS app development"
         - "PySide6 / Qt · OAuth 2.0"
         - "Cross-platform packaging (Nuitka / PyInstaller)"
-        - "Python · C/C++"
+        - "Python"
         - "pytest / Vitest / Playwright · Docker"
 
 # --- experiences: two strongest roles, tight bullets, no per-exp keyword line ---
@@ -65,7 +65,7 @@ experiences:
     hmc-adas:
       hook: ""
       bullets:
-        - "Built Python/C++ AI-transition toolchains running learned models on real vehicle signals (XCP/CAN-FD) and replay-based validation tooling; owned algorithm work (e.g. EKF sensor fusion) end to end."
+        - "Designed AI-transition toolchain prototypes that run learned models on real vehicle signals (XCP/CAN-FD), plus replay-based validation tooling; independently developed selected production ADAS logic, including EKF-based road-radius fusion."
       keywords: []
     add-k2-tcu:
       hook: ""
@@ -89,17 +89,17 @@ software:
       impact: ""
       tags: []
     decisioncanvas:
-      hook: "Visual builder for auditable multi-agent AI workflows: typed node graph, async SSE execution engine, 4-provider LLM router, 80 pytest tests."
+      hook: "Visual builder for auditable multi-agent AI workflows: typed node graph, async SSE execution engine, 4-provider LLM router, pytest suite."
       objective: ""
       impact: ""
       tags: []
     voiceprint:
-      hook: "Python + LLM assistant that learns a writer's voice and drafts posts; 1,000+ lines of resilient Playwright automation."
+      hook: "Python + LLM assistant that learns a writer's voice and drafts posts; resilient Playwright automation layer."
       objective: ""
       impact: ""
       tags: []
     pinterest-exporter:
-      hook: "Cross-platform Python/Qt desktop app with a hand-rolled OAuth 2.0 flow; packaged for macOS and Windows."
+      hook: "Cross-platform Python/Qt desktop app with an OAuth 2.0 authorization-code flow; packaged for macOS and Windows."
       objective: ""
       impact: ""
       tags: []

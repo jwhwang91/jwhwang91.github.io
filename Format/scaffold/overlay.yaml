@@ -34,7 +34,7 @@ site:
 # --- resume overrides (per key, e.g. reorder/replace a skill group) ---
 # resume:
 #   skills:
-#     software: ["Python", "C++", "..."]
+#     software: ["MATLAB / Simulink", "Python", "..."]
 
 # --- experiences: subset/reorder by id, plus per-id field overrides ---
 # backbone ids: hmc-adas, add-k2-tcu, kaist-masters

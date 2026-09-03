@@ -1,11 +1,11 @@
 name: "Jae Woong Hwang"
 title: "Software & Systems Engineer"
-headline: "Engineer who ships across the stack: 8+ years taking safety-critical vehicle and embedded control functions from algorithm design through full V-cycle validation, plus a body of self-built full-stack, AI/LLM, and desktop applications — including a deployed AI presentation editor."
+headline: "Engineer who ships across the stack: 8+ years taking safety-critical vehicle and embedded control functions from algorithm design through full V-cycle validation, plus a body of full-stack, AI/LLM, and desktop applications I designed and shipped — including a deployed AI presentation editor."
 one_liner: >-
   I build the whole path from problem to product, control algorithms and validation toolchains for
   production commercial-vehicle ADAS and defense drivetrains, and full-stack AI, web, and desktop apps,
-  including an AI presentation editor, a multi-agent workflow studio, and cross-platform tools, designed
-  and built on my own.
+  including an AI presentation editor, a multi-agent workflow studio, and cross-platform tools that I
+  designed and shipped.
 keywords:
   - "Full-Stack Development"
   - "AI / LLM Application Engineering"
@@ -16,7 +16,6 @@ keywords:
   - "Multi-Agent / Agentic Systems"
   - "macOS / Desktop Apps"
   - "Software Architecture"
-  - "C / C++"
   - "MATLAB / Simulink"
   - "Control Systems"
   - "Embedded / Hardware-Near Software"
@@ -25,7 +24,7 @@ keywords:
   - "MIL / HIL / Validation"
   - "Sensor Fusion"
 main_focus:
-  - "Full-stack and AI/LLM application engineer: built and deployed DeckFlip (a TypeScript/React + serverless AI presentation editor with a multi-pass LLM pipeline), built DecisionCanvas Studio (a Next.js + FastAPI multi-agent workflow engine), plus cross-platform Python/Qt desktop tools and an in-development macOS file-manager app."
+  - "Full-stack and AI/LLM application engineer: designed and shipped DeckFlip (a TypeScript/React + serverless AI presentation editor with a multi-pass LLM pipeline) and DecisionCanvas Studio (a Next.js + FastAPI multi-agent workflow engine), plus cross-platform Python/Qt desktop tools and an in-development macOS file-manager app."
   - "8+ years across the full control-systems V-cycle: control-algorithm design, embedded implementation, and MIL/HIL/dynamometer/real-vehicle validation on safety-critical commercial-vehicle ADAS, defense, and robotics platforms."
   - "Comfortable owning the whole path from problem to shipped artifact: software architecture, frontend, backend/APIs, LLM integration and safety, and test (Vitest/Playwright/pytest)."
   - "Turns messy real-world behavior into structured tools and evidence, from production BEV target-selection debugging and resource-constrained AI-transition platforms to validated-JSON AI edit gates and auditable agent workflows."

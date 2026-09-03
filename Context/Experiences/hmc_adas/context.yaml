@@ -19,7 +19,7 @@ highlights:
   - label: "Workflow"
     value: "MILS, HILS, dynamometer, real-vehicle validation, and log replay"
   - label: "Toolchain"
-    value: "CANape, VN1640, XCP/CAN-FD, MF4, MATLAB/Simulink, Python/C++ validation tooling"
+    value: "CANape, VN1640, XCP/CAN-FD, MF4, MATLAB/Simulink, and in-house validation tooling (Python/C++)"
 
 sections:
   - title: "Ownership Boundary"
