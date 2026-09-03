@@ -14,6 +14,7 @@ from .facts import Violation, load_registry
 from .jd import jd_sha256, mine_candidates, scan_jd, validate_parsed
 from .paths import Paths, rel_to_root
 from .taxonomy import Taxonomy
+from .truthlint import skills_support_check
 
 _TIER_RANK = {"exact": 0, "equivalent": 1, "related": 2}
 
@@ -343,6 +344,21 @@ def match_confirm(paths: Paths, slug: str) -> int:
     return 0
 
 
+def _iter_resume_keywords(resume: dict):
+    """(where, keyword list) for every `keywords:` block a resume can carry. These
+    are taxonomy TERM IDS, not free text, and nothing validated them — a typo or an
+    invented id silently contributed nothing to coverage instead of erroring."""
+    for grp in resume.get("skills", []) or []:
+        kws = grp.get("keywords")
+        if kws:
+            yield f"skills[{grp.get('label', '?')}]", kws
+    for section in ("experience", "projects"):
+        for e in resume.get(section, []) or []:
+            kws = e.get("keywords")
+            if kws:
+                yield f"{section}[{e.get('source') or e.get('id') or '?'}]", kws
+
+
 def validate_stage(paths: Paths, slug: str, stage: str) -> int:
     """`validate --stage jd|match|all` — schema + registry-reference checks."""
     folder = paths.applications / slug
@@ -392,6 +408,17 @@ def validate_stage(paths: Paths, slug: str, stage: str) -> int:
                         for cid in b.get("claims", []) or []:
                             if cid not in cids:
                                 errors.append(f"resume.yaml: bullet cites non-confirmed claim '{cid}'")
+            # Skills chips + keyword term-ids. `validate` used to run green on a resume
+            # whose skills asserted competence no claim carried — only `gate` looked at
+            # them — which is how an unhedged "C / C++" chip reached a submitted resume.
+            match_path = folder / "match.yaml"
+            cls = (load_yaml(match_path).get("classifications") or []) if match_path.exists() else []
+            errors += [f"resume.yaml: {x.message}"
+                       for x in skills_support_check(resume, reg, tax, cls) if x.level == "error"]
+            for where, kws in _iter_resume_keywords(resume):
+                for kw in kws:
+                    if kw not in tax.by_id:
+                        errors.append(f"resume.yaml: {where} keyword '{kw}' is not a taxonomy term id")
 
     for e in errors:
         print(f"[error] {e}")

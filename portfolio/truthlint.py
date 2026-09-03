@@ -3,7 +3,9 @@ from __future__ import annotations
 import re
 from typing import Any, Iterator
 
+from .classify import claim_taxonomy_terms
 from .facts import Registry, Violation
+from .taxonomy import Taxonomy
 
 # ---------------------------------------------------------------------------
 # JD-independent truthfulness lints (MASTER_PLAN §12: Q1-Q7, Q11-Q14).
@@ -28,6 +30,46 @@ def _iter_bullets(resume: dict[str, Any]) -> Iterator[tuple[str, dict[str, Any]]
             yield "Projects", b
 
 
+def _iter_skills(resume: dict[str, Any]) -> Iterator[tuple[str, str]]:
+    """(group label, chip text) for every skills chip. Chips are resume text too:
+    `_iter_bullets` never reached them, so for a long time a skills group could
+    assert anything and no Q-lint could see it."""
+    for grp in resume.get("skills", []) or []:
+        label = str(grp.get("label") or "skills")
+        for item in grp.get("items", []) or []:
+            yield label, str(item)
+
+
+def skills_support_check(resume: dict[str, Any], registry: Registry, taxonomy: Taxonomy,
+                         classifications: list[dict[str, Any]] | None = None) -> list[Violation]:
+    """Q1 for the SKILLS section: a chip must not assert a taxonomy skill that no
+    confirmed claim and no supported JD term backs (else a resume could fabricate
+    skills the gate never inspects).
+
+    Lives here, not in gate.py, so every entry point that lints a resume runs it —
+    `validate --stage resume` used to report 0 errors on a resume whose skills
+    asserted competence the registry did not carry.
+
+    `classifications` is optional. With no JD in hand the registry alone decides,
+    which is strictly stricter than the gate (a chip that only a JD match would
+    justify still flags), so the standalone path never passes what the gate fails."""
+    supported: set[str] = set()
+    for c in registry.citable():
+        supported |= claim_taxonomy_terms(c, taxonomy)
+    supported |= {cl["term"] for cl in (classifications or [])
+                  if cl.get("support") in ("direct", "partial")}
+
+    out: list[Violation] = []
+    for label, item in _iter_skills(resume):
+        hits = {h.term_id for h in taxonomy.scan(item)}
+        unsupported = sorted(h for h in hits if h not in supported)
+        if unsupported:
+            out.append(Violation("error", f"skills:{label}",
+                                 f"skills chip '{item}' asserts unsupported skill(s) {unsupported} — "
+                                 "not backed by any confirmed claim or JD match (Q1)"))
+    return out
+
+
 def _lexeme_present(text: str, lexeme: str) -> bool:
     return re.search(r"\b" + re.escape(lexeme) + r"\b", text, re.IGNORECASE) is not None
 
@@ -47,8 +89,14 @@ def _numbers(text: str) -> list[str]:
     return re.findall(r"\d+(?:\.\d+)?", text)
 
 
-def lint_resume(resume: dict[str, Any], registry: Registry) -> list[Violation]:
-    """Run the JD-independent truthfulness lints. Returns errors + warnings."""
+def lint_resume(resume: dict[str, Any], registry: Registry,
+                taxonomy: Taxonomy | None = None,
+                classifications: list[dict[str, Any]] | None = None) -> list[Violation]:
+    """Run the JD-independent truthfulness lints. Returns errors + warnings.
+
+    Pass `taxonomy` to include the skills-section checks; without it the skills
+    group is only phrase-linted (Q7/Q12), since the support check needs the
+    taxonomy to resolve a chip to term ids."""
     v: list[Violation] = []
     policy = registry.policy or {}
     by_id = registry.claims_by_id
@@ -171,5 +219,33 @@ def lint_resume(resume: dict[str, Any], registry: Registry) -> list[Violation]:
     for shingle, count in all_bullet_shingles.items():
         if count >= 2:
             v.append(Violation("warning", "resume", f"phrase '{' '.join(shingle)}' repeats across bullets (Q13)"))
+
+    # --- Q7 / Q12 on SKILLS chips (textual) ---
+    # Q1/Q2/Q3 do not apply to a chip: it carries no `claims:` key and no verb, and
+    # its support side is skills_support_check(). Phrasing does apply — a chip is
+    # resume text. Claim-level forbidden_phrases are folded in even though the chip
+    # cites nothing, precisely BECAUSE it cites nothing: an uncited chip has no
+    # backing at all for the phrasing those bans exist to prevent.
+    skill_patterns = list(policy.get("global_forbidden_phrases", []) or [])
+    for exp in resume.get("experience", []) or []:
+        emp = registry.employers.get(exp.get("source"))
+        if emp:
+            skill_patterns += emp.get("forbidden_phrases", []) or []
+    for claim in registry.citable():
+        skill_patterns += claim.get("forbidden_phrases", []) or []
+    vague = policy.get("vague_claim_lexicon", []) or []
+
+    for label, item in _iter_skills(resume):
+        where = f"skills:{label}"
+        for pat, qid in [(p, "Q7") for p in skill_patterns] + [(p, "Q12") for p in vague]:
+            try:
+                if re.search(pat, item, re.IGNORECASE):
+                    kind = "forbidden phrasing" if qid == "Q7" else "vague claim"
+                    v.append(Violation("error", where, f"skills chip '{item}': {kind} matched /{pat}/ ({qid})"))
+            except re.error:
+                pass
+
+    if taxonomy is not None:
+        v += skills_support_check(resume, registry, taxonomy, classifications)
 
     return v
