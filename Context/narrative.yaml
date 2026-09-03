@@ -1,5 +1,5 @@
 title: "Engineering Narrative"
-intro: "Two arcs that reinforce each other: a hardware-to-software systems arc (real motion-control hardware -> full V-cycle vehicle TCU software -> commercial-vehicle ADAS and AI-ready validation platforms), and a product-builder arc (self-shipped full-stack AI, web, and desktop applications)."
+intro: "Two arcs that reinforce each other: a hardware-to-software systems arc (real motion-control hardware -> full V-cycle vehicle TCU software -> commercial-vehicle ADAS and AI-ready validation platforms), and a product-builder arc (full-stack AI, web, and desktop applications I designed and shipped)."
 items:
   - "Physical constraints -> control logic: I turn hardware limits, sensing delays, and vehicle dynamics into algorithms and validation evidence."
   - "Problem -> product: I own the whole thing end to end, frontend, backend/APIs, LLM integration, and packaging, from an AI presentation editor (DeckFlip) to a multi-agent workflow studio (DecisionCanvas) to cross-platform desktop tools."

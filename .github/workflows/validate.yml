@@ -31,11 +31,27 @@ jobs:
       - name: Privacy guard (no private path or phone in the tracked tree)
         run: python scripts/privacy_guard.py
 
+      # Context/facts/ and Context/variants/ are gitignored (see .gitignore), so on a
+      # fresh clone of the public repo they are absent and both of these steps would
+      # fail on missing input rather than on a real defect. Gate them on the registry
+      # being present: locally — where the registry lives and where every resume is
+      # actually generated — both run in full. Publicly, CI still guards the privacy
+      # scan and the site build, which are the two things a public push can break.
       - name: Backbone fact consistency
-        run: python main.py --lint-facts
+        run: |
+          if [ -d Context/facts ]; then
+            python main.py --lint-facts
+          else
+            echo "Context/facts/ is private (gitignored) — fact lint runs locally only."
+          fi
 
       - name: Test suite
-        run: python -m pytest -q
+        run: |
+          if [ -d Context/facts ]; then
+            python -m pytest -q
+          else
+            echo "Context/facts/ is private (gitignored) — the suite reads the registry, so it runs locally only."
+          fi
 
       - name: Public site builds
         run: python main.py

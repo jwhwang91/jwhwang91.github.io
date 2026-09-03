@@ -7,8 +7,19 @@
 # stays out of git (companies you apply to + tailored resumes are private).
 /Applications/
 
-# Flat Context/variants/*.yaml lenses (e.g. a reusable field focus like
-# adas-controls.yaml) are NOT ignored and may be committed if you want them public.
+# The truth layer and the variant lenses. Untracked as of 2026-09-03 by owner
+# decision: the registry carries per-claim ownership audits, forbidden_phrases
+# redlines, open G0 questions ("'independent' may be inflated"), and authorship
+# notes recording which code was LLM-assisted. Read charitably that is an audit
+# trail; skimmed by a reviewer mid-application it is not. The public site does not
+# need either directory — verified: `python main.py` builds clean without them —
+# so nothing on jwhwang91.github.io changes.
+#
+# NOTE: earlier versions of these files WERE public (2026-07 .. 2026-09) and remain
+# in GitHub's history. Untracking stops new disclosure; it does not erase the old.
+# Full removal needs a history rewrite + GitHub-side GC, tracked separately.
+/Context/facts/
+/Context/variants/
 
 # Private job-search constraints (work authorization / visa sponsorship, target
 # list). Source of truth for the loop + rejection pipeline; must stay out of the
